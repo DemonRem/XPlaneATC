@@ -1,0 +1,41 @@
+Jetzt haben wir den atc setupframe eigentlich fast fertig.
+
+Was noch gemacht werden muss:
+
+
+Aktuelle Themen:
+Synchronnitaet zwischen den angezeigten Airports aus dem FIR-Paket und den indizierten Flughaefen aus den Xplane daten. Das stimmt noch nicht so ganz. Und es gehen Daten verloren.
+    Die Frage hier ist auch, ob die Daten dann wieder zurueck auf den Server gespielt werden sollen.
+    Was passiert, wenn zwei Controller mit unterschiedlichen Daten auf den Server syncen...?
+
+
+=========================================================
+Entfernungen:
+Die Airports sollen Sichtweiten bekommen
+
+
+=========================================================
+Voice:
+Wenn jeder Client eine UDP-Socket oeffnet und auf Voice wartet, sollte es moeglich sein, dass man die Voice-Socket des Client mit in der Session speichert und somit auch bedienen kann.
+Das koennte bedeuten, dass Voice komplett UDP basiert stattfindet, wir aber keine eigene Verwaltung in Bezug auf die Frequenzen benoetigen.
+
+
+=========================================================
+
+ATC Controller Client:
+Wir brauchen auch noch ein Map, um zu sehen, wer online ist.
+
+
+=========================================================
+Xplane Adapter
+Es ist wahrscheinlich sinnvoll, die Entfernungsmessung dem Client zu ueberlassen. Beim Start werden alle Stationen heruntergeladen und es werden nur Daten gesendet, wenn
+auch die Entfernung zur Station stimmt. Das waere auch noch Resourcen schonend.
+
+
+
+=========================================================
+AptAirport Indexing 14.9.2016:
+Es gibt jetzt einen Mechanismus, der die PlainAirports mit den AptAirports auffuellt und mit den initialDaten auffuellt.
+Das ist insofern gar nicht mal so schlecht, dass eine gewissen Anzahl an Aiports vom Server geladen werden koennen. Ist XPlane vorhanden, koennen diese Airports erweitert
+werden. Ist XPlane nicht vorhanden und koennen keine Daten angereichert werden, muss es bei den Server bereitgestellten flughaefen bleiben.
+

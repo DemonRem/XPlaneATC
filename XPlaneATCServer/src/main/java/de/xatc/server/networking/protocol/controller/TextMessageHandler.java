@@ -1,0 +1,48 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package de.xatc.server.networking.protocol.controller;
+
+import de.xatc.commons.networkpackets.client.TextMessagePacket;
+import de.xatc.server.config.ServerConfig;
+import de.xatc.server.db.entities.XATCUserSession;
+import de.xatc.server.mq.producers.MQMessageSender;
+import de.xatc.server.sessionmanagment.SessionManagement;
+import io.netty.channel.Channel;
+
+/**
+ *
+ * @author Mirko
+ */
+public class TextMessageHandler {
+    
+    
+    public static void handleUserTextMessage(Channel n,Object msg) {
+        
+        TextMessagePacket p = (TextMessagePacket) msg;
+        System.out.println("Incoming TextMessage in Handler");
+        XATCUserSession s = SessionManagement.findUserSessionByChannelID(n.id().asLongText(), SessionManagement.getUserSessionList());
+        if (s == null) {
+            System.out.println("No session found, returning");
+            return;
+        }
+        
+        
+        
+        MQMessageSender m = ServerConfig.getMessageSenders().get("broadcastTextMessages");
+        
+        if (m != null) {
+            System.out.println("Sending Message..... "  + p.getMessage());
+            m.sendObjectMessage(p);
+            
+        }
+        else {
+            System.out.println("Could not find MQ Message Producer to send textmessage to");
+        }
+        
+    }
+    
+    
+}
