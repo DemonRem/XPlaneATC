@@ -40,8 +40,10 @@
         <mapping class="de.xatc.commons.db.sharedentities.atcdata.Fir"/>
         <mapping class="de.xatc.commons.db.sharedentities.atcdata.PlainAirport"/>
         
+        <mapping class="de.xatc.commons.networkpackets.atc.stations.SupportedATISStation"/>
         <mapping class="de.xatc.commons.networkpackets.atc.stations.SupportedAirportStation"/>
         <mapping class="de.xatc.commons.networkpackets.atc.stations.SupportedFirStation"/>
+        <mapping class="de.xatc.commons.networkpackets.atc.stations.SupportedStationStatistics"/>
         
         
     </session-factory>

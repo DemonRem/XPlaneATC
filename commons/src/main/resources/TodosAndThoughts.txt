@@ -39,3 +39,8 @@ Es gibt jetzt einen Mechanismus, der die PlainAirports mit den AptAirports auffu
 Das ist insofern gar nicht mal so schlecht, dass eine gewissen Anzahl an Aiports vom Server geladen werden koennen. Ist XPlane vorhanden, koennen diese Airports erweitert
 werden. Ist XPlane nicht vorhanden und koennen keine Daten angereichert werden, muss es bei den Server bereitgestellten flughaefen bleiben.
 
+
+To Be Documented:
+Es kann immer nur eine Station am Airport per Controller besetzt werden. Wer zuerst kommt, der muss ATIS eingeben. Wenn mann mehrere Airports untersützen möchte, dann besser mittels FIR oder verfahren.
+
+

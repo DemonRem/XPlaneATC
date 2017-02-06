@@ -124,8 +124,8 @@ public class AircraftPainter implements Painter<JXMapViewer> {
         this.image = this.originalImage;
         this.image = this.rotateImage(image, Double.parseDouble(p.getHeading()));
         
-        int x = (int) plane2d.getX();
-        int y = (int) (int) plane2d.getY();
+        int x = (int) plane2d.getX() - (this.image.getWidth() / 2);
+        int y = (int) (int) plane2d.getY() - (this.image.getHeight()/ 2);
         g.setColor(Color.BLACK);
         g.drawString("xPr<b> " + p.getTransponder() + " " + p.getTransponderMode(), x, y-30);
         g.drawString("iac: " + p.getGroundSpeed(), x, y-20);

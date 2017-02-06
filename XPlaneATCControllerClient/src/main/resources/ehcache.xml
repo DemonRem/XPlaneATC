@@ -47,6 +47,8 @@
         <persistence strategy="localTempSwap" />
     </cache>
  
+ 
+ 
     <cache name="org.hibernate.cache.spi.UpdateTimestampsCache"
            maxEntriesLocalHeap="5000" eternal="true">
         <persistence strategy="localTempSwap" />

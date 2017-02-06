@@ -6,13 +6,12 @@
 package de.xatc.commons.networkpackets.atc.stations;
 
 import de.xatc.commons.db.sharedentities.atcdata.PlainAirport;
-import de.xatc.commons.db.sharedentities.atcdata.PlainNavPoint;
-import java.util.ArrayList;
+import de.xatc.commons.db.sharedentities.user.RegisteredUser;
+import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -25,7 +24,7 @@ import org.hibernate.annotations.Index;
 @Entity
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE,
         region = "stationData")
-public class SupportedAirport {
+public class SupportedATISStation extends NetworkPacket {
     
     @Index(name = "id")
     @GenericGenerator(name = "generator", strategy = "increment")
@@ -36,12 +35,12 @@ public class SupportedAirport {
     
     private PlainAirport airport;
     
+    //TODO refactor this supported shit
+    //put everything in own objects which could be saved and administered
     private String atisMessage;
     private String atisFrequency;
-    
-    @Lob
-    @Column(length = 65535)
-    private ArrayList<SupportedAirportStation> airportStations = new ArrayList<>();
+    private RegisteredUser user;
+    private boolean active = false;
 
     public int getId() {
         return id;
@@ -75,14 +74,24 @@ public class SupportedAirport {
         this.atisFrequency = atisFrequency;
     }
 
-    public ArrayList<SupportedAirportStation> getAirportStations() {
-        return airportStations;
+    public RegisteredUser getUser() {
+        return user;
     }
 
-    public void setAirportStations(ArrayList<SupportedAirportStation> airportStations) {
-        this.airportStations = airportStations;
+    public void setUser(RegisteredUser user) {
+        this.user = user;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
     
     
+
+   
     
 }

@@ -12,7 +12,7 @@ package de.xatc.controllerclient.gui.setupatc;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.gui.painters.AircraftPainter;
 import de.xatc.controllerclient.gui.painters.AptPainter;
-import de.xatc.controllerclient.gui.painters.AtcSetupMapFirPainter;
+import de.xatc.controllerclient.gui.setupatc.painters.AtcSetupMapFirPainter;
 import de.xatc.controllerclient.gui.painters.RosePainter;
 import java.awt.BorderLayout;
 import java.util.ArrayList;

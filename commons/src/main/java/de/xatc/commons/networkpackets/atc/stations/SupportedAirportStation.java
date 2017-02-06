@@ -8,7 +8,6 @@ package de.xatc.commons.networkpackets.atc.stations;
 import de.xatc.commons.db.sharedentities.atcdata.PlainAirport;
 import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
-import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,7 +25,7 @@ import org.hibernate.annotations.Index;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE,
         region = "stationData")
 public class SupportedAirportStation extends NetworkPacket {
- 
+    
     @Index(name = "id")
     @GenericGenerator(name = "generator", strategy = "increment")
     @GeneratedValue(generator = "generator")
@@ -34,18 +33,13 @@ public class SupportedAirportStation extends NetworkPacket {
     @Id
     private int id;
     
-    private RegisteredUser user;
-    private int range;
-    
-    private Timestamp startStation;
-    private Timestamp endStation;
-    private boolean active;
+    private PlainAirport airport;
     
     private String stationName;
-    private String frequency;
-    
-    
-    
+    private String stationFrequency;
+    private int visibility;
+    private boolean active = false;
+    private RegisteredUser user;
 
     public int getId() {
         return id;
@@ -55,36 +49,36 @@ public class SupportedAirportStation extends NetworkPacket {
         this.id = id;
     }
 
-    public RegisteredUser getUser() {
-        return user;
+    public PlainAirport getAirport() {
+        return airport;
     }
 
-    public void setUser(RegisteredUser user) {
-        this.user = user;
+    public void setAirport(PlainAirport airport) {
+        this.airport = airport;
     }
 
-    public int getRange() {
-        return range;
+    public String getStationName() {
+        return stationName;
     }
 
-    public void setRange(int range) {
-        this.range = range;
+    public void setStationName(String stationName) {
+        this.stationName = stationName;
     }
 
-    public Timestamp getStartStation() {
-        return startStation;
+    public String getStationFrequency() {
+        return stationFrequency;
     }
 
-    public void setStartStation(Timestamp startStation) {
-        this.startStation = startStation;
+    public void setStationFrequency(String stationFrequency) {
+        this.stationFrequency = stationFrequency;
     }
 
-    public Timestamp getEndStation() {
-        return endStation;
+    public int getVisibility() {
+        return visibility;
     }
 
-    public void setEndStation(Timestamp endStation) {
-        this.endStation = endStation;
+    public void setVisibility(int visibility) {
+        this.visibility = visibility;
     }
 
     public boolean isActive() {
@@ -95,22 +89,18 @@ public class SupportedAirportStation extends NetworkPacket {
         this.active = active;
     }
 
-
-    public String getStationName() {
-        return stationName;
+    public RegisteredUser getUser() {
+        return user;
     }
 
-    public void setStationName(String stationName) {
-        this.stationName = stationName;
+    public void setUser(RegisteredUser user) {
+        this.user = user;
     }
-
-    public String getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(String frequency) {
-        this.frequency = frequency;
-    }
+    
+    
+    
+    
+ 
     
     
 }

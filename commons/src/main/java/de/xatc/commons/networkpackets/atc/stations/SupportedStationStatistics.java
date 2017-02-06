@@ -6,8 +6,10 @@
 package de.xatc.commons.networkpackets.atc.stations;
 
 import de.xatc.commons.db.sharedentities.atcdata.Fir;
+import de.xatc.commons.db.sharedentities.atcdata.PlainAirport;
 import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
+import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,20 +26,27 @@ import org.hibernate.annotations.Index;
 @Entity
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE,
         region = "stationData")
-public class SupportedFirStation extends NetworkPacket {
-
+public class SupportedStationStatistics extends NetworkPacket {
+ 
     @Index(name = "id")
     @GenericGenerator(name = "generator", strategy = "increment")
     @GeneratedValue(generator = "generator")
     @Column(nullable = false)
     @Id
     private int id;
-
+    
     private RegisteredUser user;
-    private Fir fir;
-    private String firMessage;
-    private String frequency;
+    private int range;
+    
+    private Timestamp startStation;
+    private Timestamp endStation;
     private boolean active;
+    
+    private PlainAirport plainAirport;
+    private Fir fir;
+    private String stationName;
+    private String frequency;
+    
 
     public int getId() {
         return id;
@@ -55,28 +64,28 @@ public class SupportedFirStation extends NetworkPacket {
         this.user = user;
     }
 
-    public Fir getFir() {
-        return fir;
+    public int getRange() {
+        return range;
     }
 
-    public void setFir(Fir fir) {
-        this.fir = fir;
+    public void setRange(int range) {
+        this.range = range;
     }
 
-    public String getFirMessage() {
-        return firMessage;
+    public Timestamp getStartStation() {
+        return startStation;
     }
 
-    public void setFirMessage(String firMessage) {
-        this.firMessage = firMessage;
+    public void setStartStation(Timestamp startStation) {
+        this.startStation = startStation;
     }
 
-    public String getFrequency() {
-        return frequency;
+    public Timestamp getEndStation() {
+        return endStation;
     }
 
-    public void setFrequency(String frequency) {
-        this.frequency = frequency;
+    public void setEndStation(Timestamp endStation) {
+        this.endStation = endStation;
     }
 
     public boolean isActive() {
@@ -87,7 +96,39 @@ public class SupportedFirStation extends NetworkPacket {
         this.active = active;
     }
 
-  
-    
 
+    public String getStationName() {
+        return stationName;
+    }
+
+    public void setStationName(String stationName) {
+        this.stationName = stationName;
+    }
+
+    public String getFrequency() {
+        return frequency;
+    }
+
+    public void setFrequency(String frequency) {
+        this.frequency = frequency;
+    }
+
+    public PlainAirport getPlainAirport() {
+        return plainAirport;
+    }
+
+    public void setPlainAirport(PlainAirport plainAirport) {
+        this.plainAirport = plainAirport;
+    }
+
+    public Fir getFir() {
+        return fir;
+    }
+
+    public void setFir(Fir fir) {
+        this.fir = fir;
+    }
+    
+    
+    
 }

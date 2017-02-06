@@ -4,7 +4,7 @@ import de.mytools.tools.swing.SwingTools;
 import de.xatc.commons.db.sharedentities.atcdata.AirportStation;
 import de.xatc.commons.db.sharedentities.atcdata.Fir;
 import de.xatc.commons.db.sharedentities.atcdata.PlainAirport;
-import de.xatc.commons.networkpackets.atc.stations.SupportedAirportStation;
+import de.xatc.commons.networkpackets.atc.stations.SupportedStationStatistics;
 import de.xatc.commons.networkpackets.atc.stations.SupportedFirStation;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
@@ -136,6 +136,7 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         jLabel2.setText("Search:");
 
         airportJList.setModel(loadAirports());
+        airportJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         airportJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 airportJListValueChanged(evt);
@@ -162,6 +163,12 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         jLabel4.setText("Selected");
 
         airportFreqJList.setModel(new DefaultListModel());
+        airportFreqJList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        airportFreqJList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                airportFreqJListValueChanged(evt);
+            }
+        });
         jScrollPane5.setViewportView(airportFreqJList);
 
         jLabel5.setText("Airport Stations");
@@ -173,12 +180,14 @@ public class ATCSetupFrame extends javax.swing.JFrame {
             }
         });
 
+        customStationFreqField.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         customStationFreqField.setEnabled(false);
 
         jLabel6.setText("Frequency");
 
         jLabel7.setText("Station Name");
 
+        customStationName.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         customStationName.setEnabled(false);
 
         airportATISField.setColumns(20);
@@ -527,6 +536,10 @@ public class ATCSetupFrame extends javax.swing.JFrame {
             for (AirportStation station : airportStationList) {
 
                 System.out.println(station.getStationName());
+                if (station.getStationName().matches("(?i:.*ATIS.*)")) {
+                    this.airportATISFrequencyField.setText(station.getFrequency());
+                    continue;
+                }
                 model.addElement(station);
             }
             this.airportFreqJList.setModel(model);
@@ -647,6 +660,8 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             this.customStationFreqField.setEnabled(true);
             this.customStationName.setEnabled(true);
+            this.customStationFreqField.setText("");
+            this.customStationName.setText("");
             this.airportFreqJList.clearSelection();
 
         } else {
@@ -720,7 +735,7 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         //verdammte hacke, so richtig funktioniert das hier auch nicht. Ich glaube, ich muss die Objekte Supported Airport Stations und ATIS
         //        voneinander trennen.
                 
-        SupportedAirportStation supAirportStation = new SupportedAirportStation();
+        SupportedStationStatistics supAirportStation = new SupportedStationStatistics();
         supAirportStation.setActive(true);
       //  supAirportStation.setAirport(this.airportJList.getSelectedValue());
       //  supAirportStation.setAtisMessage(this.airportATISField.getText());
@@ -735,6 +750,19 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         this.selectedStationsModel.addElement(supAirportStation);
 
     }//GEN-LAST:event_airportSelectButtonActionPerformed
+
+    private void airportFreqJListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_airportFreqJListValueChanged
+
+        if (evt.getValueIsAdjusting()) {
+        System.out.println("FREQLIST CHANGED");
+        AirportStation station = this.airportFreqJList.getSelectedValue();
+        this.customStationName.setText(station.getStationName());
+        this.customStationFreqField.setText(station.getFrequency());
+        System.out.println(station.getStationName());
+        }
+        
+        
+    }//GEN-LAST:event_airportFreqJListValueChanged
 
 
 

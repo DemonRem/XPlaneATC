@@ -1,4 +1,4 @@
-package de.xatc.controllerclient.gui.painters;
+package de.xatc.controllerclient.gui.setupatc.painters;
 
 import de.xatc.commons.db.sharedentities.atcdata.Fir;
 import de.xatc.commons.db.sharedentities.atcdata.PlainAirport;
