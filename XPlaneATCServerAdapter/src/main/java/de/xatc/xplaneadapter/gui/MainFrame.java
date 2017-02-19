@@ -24,6 +24,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JSeparator;
+import javax.swing.JTextField;
 
 /**
  *
@@ -42,8 +43,10 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener,
     private JMenuItem disconnectMenuItem;
     private JMenuItem sendFlightPlanMenuItem;
     private JCheckBoxMenuItem listenToXPlaneItem;
+    private JCheckBoxMenuItem recordFligtItem;
     private MainPanel mainPanel;
     private JMenuItem registerMenuItem;
+    private JTextField recordFileName;
 
     private boolean isConnected = false;
 
@@ -57,6 +60,7 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener,
         this.addWindowListener(this);
         this.setAlwaysOnTop(true);
         this.setLocation(5, 10);
+        this.recordFileName = new JTextField();
         this.setSize(new Dimension(300, 300));
         createMenu();
         this.setVisible(true);
@@ -83,6 +87,7 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener,
         connectMenuItem = new JMenuItem("Connect to ATC-Server");
         disconnectMenuItem = new JMenuItem("Disconnect");
         this.listenToXPlaneItem = new JCheckBoxMenuItem("Listen to XPlane");
+        this.recordFligtItem = new JCheckBoxMenuItem("Record Flight");
         this.listenToXPlaneItem.addItemListener(this);
 
         this.registerMenuItem = new JMenuItem("Create Account");
@@ -105,6 +110,9 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener,
         this.fileMenu.add(this.disconnectMenuItem);
         this.fileMenu.add(new JSeparator());
         this.fileMenu.add(listenToXPlaneItem);
+        this.fileMenu.add(new JSeparator());
+        this.fileMenu.add(this.recordFligtItem);
+        this.fileMenu.add(this.recordFileName);
         this.fileMenu.add(new JSeparator());
         this.fileMenu.add(registerMenuItem);
         this.fileMenu.add(new JSeparator());
@@ -306,5 +314,30 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener,
     public void setIsConnected(boolean isConnected) {
         this.isConnected = isConnected;
     }
+
+    public JCheckBoxMenuItem getListenToXPlaneItem() {
+        return listenToXPlaneItem;
+    }
+
+    public void setListenToXPlaneItem(JCheckBoxMenuItem listenToXPlaneItem) {
+        this.listenToXPlaneItem = listenToXPlaneItem;
+    }
+
+    public JTextField getRecordFileName() {
+        return recordFileName;
+    }
+
+    public void setRecordFileName(JTextField recordFileName) {
+        this.recordFileName = recordFileName;
+    }
+
+    public JCheckBoxMenuItem getRecordFligtItem() {
+        return recordFligtItem;
+    }
+
+    public void setRecordFligtItem(JCheckBoxMenuItem recordFligtItem) {
+        this.recordFligtItem = recordFligtItem;
+    }
+    
 
 }

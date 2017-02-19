@@ -7,6 +7,7 @@ package de.xatc.xplaneadapter;
 
 import de.xatc.xplaneadapter.config.AdapterConfig;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -22,10 +23,21 @@ import java.net.UnknownHostException;
 public class PacketTestSender extends Thread {
 
     private boolean running = true;
+    private File pathFile;
 
     public static void main(String[] arg) {
 
+        String fileName = AdapterConfig.getRecordingDirectory() + File.separator + arg[0] + ".txt";
+        
+        File pathFile = new File(fileName);
+        if (!pathFile.exists()) {
+            
+            System.out.println("PathFile not found. Exiting");
+            
+        }
+        
         PacketTestSender sender = new PacketTestSender();
+        sender.setPathFile(pathFile);
         sender.start();
     }
 
@@ -38,8 +50,9 @@ public class PacketTestSender extends Thread {
             while (running) {
                 InetAddress address = InetAddress.getByName(AdapterConfig.getConfigBean().getXplaneListnerIP());
                
+                
 
-                BufferedReader br = new BufferedReader(new FileReader("defaultPath.txt"));
+                BufferedReader br = new BufferedReader(new FileReader(this.pathFile));
 
                 String line = null;
                 while ((line = br.readLine()) != null) {
@@ -70,5 +83,22 @@ public class PacketTestSender extends Thread {
         }
 
     }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
+
+    public File getPathFile() {
+        return pathFile;
+    }
+
+    public void setPathFile(File pathFile) {
+        this.pathFile = pathFile;
+    }
+    
 
 }

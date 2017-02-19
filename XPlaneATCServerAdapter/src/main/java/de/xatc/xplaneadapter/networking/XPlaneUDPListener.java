@@ -87,7 +87,7 @@ public class XPlaneUDPListener extends Thread {
 
                 System.out.println("new PlanePosition");
 
-                // this.appendPathToFile(sentence);
+                this.appendPathToFile(sentence);
                 PlanePosition p = new PlanePosition();
 
                 String[] split = sentence.split("\\|\\|\\|");
@@ -210,10 +210,21 @@ public class XPlaneUDPListener extends Thread {
 
     private void appendPathToFile(String s) {
 
-        System.out.println("writing line!");
+        if (!AdapterConfig.getMainFrame().getRecordFligtItem().isSelected()) {
+            return;
+            
+        }
+        String fileName = AdapterConfig.getMainFrame().getRecordFileName().getText();
+        if (StringUtils.isEmpty(fileName)) {
+            return;
+        }
+        
+        
         try {
-            File pathFile = new File("defaultPath.txt");
+            File pathFile = new File(AdapterConfig.getRecordingDirectory() + File.separator + fileName + ".txt");
+           
 
+            System.out.println("writing line!");
             FileWriter fw = new FileWriter(pathFile, true); //the true will append the new data
             fw.write(s + "\n");//appends the string to the file
             fw.close();

@@ -43,6 +43,7 @@ public class AdapterConfig {
     private static String currentConnectionName;
     private static RegisterFrame registerFrame;
     private static String currentRadioFrequency;
+    private static final String recordingDirectory = "recordings";
     
     
     private static DataClientBootstrap clientBootstrap;
@@ -287,7 +288,12 @@ public class AdapterConfig {
         AdapterConfig.flightPlanFrame = flightPlanFrame;
     }
 
+    public static String getRecordingDirectory() {
+        return recordingDirectory;
+    }
 
+
+    
     
 
     
