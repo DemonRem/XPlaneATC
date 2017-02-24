@@ -3,3 +3,5 @@ derby.log
 nb-configuration.xml
 atcClient.properties
 XHomeServerDB/
+nbproject/
+.homeserverLock

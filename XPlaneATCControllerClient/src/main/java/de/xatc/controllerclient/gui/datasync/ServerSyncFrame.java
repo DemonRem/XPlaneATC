@@ -5,6 +5,7 @@ import de.mytools.tools.swing.SwingTools;
 import de.xatc.commons.networkpackets.atc.datasync.RequestSyncPacket;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
+import javax.swing.JButton;
 import javax.swing.JProgressBar;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -99,10 +100,9 @@ public class ServerSyncFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(syncFirButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(syncAirportsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(SyncCountriesButton, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE))
+                        .addComponent(syncFirButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(syncAirportsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SyncCountriesButton, javax.swing.GroupLayout.DEFAULT_SIZE, 155, Short.MAX_VALUE)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 646, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(firProgress, javax.swing.GroupLayout.DEFAULT_SIZE, 697, Short.MAX_VALUE)
                         .addComponent(airportProgress, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -250,7 +250,7 @@ public class ServerSyncFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton SyncCountriesButton;
+    public javax.swing.JButton SyncCountriesButton;
     private javax.swing.JProgressBar airportProgress;
     private javax.swing.JButton closeButton;
     private javax.swing.JProgressBar countryProgress;
@@ -260,8 +260,8 @@ public class ServerSyncFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JButton syncAirportsButton;
-    private javax.swing.JButton syncFirButton;
+    public javax.swing.JButton syncAirportsButton;
+    public javax.swing.JButton syncFirButton;
     // End of variables declaration//GEN-END:variables
 
     public JProgressBar getAirportProgress() {
@@ -287,6 +287,32 @@ public class ServerSyncFrame extends javax.swing.JFrame {
     public void setFirProgress(JProgressBar firProgress) {
         this.firProgress = firProgress;
     }
+
+    public JButton getSyncCountriesButton() {
+        return SyncCountriesButton;
+    }
+
+    public void setSyncCountriesButton(JButton SyncCountriesButton) {
+        this.SyncCountriesButton = SyncCountriesButton;
+    }
+
+    public JButton getSyncAirportsButton() {
+        return syncAirportsButton;
+    }
+
+    public void setSyncAirportsButton(JButton syncAirportsButton) {
+        this.syncAirportsButton = syncAirportsButton;
+    }
+
+    public JButton getSyncFirButton() {
+        return syncFirButton;
+    }
+
+    public void setSyncFirButton(JButton syncFirButton) {
+        this.syncFirButton = syncFirButton;
+    }
+    
+    
 
 
 

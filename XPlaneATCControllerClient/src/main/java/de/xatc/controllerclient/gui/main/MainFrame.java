@@ -604,4 +604,31 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
         this.userManagementItem = userManagementItem;
     }
 
+    public JMenuItem getServerSyncItem() {
+        return serverSyncItem;
+    }
+
+    public void setServerSyncItem(JMenuItem serverSyncItem) {
+        this.serverSyncItem = serverSyncItem;
+    }
+
+    public JMenuItem getxPlaneFileIndexerItem() {
+        return xPlaneFileIndexerItem;
+    }
+
+    public void setxPlaneFileIndexerItem(JMenuItem xPlaneFileIndexerItem) {
+        this.xPlaneFileIndexerItem = xPlaneFileIndexerItem;
+    }
+
+    public JMenuItem getFolderOptionsItem() {
+        return folderOptionsItem;
+    }
+
+    public void setFolderOptionsItem(JMenuItem folderOptionsItem) {
+        this.folderOptionsItem = folderOptionsItem;
+    }
+    
+    
+    
+
 }

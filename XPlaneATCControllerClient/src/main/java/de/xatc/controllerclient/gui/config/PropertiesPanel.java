@@ -29,6 +29,7 @@ public class PropertiesPanel extends JPanel implements ActionListener {
     private String xplaneFolderValue;
 
 
+    private JButton saveButton;
   
     private final int maxFolderStartDisplayLength = 10;
 
@@ -77,21 +78,10 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 
         this.add(new JSeparator());
 
-        
-
-       
-
-       
-
-       
-
-       
-
-        this.add(new JSeparator());
 
         JPanel applyPanel = new JPanel();
 
-        JButton saveButton = new JButton("apply");
+        saveButton = new JButton("apply");
         JButton cancelButton = new JButton("cancel");
         saveButton.addActionListener(this);
         cancelButton.addActionListener(this);
@@ -153,50 +143,7 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 
     }
 
-    private void setNeededFoldersAutomatically() {
 
-        File homeDir = new File(XHSConfig.getConfigBean().getFolder_xplaneFolder());
-        if (homeDir.exists()) {
-
-//            File airportDir = new File(homeDir + File.separator + "Resources" + File.separator + "plugins" + File.separator + "PythonScripts" + File.separator + "followMeCarScripts" + File.separator + "airportfiles");
-//            if (airportDir.exists()) {
-//                FMCConfig.getConfigBean().setFolder_airportFilesFolder(airportDir.getAbsolutePath());
-//                this.airportFilesFolderTextField.setText(this.stripLongFolderNames(airportDir.getAbsolutePath()));
-//            } else {
-//                SwingTools.alertWindow("Airport Directory does not exist!", this);
-//                return;
-//            }
-//
-//            File exportDir = new File(homeDir + File.separator + "Resources" + File.separator + "plugins" + File.separator + "PythonScripts" + File.separator + "followMeCarScripts" + File.separator + "export");
-//            if (exportDir.exists()) {
-//                FMCConfig.getConfigBean().setFolder_exportFolder(exportDir.getAbsolutePath());
-//                this.exportFolderTextField.setText(this.stripLongFolderNames(exportDir.getAbsolutePath()));
-//            } else {
-//                SwingTools.alertWindow("Export Directory does not exist!", this);
-//                return;
-//            }
-//            File sectorFilesDir = new File(homeDir + File.separator + "Resources" + File.separator + "plugins" + File.separator + "PythonScripts" + File.separator + "followMeCarScripts" + File.separator + "sectorfiles");
-//            if (sectorFilesDir.exists()) {
-//                FMCConfig.getConfigBean().setFolder_sectorFilesFolder(sectorFilesDir.getAbsolutePath());
-//                this.sectorFilesFolderTextField.setText(this.stripLongFolderNames(sectorFilesDir.getAbsolutePath()));
-//            } else {
-//                SwingTools.alertWindow("Sectorfiles Directory does not exist!", this);
-//                return;
-//            }
-//            File routeFilesDir = new File(homeDir + File.separator + "Resources" + File.separator + "plugins" + File.separator + "PythonScripts" + File.separator + "followMeCarScripts" + File.separator + "routefiles");
-//            if (routeFilesDir.exists()) {
-//                FMCConfig.getConfigBean().setFolder_routeFilesFolder(routeFilesDir.getAbsolutePath());
-//                this.routeFilesFolderTextField.setText(this.stripLongFolderNames(routeFilesDir.getAbsolutePath()));
-//            } else {
-//                SwingTools.alertWindow("Routefiles Directory does not exist!", this);
-//                return;
-//            }
-//
-//            SwingTools.alertWindow("All directories could be set automatically. Please press Apply to save", this);
-
-        }
-
-    }
 
     /**
      * make long folder names short
@@ -215,4 +162,23 @@ public class PropertiesPanel extends JPanel implements ActionListener {
         return startString + "..." + endString;
     }
 
+    public String getXplaneFolderValue() {
+        return xplaneFolderValue;
+    }
+
+    public void setXplaneFolderValue(String xplaneFolderValue) {
+        this.xplaneFolderValue = xplaneFolderValue;
+    }
+
+    public JButton getSaveButton() {
+        return saveButton;
+    }
+
+    public void setSaveButton(JButton saveButton) {
+        this.saveButton = saveButton;
+    }
+
+    
+    
+    
 }

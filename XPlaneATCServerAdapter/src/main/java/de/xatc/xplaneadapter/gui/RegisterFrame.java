@@ -94,11 +94,6 @@ public class RegisterFrame extends JFrame implements WindowListener, ActionListe
             DataClientBootstrap b = new DataClientBootstrap();
             AdapterConfig.setClientBootstrap(b);
             
-            
-      
-            
-            
-            
             RegisterPacket p = new RegisterPacket();
             p.setUserName(this.userNameField.getText());
             p.setPassword(String.valueOf(this.passwordField.getPassword()));

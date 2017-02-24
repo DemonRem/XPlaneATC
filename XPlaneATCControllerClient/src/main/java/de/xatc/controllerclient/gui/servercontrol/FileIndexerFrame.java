@@ -4,6 +4,7 @@ import de.mytools.tools.swing.SwingTools;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.log.DebugMessageLevel;
 import de.xatc.controllerclient.xdataparser.AptFileIndexer;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
@@ -203,5 +204,22 @@ public class FileIndexerFrame extends javax.swing.JFrame {
     public void setStatusLabel(JLabel statusLabel) {
         this.statusLabel = statusLabel;
     }
+
+    public JButton getCloseButton() {
+        return closeButton;
+    }
+
+    public void setCloseButton(JButton closeButton) {
+        this.closeButton = closeButton;
+    }
+
+    public JButton getjButton1() {
+        return jButton1;
+    }
+
+    public void setjButton1(JButton jButton1) {
+        this.jButton1 = jButton1;
+    }
+    
 
 }

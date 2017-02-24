@@ -61,6 +61,7 @@ public class DataSyncHandler {
             }
             
             PlainAirport airport = (PlainAirport) p.getTransferObject();
+
             Session s = DBSessionManager.getSession();
             System.out.println("Saving new Airport: " + airport.getAirportIcao());
             s.saveOrUpdate(airport);

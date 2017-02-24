@@ -212,6 +212,15 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener,
 
     @Override
     public void itemStateChanged(ItemEvent e) {
+        
+        System.out.println("Item State Changed");
+        System.out.println("ID: " + e.getID());
+        System.out.println("Statechanged: " + e.getStateChange());
+        System.out.println("ITEM: " + e.getItem());
+        
+        System.out.println("SELECTED: " +ItemEvent.SELECTED);
+        
+        
         if (this.listenToXPlaneItem.isSelected()) {
             System.out.println("CheckBox Listener selected");
             XPlaneUDPListener l = new XPlaneUDPListener();

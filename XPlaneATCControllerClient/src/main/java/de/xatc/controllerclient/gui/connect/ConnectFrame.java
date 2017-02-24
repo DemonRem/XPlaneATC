@@ -157,4 +157,29 @@ public class ConnectFrame extends JFrame implements ActionListener, WindowListen
 
     }
 
+    public JTextField getNameField() {
+        return nameField;
+    }
+
+    public void setNameField(JTextField nameField) {
+        this.nameField = nameField;
+    }
+
+    public JPasswordField getPasswordField() {
+        return passwordField;
+    }
+
+    public void setPasswordField(JPasswordField passwordField) {
+        this.passwordField = passwordField;
+    }
+
+    public JButton getConnectButton() {
+        return connectButton;
+    }
+
+    public void setConnectButton(JButton connectButton) {
+        this.connectButton = connectButton;
+    }
+    
+
 }
