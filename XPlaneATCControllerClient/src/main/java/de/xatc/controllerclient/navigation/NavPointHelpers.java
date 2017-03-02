@@ -417,8 +417,20 @@ public class NavPointHelpers {
         if (freq.matches("^\\d{3}\\.\\d{3}$") || freq.matches("^\\d{3}\\.\\d{2}$")) {
             return true;
         }
+       
         
         return false;
+    }
+    
+    public static boolean isFrequencyStringInRange(String freq) {
+         float checkFreq = Float.parseFloat(freq);
+        if (checkFreq < 118.000) {
+            return false;
+        }
+        if (checkFreq > 136.991) {
+            return false;
+        }
+        return true;
     }
     
 
