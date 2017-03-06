@@ -27,26 +27,16 @@ import org.hibernate.annotations.Index;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE,
         region = "stationData")
 public class SupportedStationStatistics extends NetworkPacket {
- 
+
     @Index(name = "id")
     @GenericGenerator(name = "generator", strategy = "increment")
     @GeneratedValue(generator = "generator")
     @Column(nullable = false)
     @Id
     private int id;
-    
-    private RegisteredUser user;
-    private int range;
-    
+
     private Timestamp startStation;
     private Timestamp endStation;
-    private boolean active;
-    
-    private PlainAirport plainAirport;
-    private Fir fir;
-    private String stationName;
-    private String frequency;
-    
 
     public int getId() {
         return id;
@@ -54,22 +44,6 @@ public class SupportedStationStatistics extends NetworkPacket {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public RegisteredUser getUser() {
-        return user;
-    }
-
-    public void setUser(RegisteredUser user) {
-        this.user = user;
-    }
-
-    public int getRange() {
-        return range;
-    }
-
-    public void setRange(int range) {
-        this.range = range;
     }
 
     public Timestamp getStartStation() {
@@ -88,47 +62,4 @@ public class SupportedStationStatistics extends NetworkPacket {
         this.endStation = endStation;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-
-    public String getStationName() {
-        return stationName;
-    }
-
-    public void setStationName(String stationName) {
-        this.stationName = stationName;
-    }
-
-    public String getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(String frequency) {
-        this.frequency = frequency;
-    }
-
-    public PlainAirport getPlainAirport() {
-        return plainAirport;
-    }
-
-    public void setPlainAirport(PlainAirport plainAirport) {
-        this.plainAirport = plainAirport;
-    }
-
-    public Fir getFir() {
-        return fir;
-    }
-
-    public void setFir(Fir fir) {
-        this.fir = fir;
-    }
-    
-    
-    
 }

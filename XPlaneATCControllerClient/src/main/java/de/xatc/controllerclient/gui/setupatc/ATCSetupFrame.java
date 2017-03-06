@@ -1,9 +1,12 @@
 package de.xatc.controllerclient.gui.setupatc;
 
+import de.mytools.tools.dateandtime.SQLDateTimeTools;
 import de.mytools.tools.swing.SwingTools;
 import de.xatc.commons.db.sharedentities.atcdata.AirportStation;
 import de.xatc.commons.db.sharedentities.atcdata.Fir;
 import de.xatc.commons.db.sharedentities.atcdata.PlainAirport;
+import de.xatc.commons.networkpackets.atc.stations.SupportedATISStation;
+import de.xatc.commons.networkpackets.atc.stations.SupportedAirportStation;
 import de.xatc.commons.networkpackets.atc.stations.SupportedStationStatistics;
 import de.xatc.commons.networkpackets.atc.stations.SupportedFirStation;
 import de.xatc.controllerclient.config.XHSConfig;
@@ -602,6 +605,7 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         this.atcSetupMapPanel.repaint();
         this.selectedStationsModel.addElement(station);
         this.selectedJList.repaint();
+        this.deactivateAllSelections();
 
     }//GEN-LAST:event_firSelectButtonActionPerformed
 
@@ -612,6 +616,7 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         Object o = this.selectedJList.getSelectedValue();
         this.selectedStationsModel.removeElement(o);
         this.selectedJList.repaint();
+        this.activateAllSelections();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void showIncludedAirportsCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_showIncludedAirportsCheckboxItemStateChanged
@@ -641,6 +646,10 @@ public class ATCSetupFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_showIncludedAirportsCheckboxItemStateChanged
 
     private void resetAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetAllButtonActionPerformed
+        resetAllButtonsAndValues();
+    }//GEN-LAST:event_resetAllButtonActionPerformed
+
+    private void resetAllButtonsAndValues() {
         this.atcSetupMapPanel.getFirPainter().resetAirports();
         this.atcSetupMapPanel.getFirPainter().getFirList().clear();
         this.atcSetupMapPanel.revalidate();
@@ -659,8 +668,9 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         this.customStationName.setText("");
         this.customStationFreqField.setEditable(false);
         this.customStationName.setEnabled(false);
-    }//GEN-LAST:event_resetAllButtonActionPerformed
-
+        this.airportATISFrequencyField.setText("");
+    }
+    
     private void customStationCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_customStationCheckboxItemStateChanged
         if (evt.getStateChange() == ItemEvent.SELECTED) {
             this.customStationFreqField.setEnabled(true);
@@ -736,25 +746,78 @@ public class ATCSetupFrame extends javax.swing.JFrame {
             }
         }
 
-        //TODO
-        //verdammte hacke, so richtig funktioniert das hier auch nicht. Ich glaube, ich muss die Objekte Supported Airport Stations und ATIS
-        //        voneinander trennen.
-        SupportedStationStatistics supAirportStation = new SupportedStationStatistics();
-        supAirportStation.setActive(true);
-        //  supAirportStation.setAirport(this.airportJList.getSelectedValue());
-        //  supAirportStation.setAtisMessage(this.airportATISField.getText());
+        SupportedAirportStation airportStation = new SupportedAirportStation();
+        airportStation.setAirport(this.airportJList.getSelectedValue());
+        SupportedStationStatistics airportStatistics = new SupportedStationStatistics();
+        airportStation.setStatistics(airportStatistics);
+        airportStation.setActive(true);
+        airportStation.getStatistics().setStartStation(SQLDateTimeTools.getTimeStampOfNow());
+        SupportedATISStation atis = new SupportedATISStation();
+        
+        atis.setAirport(this.airportJList.getSelectedValue());
+        atis.setAtisFrequency(this.airportATISFrequencyField.getText());
+        atis.setAtisMessage(this.airportATISField.getText());
+        
+        airportStation.setAtis(atis);
+        
         if (this.customStationCheckbox.isSelected()) {
-            supAirportStation.setFrequency(this.customStationFreqField.getText());
-            supAirportStation.setStationName(this.customStationName.getText());
+            airportStation.setStationFrequency(this.customStationFreqField.getText());
+            airportStation.setStationName(this.customStationName.getText());
         } else {
-            supAirportStation.setFrequency(this.airportFreqJList.getSelectedValue().getFrequency());
-            supAirportStation.setStationName(this.airportFreqJList.getSelectedValue().getStationName());
+            airportStation.setStationFrequency(this.airportFreqJList.getSelectedValue().getFrequency());
+            airportStation.setStationName(this.airportFreqJList.getSelectedValue().getStationName());
         }
-        supAirportStation.setRange(this.airportRangeSlider.getValue());
-        this.selectedStationsModel.addElement(supAirportStation);
+        airportStation.setVisibility(this.airportRangeSlider.getValue());
+        this.selectedStationsModel.addElement(airportStation);
+        this.deactivateAllSelections();
 
     }//GEN-LAST:event_airportSelectButtonActionPerformed
 
+    private void deactivateAllSelections() {
+    
+        this.firJList.setEnabled(false);
+        this.airportJList.setEnabled(false);
+        this.airportFreqJList.setEnabled(false);
+        this.firFrequencyField.setEnabled(false);
+        this.firMessageArea.setEnabled(false);
+        this.firSelectButton.setEnabled(false);
+        this.firClearButton.setEnabled(false);
+        this.customStationCheckbox.setEnabled(false);
+        this.customStationFreqField.setEnabled(false);
+        this.customStationName.setEnabled(false);
+        this.airportClearButton.setEnabled(false);
+        this.airportSelectButton.setEnabled(false);
+        this.airportRangeSlider.setEnabled(false);
+        this.airportATISField.setEnabled(false);
+        this.airportATISFrequencyField.setEnabled(false);
+        
+        
+    }
+    private void activateAllSelections() {
+    
+        this.firJList.setEnabled(true);
+        this.airportJList.setEnabled(true);
+        this.airportFreqJList.setEnabled(true);
+        this.firFrequencyField.setEnabled(true);
+        this.firMessageArea.setEnabled(true);
+        this.firSelectButton.setEnabled(true);
+        this.firClearButton.setEnabled(true);
+        this.customStationCheckbox.setEnabled(true);
+        this.customStationFreqField.setEnabled(false);
+        this.customStationName.setEnabled(false);
+        this.airportClearButton.setEnabled(true);
+        this.airportSelectButton.setEnabled(true);
+        this.airportRangeSlider.setEnabled(true);
+        this.airportATISField.setEnabled(true);
+        this.airportATISFrequencyField.setEnabled(true);
+        this.resetAllButtonsAndValues();
+        
+        
+    }
+    
+    
+    
+    
     private void airportFreqJListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_airportFreqJListValueChanged
 
         if (evt.getValueIsAdjusting()) {

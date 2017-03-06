@@ -38,6 +38,9 @@ public class SupportedFirStation extends NetworkPacket {
     private String firMessage;
     private String frequency;
     private boolean active;
+    private SupportedStationStatistics statistics;
+   
+           
 
     public int getId() {
         return id;
@@ -87,7 +90,16 @@ public class SupportedFirStation extends NetworkPacket {
         this.active = active;
     }
 
-  
+    public SupportedStationStatistics getStatistics() {
+        return statistics;
+    }
+
+    public void setStatistics(SupportedStationStatistics statistics) {
+        this.statistics = statistics;
+    }
+
+
     
 
+    
 }

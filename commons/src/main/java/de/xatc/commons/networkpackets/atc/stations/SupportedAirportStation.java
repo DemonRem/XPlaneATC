@@ -40,6 +40,8 @@ public class SupportedAirportStation extends NetworkPacket {
     private int visibility;
     private boolean active = false;
     private RegisteredUser user;
+    private SupportedStationStatistics statistics;
+    private SupportedATISStation atis;
 
     public int getId() {
         return id;
@@ -96,6 +98,24 @@ public class SupportedAirportStation extends NetworkPacket {
     public void setUser(RegisteredUser user) {
         this.user = user;
     }
+
+    public SupportedStationStatistics getStatistics() {
+        return statistics;
+    }
+
+    public void setStatistics(SupportedStationStatistics statistics) {
+        this.statistics = statistics;
+    }
+
+    public SupportedATISStation getAtis() {
+        return atis;
+    }
+
+    public void setAtis(SupportedATISStation atis) {
+        this.atis = atis;
+    }
+    
+    
     
     
     

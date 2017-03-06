@@ -1,6 +1,7 @@
 
 package de.xatc.controllerclient.gui.setupatc;
 
+import de.xatc.commons.networkpackets.atc.stations.SupportedAirportStation;
 import de.xatc.commons.networkpackets.atc.stations.SupportedFirStation;
 import java.awt.Color;
 import java.awt.Component;
@@ -28,17 +29,72 @@ public class SelectedStationListCellRenderer implements ListCellRenderer<Object>
         
         if (value instanceof SupportedFirStation) {
             SupportedFirStation fir = (SupportedFirStation) value;
-            return this.createFirRenderPanel(fir);
+            System.out.println("FIRSTATION");
+            return this.createFirRenderPanel(fir, isSelected, cellHasFocus);
+        }
+        else if (value instanceof SupportedAirportStation) {
+            SupportedAirportStation airport = (SupportedAirportStation)value;
+            System.out.println("Airportstation");
+            return this.createAirportRenderPanel(airport, isSelected, cellHasFocus);
         }
         return null;
         
         
     }
-
-    private JPanel createFirRenderPanel(SupportedFirStation fir) {
+    
+    private JPanel createAirportRenderPanel(SupportedAirportStation airport, boolean selected, boolean focus) {
+        
+        JPanel p = new JPanel();
+        if (selected) {
+            p.setBackground(Color.RED);
+        }
+        
+        if (focus) {
+            p.setBackground(Color.LIGHT_GRAY);
+        }
+        else {
+            p.setBackground(Color.DARK_GRAY);
+        }
+        p.setLayout(new FlowLayout(FlowLayout.LEFT));
+        
+        JLabel freqLabel = new JLabel(airport.getStationFrequency());
+        JLabel nameLabel = new JLabel(airport.getAirport().getAirportName() + " - " + airport.getAirport().getAirportIcao());
+        p.add(freqLabel);
+        p.add(nameLabel);
+        
+        JLabel atisFreq = new JLabel(airport.getAtis().getAtisFrequency());
+        p.add(atisFreq);
+        
+        JTextArea a = new JTextArea();
+        a.setLineWrap(true);
+        a.setText(airport.getAtis().getAtisMessage());
+        
+        a.setMaximumSize(new Dimension(400,50));
+        a.setPreferredSize(new Dimension(400,50));
+        a.setForeground(Color.BLACK);
+        a.setBackground(Color.LIGHT_GRAY);
+        a.setEditable(false);
+        p.add(a);
+        
+        
+        
+        return p;
+    }
+    
+    private JPanel createFirRenderPanel(SupportedFirStation fir, boolean isSelected, boolean hasFocus) {
         
         
         JPanel p = new JPanel();
+        if (isSelected) {
+            p.setBackground(Color.RED);
+        }
+        
+        if (hasFocus) {
+            p.setBackground(Color.LIGHT_GRAY);
+        }
+        else {
+            p.setBackground(Color.DARK_GRAY);
+        }
         
         p.setLayout(new FlowLayout(FlowLayout.LEFT));
         JLabel freqLabel = new JLabel(fir.getFrequency());
@@ -46,7 +102,7 @@ public class SelectedStationListCellRenderer implements ListCellRenderer<Object>
         JTextArea a = new JTextArea();
         a.setLineWrap(true);
         a.setText(fir.getFirMessage());
-        System.out.println(fir.getFirMessage());
+        
         a.setMaximumSize(new Dimension(400,50));
         a.setPreferredSize(new Dimension(400,50));
         a.setForeground(Color.BLACK);
