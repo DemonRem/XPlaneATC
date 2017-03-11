@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -21,7 +22,7 @@ import org.hibernate.annotations.Index;
  *
  * @author Mirko
  */
-@Entity
+@Entity(name = "SupportedFirStation")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE,
         region = "stationData")
 public class SupportedFirStation extends NetworkPacket {
@@ -33,12 +34,24 @@ public class SupportedFirStation extends NetworkPacket {
     @Id
     private int id;
 
-    private RegisteredUser user;
+    @Lob
+    @Column(length = 65535)
+    private RegisteredUser registeredUser;
+    
+    private String saveName;
+    
+    @Lob
+    @Column(length = 65535)
     private Fir fir;
+    
+    
     private String firMessage;
     private String frequency;
     private boolean active;
-    private SupportedStationStatistics statistics;
+    
+    @Lob
+    @Column(length = 65535)
+    private SupportedStationStatistics statistics = new SupportedStationStatistics();
    
            
 
@@ -51,11 +64,11 @@ public class SupportedFirStation extends NetworkPacket {
     }
 
     public RegisteredUser getUser() {
-        return user;
+        return registeredUser;
     }
 
     public void setUser(RegisteredUser user) {
-        this.user = user;
+        this.registeredUser = user;
     }
 
     public Fir getFir() {
@@ -98,7 +111,24 @@ public class SupportedFirStation extends NetworkPacket {
         this.statistics = statistics;
     }
 
+    public RegisteredUser getRegisteredUser() {
+        return registeredUser;
+    }
 
+    public void setRegisteredUser(RegisteredUser registeredUser) {
+        this.registeredUser = registeredUser;
+    }
+
+    public String getSaveName() {
+        return saveName;
+    }
+
+    public void setSaveName(String saveName) {
+        this.saveName = saveName;
+    }
+
+
+    
     
 
     

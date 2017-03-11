@@ -107,11 +107,11 @@ public class XHSConfig {
     /**
      * hibernate loglevel. normally set to off, because of large log output
      */
-    private final static Level hibernateLogLevel = Level.OFF;
+    private final static Level hibernateLogLevel = Level.WARNING;
     /**
      * loglevel of ehcache
      */
-    private final static Level ehCacheLogLevel = Level.OFF;
+    private final static Level ehCacheLogLevel = Level.WARNING;
 
     /**
      * This is me

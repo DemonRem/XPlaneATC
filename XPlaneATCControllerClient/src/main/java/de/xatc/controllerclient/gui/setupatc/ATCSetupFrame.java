@@ -261,6 +261,11 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         rangeValueField.setText("60 nm");
 
         saveSetupButton.setText("save setup for later usage");
+        saveSetupButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveSetupButtonActionPerformed(evt);
+            }
+        });
 
         jLabel14.setText("Setup name:");
 
@@ -830,6 +835,47 @@ public class ATCSetupFrame extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_airportFreqJListValueChanged
+
+    private void saveSetupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveSetupButtonActionPerformed
+        
+        String saveName = this.setupSaveNameField.getText();
+        if (StringUtils.isEmpty(saveName)) {
+            SwingTools.alertWindow("Please enter a name for this configuration!", this);
+            this.setupSaveNameField.requestFocus();
+            return;
+        }
+        if (this.selectedJList.getModel() == null) {
+            SwingTools.alertWindow("Nothing to save!", this);
+            return;
+        }
+        if (this.selectedJList.getModel().getSize() <= 0) {
+            SwingTools.alertWindow("Nothing to save!", this);
+            return;
+        }
+        if (this.selectedJList.getModel().getSize() > 1) {
+            SwingTools.alertWindow("Only one configuration item can be saved!", this);
+            return;
+        }
+        
+        Object o = this.selectedJList.getModel().getElementAt(0);
+        if (o == null) {
+            SwingTools.alertWindow("No item found!", this);
+            return;
+        }
+        Session s = DBSessionManager.getSession();
+        if (o instanceof SupportedFirStation) {
+            SupportedFirStation f = (SupportedFirStation) o;
+            f.getStatistics().setStartStation(SQLDateTimeTools.getTimeStampOfNow());
+            s.saveOrUpdate(f);
+            DBSessionManager.closeSession(s);
+            SwingTools.alertWindow("Saved", this);
+        }
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_saveSetupButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

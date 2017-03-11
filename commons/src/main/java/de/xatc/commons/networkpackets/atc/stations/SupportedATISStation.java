@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -39,7 +40,10 @@ public class SupportedATISStation extends NetworkPacket {
     //put everything in own objects which could be saved and administered
     private String atisMessage;
     private String atisFrequency;
-    private RegisteredUser user;
+    
+    @Lob
+    @Column(length = 65535)
+    private RegisteredUser registeredUser;
     private boolean active = false;
 
     public int getId() {
@@ -75,11 +79,11 @@ public class SupportedATISStation extends NetworkPacket {
     }
 
     public RegisteredUser getUser() {
-        return user;
+        return registeredUser;
     }
 
     public void setUser(RegisteredUser user) {
-        this.user = user;
+        this.registeredUser = user;
     }
 
     public boolean isActive() {

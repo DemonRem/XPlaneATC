@@ -12,6 +12,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -33,14 +34,29 @@ public class SupportedAirportStation extends NetworkPacket {
     @Id
     private int id;
     
+    @Lob
+    @Column(length = 65535)
     private PlainAirport airport;
     
     private String stationName;
     private String stationFrequency;
     private int visibility;
     private boolean active = false;
-    private RegisteredUser user;
+    
+    private String saveName;
+    
+    
+    
+    @Lob
+    @Column(length = 65535)
+    private RegisteredUser regjsteredUser;
+    
+    @Lob
+    @Column(length = 65535)
     private SupportedStationStatistics statistics;
+    
+    @Lob
+    @Column(length = 65535)
     private SupportedATISStation atis;
 
     public int getId() {
@@ -92,11 +108,11 @@ public class SupportedAirportStation extends NetworkPacket {
     }
 
     public RegisteredUser getUser() {
-        return user;
+        return regjsteredUser;
     }
 
     public void setUser(RegisteredUser user) {
-        this.user = user;
+        this.regjsteredUser = user;
     }
 
     public SupportedStationStatistics getStatistics() {
@@ -114,6 +130,23 @@ public class SupportedAirportStation extends NetworkPacket {
     public void setAtis(SupportedATISStation atis) {
         this.atis = atis;
     }
+
+    public String getSaveName() {
+        return saveName;
+    }
+
+    public void setSaveName(String saveName) {
+        this.saveName = saveName;
+    }
+
+    public RegisteredUser getRegjsteredUser() {
+        return regjsteredUser;
+    }
+
+    public void setRegjsteredUser(RegisteredUser regjsteredUser) {
+        this.regjsteredUser = regjsteredUser;
+    }
+    
     
     
     
