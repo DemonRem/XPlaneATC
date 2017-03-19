@@ -75,6 +75,8 @@ public class SelectedStationListCellRenderer implements ListCellRenderer<Object>
         a.setBackground(Color.LIGHT_GRAY);
         a.setEditable(false);
         p.add(a);
+        JLabel rangeLabel = new JLabel("RANGE: " + airport.getVisibility());
+        p.add(rangeLabel);
         
         
         

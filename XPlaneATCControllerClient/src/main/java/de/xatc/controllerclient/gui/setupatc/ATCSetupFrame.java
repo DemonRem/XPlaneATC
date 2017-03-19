@@ -27,7 +27,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.JSlider;
 import org.apache.commons.lang.StringUtils;
 import org.apache.derby.vti.Restriction;
+import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -109,6 +111,7 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         jLabel15 = new javax.swing.JLabel();
         loadSetupButton = new javax.swing.JButton();
         savedSetupsComboBox = new javax.swing.JComboBox<>();
+        deleteSetupsButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -248,6 +251,11 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         });
 
         submitButton.setText("submit and register ATC");
+        submitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                submitButtonActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("remove");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -285,6 +293,13 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         });
 
         savedSetupsComboBox.setModel(loadSavedSetups());
+
+        deleteSetupsButton.setText("Delete setups");
+        deleteSetupsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteSetupsButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -343,7 +358,9 @@ public class ATCSetupFrame extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(saveSetupButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(loadSetupButton, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(deleteSetupsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(loadSetupButton, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
                                         .addGap(0, 0, Short.MAX_VALUE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -417,7 +434,16 @@ public class ATCSetupFrame extends javax.swing.JFrame {
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(showIncludedAirportsCheckbox)))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(firSelectButton)
+                            .addComponent(firClearButton)
+                            .addComponent(airportSelectButton)
+                            .addComponent(airportClearButton)
+                            .addComponent(rangeValueField))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -467,16 +493,9 @@ public class ATCSetupFrame extends javax.swing.JFrame {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(savedSetupsComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(10, 10, 10)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(firSelectButton)
-                    .addComponent(firClearButton)
-                    .addComponent(airportSelectButton)
-                    .addComponent(airportClearButton)
-                    .addComponent(rangeValueField))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(deleteSetupsButton)
+                        .addGap(31, 31, 31)))
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
@@ -495,6 +514,8 @@ public class ATCSetupFrame extends javax.swing.JFrame {
 
         if (evt.getValueIsAdjusting()) {
 
+            
+            
             List<Fir> firList = new ArrayList<>();
             List<PlainAirport> airports = new ArrayList<>();
             for (int i : firJList.getSelectedIndices()) {
@@ -506,10 +527,10 @@ public class ATCSetupFrame extends javax.swing.JFrame {
                 }
 
             }
-            this.atcSetupMapPanel.getFirPainter().setFirList(firList);
-            this.atcSetupMapPanel.getFirPainter().setAirports(airports);
-            this.atcSetupMapPanel.revalidate();
-            this.atcSetupMapPanel.repaint();
+            this.atcSetupMapPanel.getFirPainter().setSelectedFir(firList.get(0));
+            this.atcSetupMapPanel.getFirPainter().setIncludedAirportsInFir(airports);
+            this.revalidate();
+            this.repaint();
         }
 
 
@@ -561,13 +582,13 @@ public class ATCSetupFrame extends javax.swing.JFrame {
 
         if (evt.getValueIsAdjusting()) {
             this.airportATISFrequencyField.setText("");
-            List<String> criteriaStrings = new ArrayList<>();
+            
             List<PlainAirport> airportList = new ArrayList<>();
             for (int i : airportJList.getSelectedIndices()) {
 
                 PlainAirport airport = airportJList.getModel().getElementAt(i);
                 airportList.add(airport);
-                criteriaStrings.add(airport.getAirportIcao());
+                
 
             }
 
@@ -584,10 +605,10 @@ public class ATCSetupFrame extends javax.swing.JFrame {
                 model.addElement(station);
             }
             this.airportFreqJList.setModel(model);
-            this.atcSetupMapPanel.getFirPainter().setAirports(airportList);
-            this.atcSetupMapPanel.getFirPainter().setAiportRange(this.airportRangeSlider.getValue() * XHSConfig.getMetersPerNauticalMile());
-            this.atcSetupMapPanel.revalidate();
-            this.atcSetupMapPanel.repaint();
+            this.atcSetupMapPanel.getFirPainter().setSelectedAirport(airportList.get(0));
+            this.atcSetupMapPanel.getFirPainter().setSelectedAirportRange(this.airportRangeSlider.getValue() * XHSConfig.getMetersPerNauticalMile());
+            this.revalidate();
+            this.repaint();
 
         }
 
@@ -636,47 +657,60 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         this.firMessageArea.setText("");
         this.firFrequencyField.setText("");
         this.firJList.clearSelection();
-        this.atcSetupMapPanel.getFirPainter().getFirList().clear();
-        this.atcSetupMapPanel.getFirPainter().getAirports().clear();
-        this.atcSetupMapPanel.revalidate();
-        this.atcSetupMapPanel.repaint();
+        this.atcSetupMapPanel.getFirPainter().setSelectedFir(null);
+        this.atcSetupMapPanel.getFirPainter().setSelectedAirport(null);
+        
+        this.selectedStationsModel = new DefaultListModel();
         this.selectedStationsModel.addElement(station);
-        this.selectedJList.repaint();
+        this.selectedJList.setModel(selectedStationsModel);
+        this.atcSetupMapPanel.getFirPainter().setSetupFir(station);
+    
+        
         this.deactivateAllSelections();
-
+        this.revalidate();
+        this.repaint();
     }//GEN-LAST:event_firSelectButtonActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if (this.selectedJList.getSelectedIndices().length == 0) {
-            SwingTools.alertWindow("No Item selected!", this);
-        }
-        Object o = this.selectedJList.getSelectedValue();
-        this.selectedStationsModel.removeElement(o);
-        this.selectedJList.repaint();
+        
+        
+        this.selectedStationsModel = new DefaultListModel();
+        this.selectedJList.setModel(this.selectedStationsModel);
+       
+        this.atcSetupMapPanel.getFirPainter().setSetupFir(null);
+        
         this.activateAllSelections();
+        this.revalidate();
+        this.repaint();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void showIncludedAirportsCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_showIncludedAirportsCheckboxItemStateChanged
 
         if (this.firJList.getSelectedIndices().length == 0) {
+            SwingTools.alertWindow("No Fir selected!", this);
             System.out.println("No Fir selected");
             return;
         }
+        int selectedIndex = this.firJList.getSelectedIndex();
         if (evt.getStateChange() == ItemEvent.SELECTED) {
 
-            int selectedIndex = this.firJList.getSelectedIndex();
+            
+            System.out.println("SELECTED ITEM IS: " + this.firJList.getSelectedIndex());
             System.out.println("Checkbox Value selected!");
 
+            this.revalidate();
             System.out.println("FIR SELECTED: " + this.firJList.getModel().getElementAt(selectedIndex));
-            this.atcSetupMapPanel.getFirPainter().setAirports(this.firJList.getModel().getElementAt(selectedIndex).getIncludedAirports());
+            this.atcSetupMapPanel.getFirPainter().setIncludedAirportsInFir(this.firJList.getModel().getElementAt(selectedIndex).getIncludedAirports());
             System.out.println("Selected Airports: " + this.firJList.getModel().getElementAt(selectedIndex).getIncludedAirports().size());
-            this.atcSetupMapPanel.revalidate();
-            this.atcSetupMapPanel.repaint();
+            this.revalidate();
+            this.repaint();
         } else {
             System.out.println("Checkbox Value unselected");
-            this.atcSetupMapPanel.getFirPainter().resetAirports();
-            this.atcSetupMapPanel.revalidate();
-            this.atcSetupMapPanel.repaint();
+            this.atcSetupMapPanel.getFirPainter().getIncludedAirportsInFir().clear();
+            this.firJList.setModel(this.loadFirs());
+            this.firJList.setSelectedIndex(selectedIndex);
+            this.revalidate();
+            this.repaint();
         }
 
 
@@ -684,13 +718,18 @@ public class ATCSetupFrame extends javax.swing.JFrame {
 
     private void resetAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetAllButtonActionPerformed
         resetAllButtonsAndValues();
+        this.deactivateAllSelections();
+        this.activateAllSelections();
     }//GEN-LAST:event_resetAllButtonActionPerformed
 
     private void resetAllButtonsAndValues() {
-        this.atcSetupMapPanel.getFirPainter().resetAirports();
-        this.atcSetupMapPanel.getFirPainter().getFirList().clear();
-        this.atcSetupMapPanel.revalidate();
-        this.atcSetupMapPanel.repaint();
+        this.atcSetupMapPanel.getFirPainter().setSelectedAirport(null);
+        this.atcSetupMapPanel.getFirPainter().setSelectedFir(null);
+        this.atcSetupMapPanel.getFirPainter().getIncludedAirportsInFir().clear();
+        this.atcSetupMapPanel.getFirPainter().setSetupAirport(null);
+        this.atcSetupMapPanel.getFirPainter().setSetupFir(null);
+        
+        
         this.selectedJList.setModel(new DefaultListModel());
         this.showIncludedAirportsCheckbox.setSelected(false);
         this.airportJList.clearSelection();
@@ -706,6 +745,8 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         this.customStationFreqField.setEnabled(false);
         this.customStationName.setEnabled(false);
         this.airportATISFrequencyField.setText("");
+        this.revalidate();
+        this.repaint();
     }
     
     private void customStationCheckboxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_customStationCheckboxItemStateChanged
@@ -734,9 +775,9 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         //calc nm from slider to meters
         double sliderNM = s.getValue() * XHSConfig.getMetersPerNauticalMile();
         System.out.println("SLIDER METERS: " + sliderNM);
-        this.atcSetupMapPanel.getFirPainter().setAiportRange(sliderNM);
-        this.atcSetupMapPanel.revalidate();
-        this.atcSetupMapPanel.repaint();
+        this.atcSetupMapPanel.getFirPainter().setSelectedAirportRange(sliderNM);
+        this.revalidate();
+        this.repaint();
 
 
     }//GEN-LAST:event_airportRangeSliderStateChanged
@@ -804,8 +845,14 @@ public class ATCSetupFrame extends javax.swing.JFrame {
             airportStation.setStationFrequency(this.airportFreqJList.getSelectedValue().getFrequency());
             airportStation.setStationName(this.airportFreqJList.getSelectedValue().getStationName());
         }
-        airportStation.setVisibility(this.airportRangeSlider.getValue());
+        airportStation.setVisibility(this.airportRangeSlider.getValue() * XHSConfig.getMetersPerNauticalMile());
+        this.selectedStationsModel = new DefaultListModel();
         this.selectedStationsModel.addElement(airportStation);
+        this.selectedJList.setModel(this.selectedStationsModel);
+        this.atcSetupMapPanel.getFirPainter().setSetupAirport(airportStation);
+        this.atcSetupMapPanel.getFirPainter().setSelectedAirport(null);
+        this.revalidate();
+        this.repaint();
         this.deactivateAllSelections();
 
     }//GEN-LAST:event_airportSelectButtonActionPerformed
@@ -916,8 +963,9 @@ public class ATCSetupFrame extends javax.swing.JFrame {
             DBSessionManager.closeSession(s);
         }
         this.savedSetupsComboBox.setModel(this.loadSavedSetups());
-        this.savedSetupsComboBox.revalidate();
-        
+        this.setupSaveNameField.setText("");
+        this.revalidate();
+        this.repaint();
         
     }//GEN-LAST:event_saveSetupButtonActionPerformed
 
@@ -950,13 +998,86 @@ public class ATCSetupFrame extends javax.swing.JFrame {
             SwingTools.alertWindow("Setup could not be found!", this);
             return;
         }
-        this.selectedStationsModel.clear();
-        this.selectedStationsModel.add(0, o);
-        this.selectedJList.repaint();
+        this.selectedStationsModel = new DefaultListModel();
+        this.selectedStationsModel.addElement(o);
+        this.selectedJList.setModel(selectedStationsModel);
+        if (o instanceof SupportedFirStation) {
+            SupportedFirStation fir = (SupportedFirStation) o;
+            this.atcSetupMapPanel.getFirPainter().setSetupFir(fir);
+        }
+        else if(o instanceof SupportedAirportStation) {
+            SupportedAirportStation airport = (SupportedAirportStation) o;
+            this.atcSetupMapPanel.getFirPainter().setSetupAirport(airport);
+            System.out.println("AIRPORT RANGE: " + airport.getVisibility());
+            this.airportRangeSlider.setValue(airport.getVisibility());
+        }
+        this.revalidate();
+        this.repaint();
         
         
         
     }//GEN-LAST:event_loadSetupButtonActionPerformed
+
+    private void deleteSetupsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteSetupsButtonActionPerformed
+        int result = SwingTools.showYesNoDialogBox("Are you sure", "This will delete all your saved setups and statistics. Are you sure? Really delete all?", this);
+       
+        if (result != 0) {
+            System.out.println("Answer was " + result);
+            return;
+        }
+        Session session = DBSessionManager.getSession();
+        List<String> deleteList = new ArrayList<>();
+        deleteList.add("SupportedFirStation");
+        deleteList.add("SupportedATISStation");
+        deleteList.add("SupportedAirportStation");
+        deleteList.add("SupportedStationStatistics");
+
+        deleteList.forEach((table) -> {
+            Transaction t1 = session.beginTransaction();
+            Query deleteStatement = session.createQuery("delete from " + table);
+            System.out.println("execute Delete Query " + table);
+            deleteStatement.executeUpdate();
+            System.out.println("commit delete " + table);
+            t1.commit();
+        });
+        DBSessionManager.closeSession(session);
+        this.savedSetupsComboBox.setModel(this.loadSavedSetups());
+        this.revalidate();
+        this.repaint();
+        
+        
+        
+    }//GEN-LAST:event_deleteSetupsButtonActionPerformed
+
+    private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
+        
+        if (XHSConfig.getDataClient() == null) {            
+            SwingTools.alertWindow("Not connected!", this);
+            return;
+        }
+        
+        if (this.selectedJList.getModel().getSize() == 0) {
+            SwingTools.alertWindow("No Setup found!", this);
+            return;
+        }
+        Object o = this.selectedJList.getModel().getElementAt(0);
+        if (o == null) {
+            SwingTools.alertWindow("could not read setup", this);
+            return;
+        }
+        if (o instanceof SupportedAirportStation) {
+            SupportedAirportStation airport = (SupportedAirportStation) o;
+            XHSConfig.getDataClient().writeMessage(airport);
+        }
+        else if (o instanceof SupportedFirStation) {
+            SupportedFirStation fir = (SupportedFirStation) o;
+            XHSConfig.getDataClient().writeMessage(fir);
+        }
+        
+        SwingTools.alertWindow("Your Message was submitted to server. Please wait until it is confirmed and set to active!", this);
+        
+        
+    }//GEN-LAST:event_submitButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -972,6 +1093,7 @@ public class ATCSetupFrame extends javax.swing.JFrame {
     private javax.swing.JCheckBox customStationCheckbox;
     private javax.swing.JTextField customStationFreqField;
     private javax.swing.JTextField customStationName;
+    private javax.swing.JButton deleteSetupsButton;
     private javax.swing.JButton firClearButton;
     private javax.swing.JTextField firFrequencyField;
     private javax.swing.JList<Fir> firJList;

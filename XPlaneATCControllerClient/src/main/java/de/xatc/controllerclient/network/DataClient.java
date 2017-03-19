@@ -6,6 +6,8 @@
 package de.xatc.controllerclient.network;
 
 
+import de.mytools.tools.swing.SwingTools;
+import de.xatc.commons.beans.ServerMessageToClient;
 import de.xatc.commons.networkpackets.atc.datasync.DataSyncPacket;
 import de.xatc.commons.networkpackets.atc.servercontrol.ServerMetrics;
 import de.xatc.commons.networkpackets.atc.usermgt.UserListResponse;
@@ -104,6 +106,14 @@ public class DataClient extends ChannelInboundHandlerAdapter {
            UserListResponse u = (UserListResponse) msg;
            UserListResponseHandler.handleUserListResonse(u);
            return;
+           
+       }
+       
+       if (msg instanceof ServerMessageToClient) {
+           
+           ServerMessageToClient message = (ServerMessageToClient) msg;
+           SwingTools.alertWindow(message.getMessage(), XHSConfig.getMainFrame());
+           
            
        }
        

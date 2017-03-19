@@ -16,6 +16,8 @@ import de.xatc.commons.networkpackets.atc.servercontrol.StopClientConnector;
 import de.xatc.commons.networkpackets.atc.servercontrol.StopMQBroker;
 import de.xatc.commons.networkpackets.atc.servercontrol.StopMessagingConsumers;
 import de.xatc.commons.networkpackets.atc.servercontrol.StopMessagingProducers;
+import de.xatc.commons.networkpackets.atc.stations.SupportedAirportStation;
+import de.xatc.commons.networkpackets.atc.stations.SupportedFirStation;
 import de.xatc.commons.networkpackets.atc.usermgt.DeleteUser;
 import de.xatc.commons.networkpackets.atc.usermgt.NewUser;
 import de.xatc.commons.networkpackets.atc.usermgt.RequestUserList;
@@ -27,6 +29,7 @@ import de.xatc.server.networking.protocol.controller.MetricsHandler;
 import de.xatc.server.networking.protocol.controller.RequestUserListHandler;
 import de.xatc.server.networking.protocol.controller.ServerControlHandler;
 import de.xatc.server.networking.protocol.controller.ServerSyncHandler;
+import de.xatc.server.networking.protocol.controller.SetupATCHandler;
 import de.xatc.server.networking.protocol.controller.UserManagementHander;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
@@ -142,6 +145,20 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
                 return;
                 
             }
+            
+            if (msg instanceof SupportedAirportStation) {
+                System.out.println("Incoming SupportedAirportStation");
+                SupportedAirportStation airport = (SupportedAirportStation) msg;
+                SetupATCHandler.handleAirportSetup(airport,ctx.channel());
+            }
+            
+            if (msg instanceof SupportedFirStation) {
+                System.out.println("Incoming SupportedAirportStation");
+                SupportedFirStation fir = (SupportedFirStation) msg;
+                SetupATCHandler.handleFirSetup(fir,ctx.channel());
+            }
+            
+            
             
         }
     }

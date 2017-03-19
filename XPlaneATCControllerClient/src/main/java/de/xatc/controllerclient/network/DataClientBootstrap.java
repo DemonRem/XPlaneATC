@@ -167,9 +167,5 @@ public class DataClientBootstrap {
     }
 
     
-    public static void main (String [] arg) {
-        
-        new DataClientBootstrap();
-        System.out.println("DATAC " + XHSConfig.getDataClient());
-    }
+   
 }

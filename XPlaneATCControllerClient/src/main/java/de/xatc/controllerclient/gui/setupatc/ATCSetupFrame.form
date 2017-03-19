@@ -92,8 +92,11 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="saveSetupButton" max="32767" attributes="0"/>
-                                  <Group type="102" attributes="0">
-                                      <Component id="loadSetupButton" min="-2" pref="123" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="deleteSetupsButton" max="32767" attributes="0"/>
+                                          <Component id="loadSetupButton" pref="123" max="32767" attributes="0"/>
+                                      </Group>
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
@@ -160,7 +163,7 @@
               <Component id="jLabel1" min="-2" pref="25" max="-2" attributes="0"/>
               <EmptySpace min="21" pref="21" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -193,8 +196,18 @@
                           </Group>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="firSelectButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="firClearButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="airportSelectButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="airportClearButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="rangeValueField" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="286" max="-2" attributes="0"/>
@@ -256,19 +269,11 @@
                               <Component id="savedSetupsComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="deleteSetupsButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="firSelectButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="firClearButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="airportSelectButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="airportClearButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="rangeValueField" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane4" min="-2" pref="77" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
@@ -549,6 +554,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="submit and register ATC"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="submitButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="jButton1">
       <Properties>
@@ -625,6 +633,14 @@
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>
+    </Component>
+    <Component class="javax.swing.JButton" name="deleteSetupsButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Delete setups"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deleteSetupsButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

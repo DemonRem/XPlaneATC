@@ -36,7 +36,7 @@ public class ATCSetupMapPanel extends JPanel {
      */
     private JXMapKit jkit;
 
-    private RosePainter rosePainter;
+
     private AircraftPainter aircraftPainter;
     private AtcSetupMapFirPainter firPainter;
     private AptPainter aptPainter;
@@ -83,8 +83,7 @@ public class ATCSetupMapPanel extends JPanel {
         jkit.setZoom(17);
         jkit.repaint();
 
-        rosePainter = new RosePainter();
-        rosePainter.getRoseMap().put(50, XHSConfig.getInitialPos());
+
 
         firPainter = new AtcSetupMapFirPainter();
         aptPainter = new AptPainter();
@@ -95,7 +94,7 @@ public class ATCSetupMapPanel extends JPanel {
         
         this.paintersList = new ArrayList<>();
 
-        paintersList.add(rosePainter);
+
         paintersList.add(aircraftPainter);
         paintersList.add(firPainter);
         paintersList.add(aptPainter);
@@ -141,14 +140,6 @@ public class ATCSetupMapPanel extends JPanel {
 
     public void setPaintersList(List<Painter<JXMapViewer>> paintersList) {
         this.paintersList = paintersList;
-    }
-
-    public RosePainter getRosePainter() {
-        return rosePainter;
-    }
-
-    public void setRosePainter(RosePainter rosePainter) {
-        this.rosePainter = rosePainter;
     }
 
     public AircraftPainter getAircraftPainter() {
