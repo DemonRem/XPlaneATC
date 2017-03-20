@@ -11,6 +11,7 @@ package de.xatc.controllerclient.config;
 
 import de.mytools.encoding.ObjectsMarshaller;
 import de.mytools.tools.swing.SwingTools;
+import de.xatc.commons.beans.sharedgui.ChatFrame;
 import de.xatc.controllerclient.gui.config.ConnectionConfigFrame;
 import de.xatc.controllerclient.gui.config.FolderPropertiesFrame;
 import de.xatc.controllerclient.gui.connect.ConnectFrame;
@@ -57,6 +58,7 @@ public class XHSConfig {
     private static FileIndexerFrame fileIndexerFrame;
     private static FolderPropertiesFrame folderPropertiesFrame;
     private static ATCSetupFrame atcSetupFrame;
+    private static ChatFrame chatFrame;
     
     private static boolean aptIndexingRunning = false;
     
@@ -442,6 +444,14 @@ public class XHSConfig {
 
     public static int getMetersPerNauticalMile() {
         return metersPerNauticalMile;
+    }
+
+    public static ChatFrame getChatFrame() {
+        return chatFrame;
+    }
+
+    public static void setChatFrame(ChatFrame chatFrame) {
+        XHSConfig.chatFrame = chatFrame;
     }
     
     

@@ -9,6 +9,9 @@
  */
 package de.xatc.controllerclient.gui.main;
 
+import de.xatc.commons.beans.sharedgui.ChatFrame;
+import de.xatc.commons.beans.sharedgui.ChatMessageRenderer;
+import de.xatc.commons.networkpackets.client.TextMessagePacket;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
 import de.xatc.controllerclient.gui.config.ConnectionConfigFrame;
@@ -29,11 +32,13 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JScrollBar;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -199,7 +204,6 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
         configurtationItem.addActionListener(this);
         folderOptionsItem = new JMenuItem("Folder Options");
         folderOptionsItem.addActionListener(this);
-                
 
         serverControlItem = new JMenuItem("ServerControl");
         serverControlItem.addActionListener(this);
@@ -227,13 +231,12 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
 
         metricsItem = new JMenuItem("Server Metrics");
         metricsItem.addActionListener(this);
-        
+
         serverSyncItem = new JMenuItem("Sync Runtime Data");
         serverSyncItem.addActionListener(this);
-        
+
         xPlaneFileIndexerItem = new JMenuItem("XPlane File Indexer");
         xPlaneFileIndexerItem.addActionListener(this);
-
 
         //end now add all the stuff
         fileMenu.add(connectItem);
@@ -253,7 +256,6 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
         editMenu.add(new JSeparator());
         editMenu.add(folderOptionsItem);
 
-
         //windows
         windows.add(serverControlItem);
         windows.add(flightPlansItem);
@@ -265,7 +267,7 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
         windows.add(metricsItem);
         windows.add(serverSyncItem);
         windows.add(xPlaneFileIndexerItem);
-        
+        windows.add(this.textMessageItem);
 
         helpMenu.add(helpItem);
         helpMenu.add(aboutItem);
@@ -391,28 +393,48 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
             this.dispose();
             DBSessionManager.shutdownDB();
             System.exit(0);
-        }
-        else if (ae.getSource() == this.serverSyncItem) {
-            
+        } else if (ae.getSource() == this.serverSyncItem) {
+
             XHSConfig.setServerSyncFrame(new ServerSyncFrame());
             XHSConfig.getServerSyncFrame().setVisible(true);
-            
-        }
-        else if (ae.getSource() == xPlaneFileIndexerItem) {
+
+        } else if (ae.getSource() == xPlaneFileIndexerItem) {
             XHSConfig.setFileIndexerFrame(new FileIndexerFrame());
-            XHSConfig.getFileIndexerFrame().setVisible(true);            
-        }
-        else if (ae.getSource() == folderOptionsItem) {
-            
+            XHSConfig.getFileIndexerFrame().setVisible(true);
+        } else if (ae.getSource() == folderOptionsItem) {
+
             XHSConfig.setFolderPropertiesFrame(new FolderPropertiesFrame());
+
+        } else if (ae.getSource() == textMessageItem) {
+
+            System.out.println("CHATFRAME: " + XHSConfig.getChatFrame());
+
+            if (XHSConfig.getChatFrame() == null) {
+                XHSConfig.setChatFrame(new ChatFrame());
+                XHSConfig.getChatFrame().setVisible(true);
+                return;
+            }
+            if (!XHSConfig.getChatFrame().isVisible()) {
+                XHSConfig.getChatFrame().setVisible(true);
+            }
+           
             
-        }
-        
-        else if (ae.getSource() == setUpATCArea) {
+            String text = "lskjfdöldsa jfaö jasdlhfjsak asdjfhal aaslha s alskjdhfas as fdkja lasjsalkjfd salkjhfsal fsa asfsah lfkjsaf lkdsajhf dsalkjfhas lkfjhsalkjd halskj hsalkfdlsfjölsakjsaöjf kjösalkjfödsajfösaljkf jsaölkjfösalkf ödsalkjf ödsakfjöldsakfj asölkdfj ölkdsajfsaölkf jödsakjf ölksjf dölkfjdsaölkf jsaölkjföldsaf";
             
+            for (int i = 0; i <= 5; i++) {
+                
+                TextMessagePacket t = new TextMessagePacket();
+                t.setFromFAlias("HDE1807");
+                t.setMessage(text);
+                XHSConfig.getChatFrame().addMessage(t);
+                
+            }
+
+        } else if (ae.getSource() == setUpATCArea) {
+
             XHSConfig.setAtcSetupFrame(new ATCSetupFrame());
             XHSConfig.getAtcSetupFrame().setVisible(true);
-            
+
         }
 
     }
@@ -627,8 +649,5 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
     public void setFolderOptionsItem(JMenuItem folderOptionsItem) {
         this.folderOptionsItem = folderOptionsItem;
     }
-    
-    
-    
 
 }
