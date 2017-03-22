@@ -7,6 +7,7 @@ package de.xatc.xplaneadapter.config;
 
 import de.mytools.encoding.ObjectsMarshaller;
 import de.mytools.tools.swing.SwingTools;
+import de.xatc.commons.beans.sharedgui.ChatFrame;
 import de.xatc.xplaneadapter.gui.ConfigFrame;
 import de.xatc.xplaneadapter.gui.ConnectFrame;
 import de.xatc.xplaneadapter.gui.FlightPlanFrame;
@@ -53,6 +54,8 @@ public class AdapterConfig {
     private static String currentChannelID;
 
     private static MainFrame mainFrame;
+    
+    private static ChatFrame chatFrame;
 
     public static String getAppName() {
         return appName;
@@ -291,6 +294,16 @@ public class AdapterConfig {
     public static String getRecordingDirectory() {
         return recordingDirectory;
     }
+
+    public static ChatFrame getChatFrame() {
+        return chatFrame;
+    }
+
+    public static void setChatFrame(ChatFrame chatFrame) {
+        AdapterConfig.chatFrame = chatFrame;
+    }
+    
+    
 
 
     

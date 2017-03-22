@@ -9,8 +9,10 @@ import de.xatc.commons.networkpackets.atc.stations.SupportedATISStation;
 import de.xatc.commons.networkpackets.atc.stations.SupportedAirportStation;
 import de.xatc.commons.networkpackets.atc.stations.SupportedStationStatistics;
 import de.xatc.commons.networkpackets.atc.stations.SupportedFirStation;
+import de.xatc.commons.networkpackets.client.TextMessagePacket;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
+import de.xatc.controllerclient.gui.tools.ControllerClientGuiTools;
 import de.xatc.controllerclient.navigation.NavPointHelpers;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
@@ -1065,6 +1067,18 @@ public class ATCSetupFrame extends javax.swing.JFrame {
             SwingTools.alertWindow("could not read setup", this);
             return;
         }
+        
+        int result = SwingTools.showYesNoDialogBox("Are you sure?", "This will submit your setup to the ATC Server. Are you sure to start your ATC Session?", this);
+        if (result != 0) {
+            return;
+        }
+
+        ControllerClientGuiTools.showChatFrame();
+        TextMessagePacket p = new TextMessagePacket();
+        p.setFromFAlias("|LOCAL SYSTEM|");
+        p.setMessage("Your ATC Setup is submitted to ATC Server. Please wait until it is confirmed. Then start your ATC Session!");
+        XHSConfig.getChatFrame().addMessage(p);
+        
         if (o instanceof SupportedAirportStation) {
             SupportedAirportStation airport = (SupportedAirportStation) o;
             XHSConfig.getDataClient().writeMessage(airport);
@@ -1073,8 +1087,6 @@ public class ATCSetupFrame extends javax.swing.JFrame {
             SupportedFirStation fir = (SupportedFirStation) o;
             XHSConfig.getDataClient().writeMessage(fir);
         }
-        
-        SwingTools.alertWindow("Your Message was submitted to server. Please wait until it is confirmed and set to active!", this);
         
         
     }//GEN-LAST:event_submitButtonActionPerformed

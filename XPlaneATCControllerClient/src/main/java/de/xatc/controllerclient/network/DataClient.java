@@ -7,15 +7,18 @@ package de.xatc.controllerclient.network;
 
 
 import de.mytools.tools.swing.SwingTools;
-import de.xatc.commons.beans.ServerMessageToClient;
+import de.xatc.commons.beans.sharedgui.ChatFrame;
+import de.xatc.commons.networkpackets.client.ServerMessageToClient;
 import de.xatc.commons.networkpackets.atc.datasync.DataSyncPacket;
 import de.xatc.commons.networkpackets.atc.servercontrol.ServerMetrics;
 import de.xatc.commons.networkpackets.atc.usermgt.UserListResponse;
 import de.xatc.commons.networkpackets.client.LoginPacket;
 import de.xatc.commons.networkpackets.client.PlanePosition;
 import de.xatc.commons.networkpackets.client.RegisterPacket;
+import de.xatc.commons.networkpackets.client.TextMessagePacket;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.controllerclient.config.XHSConfig;
+import de.xatc.controllerclient.gui.tools.ControllerClientGuiTools;
 import de.xatc.controllerclient.network.handlers.DataSyncHandler;
 import de.xatc.controllerclient.network.handlers.LoginAnswerHandler;
 import de.xatc.controllerclient.network.handlers.MetricsAnswerHandler;
@@ -113,7 +116,16 @@ public class DataClient extends ChannelInboundHandlerAdapter {
            
            ServerMessageToClient message = (ServerMessageToClient) msg;
            SwingTools.alertWindow(message.getMessage(), XHSConfig.getMainFrame());
+           return;
            
+       }
+       if (msg instanceof TextMessagePacket) {
+           
+           ControllerClientGuiTools.showChatFrame();
+           TextMessagePacket messagePacket = (TextMessagePacket) msg;
+           
+           XHSConfig.getChatFrame().toFront();
+           XHSConfig.getChatFrame().addMessage(messagePacket);
            
        }
        

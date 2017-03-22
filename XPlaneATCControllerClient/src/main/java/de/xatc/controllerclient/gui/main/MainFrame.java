@@ -22,6 +22,7 @@ import de.xatc.controllerclient.gui.metrics.MetricsFrame;
 import de.xatc.controllerclient.gui.servercontrol.FileIndexerFrame;
 import de.xatc.controllerclient.gui.servercontrol.ServerControlFrame;
 import de.xatc.controllerclient.gui.setupatc.ATCSetupFrame;
+import de.xatc.controllerclient.gui.tools.ControllerClientGuiTools;
 import de.xatc.controllerclient.gui.usercontrol.UserControlFrame;
 import de.xatc.controllerclient.log.DebugMessageLevel;
 import java.awt.Color;
@@ -409,27 +410,8 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
 
             System.out.println("CHATFRAME: " + XHSConfig.getChatFrame());
 
-            if (XHSConfig.getChatFrame() == null) {
-                XHSConfig.setChatFrame(new ChatFrame());
-                XHSConfig.getChatFrame().setVisible(true);
-                return;
-            }
-            if (!XHSConfig.getChatFrame().isVisible()) {
-                XHSConfig.getChatFrame().setVisible(true);
-            }
-           
-            
-            String text = "lskjfdöldsa jfaö jasdlhfjsak asdjfhal aaslha s alskjdhfas as fdkja lasjsalkjfd salkjhfsal fsa asfsah lfkjsaf lkdsajhf dsalkjfhas lkfjhsalkjd halskj hsalkfdlsfjölsakjsaöjf kjösalkjfödsajfösaljkf jsaölkjfösalkf ödsalkjf ödsakfjöldsakfj asölkdfj ölkdsajfsaölkf jödsakjf ölksjf dölkfjdsaölkf jsaölkjföldsaf";
-            
-            for (int i = 0; i <= 5; i++) {
-                
-                TextMessagePacket t = new TextMessagePacket();
-                t.setFromFAlias("HDE1807");
-                t.setMessage(text);
-                XHSConfig.getChatFrame().addMessage(t);
-                
-            }
-
+            ControllerClientGuiTools.showChatFrame();
+          
         } else if (ae.getSource() == setUpATCArea) {
 
             XHSConfig.setAtcSetupFrame(new ATCSetupFrame());

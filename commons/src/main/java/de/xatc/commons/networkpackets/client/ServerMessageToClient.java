@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.xatc.commons.beans;
+package de.xatc.commons.networkpackets.client;
 
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
 

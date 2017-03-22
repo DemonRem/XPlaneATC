@@ -5,9 +5,10 @@
  */
 package de.xatc.server.networking.protocol.controller;
 
-import de.xatc.commons.beans.ServerMessageToClient;
+import de.xatc.commons.networkpackets.client.ServerMessageToClient;
 import de.xatc.commons.networkpackets.atc.stations.SupportedAirportStation;
 import de.xatc.commons.networkpackets.atc.stations.SupportedFirStation;
+import de.xatc.commons.networkpackets.client.TextMessagePacket;
 import de.xatc.server.db.DBSessionManager;
 import de.xatc.server.db.entities.XATCUserSession;
 import de.xatc.server.sessionmanagment.SessionManagement;
@@ -28,7 +29,8 @@ public class SetupATCHandler {
         airport.setRegjsteredUser(userSession.getRegisteredUser());
         airport.setActive(true);
         s.saveOrUpdate(airport);
-        ServerMessageToClient message = new ServerMessageToClient();
+        TextMessagePacket message = new TextMessagePacket();
+        message.setFromFAlias("|SERVER|");
         message.setMessage("Your ATC Session was confirmed! " + airport.getAirport() + " - " + airport.getStationName() + ". Start your ATC Duty now!");
         c.writeAndFlush(message);
         DBSessionManager.closeSession(s);
@@ -44,8 +46,9 @@ public class SetupATCHandler {
         fir.setRegisteredUser(userSession.getRegisteredUser());
         fir.setActive(true);
         s.saveOrUpdate(fir);
-        ServerMessageToClient message = new ServerMessageToClient();
-        message.setMessage("Your ATC Session was confirmed! " + fir.getFir().getFirNameIcao() + ". Start your ATC Duty now!");
+        TextMessagePacket message = new TextMessagePacket();
+        message.setFromFAlias("|SERVER|");
+        message.setMessage("Your ATC Session was confirmed! " + fir.getFir().getFirNameIcao() +  " " + fir.getFir().getFirName() +  " - " + fir.getFrequency());
         c.writeAndFlush(message);
         DBSessionManager.closeSession(s);
         

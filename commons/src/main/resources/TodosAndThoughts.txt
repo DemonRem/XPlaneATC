@@ -1,3 +1,6 @@
+ATC SetupFrame und Client Server Kommunikation ist fertig. Jetzt muss noch eingehende Anmeldungen validiert werden.
+Außerdem muss noch ein "resetServer" Button dem SetupFrame hinzugefügt werden, um laufende Sessions zu beenden.
+
 Jetzt haben wir den atc setupframe eigentlich fast fertig.
 
 Was noch gemacht werden muss:
