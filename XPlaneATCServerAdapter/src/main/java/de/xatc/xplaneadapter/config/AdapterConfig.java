@@ -46,6 +46,7 @@ public class AdapterConfig {
     private static String currentRadioFrequency;
     private static final String recordingDirectory = "recordings";
     
+    private static String currentFlightNumber;
     
     private static DataClientBootstrap clientBootstrap;
     private static DataClient dataClient;
@@ -302,11 +303,15 @@ public class AdapterConfig {
     public static void setChatFrame(ChatFrame chatFrame) {
         AdapterConfig.chatFrame = chatFrame;
     }
-    
-    
 
+    public static String getCurrentFlightNumber() {
+        return currentFlightNumber;
+    }
 
-    
+    public static void setCurrentFlightNumber(String f) {
+        currentFlightNumber = f;
+    }
+  
     
 
     

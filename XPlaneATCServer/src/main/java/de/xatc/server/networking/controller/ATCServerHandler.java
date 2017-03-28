@@ -23,6 +23,7 @@ import de.xatc.commons.networkpackets.atc.usermgt.NewUser;
 import de.xatc.commons.networkpackets.atc.usermgt.RequestUserList;
 import de.xatc.commons.networkpackets.atc.usermgt.UpdateUser;
 import de.xatc.commons.networkpackets.client.LoginPacket;
+import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.server.networking.protocol.controller.ATCLoginHandler;
 import de.xatc.server.networking.protocol.controller.MetricsHandler;
@@ -156,6 +157,11 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
                 System.out.println("Incoming SupportedAirportStation");
                 SupportedFirStation fir = (SupportedFirStation) msg;
                 SetupATCHandler.handleFirSetup(fir,ctx.channel());
+            }
+            
+            if (msg instanceof SubmittedFlightPlan) {
+                SubmittedFlightPlan plan = (SubmittedFlightPlan) msg;
+                
             }
             
             

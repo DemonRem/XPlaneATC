@@ -5,14 +5,33 @@
  */
 package de.xatc.commons.networkpackets.client;
 
+import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Index;
 
 /**
  *
  * @author C047
  */
+@Entity
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE,
+        region = "flightplan")
 public class SubmittedFlightPlan extends NetworkPacket {
 
+    @Index(name = "id")
+    @GenericGenerator(name = "generator", strategy = "increment")
+    @GeneratedValue(generator = "generator")
+    @Column(nullable = false)
+    @Id
+    private int id;
     private String icaoFrom;
     private String icaoTo;
     private String aircraftType;
@@ -24,6 +43,15 @@ public class SubmittedFlightPlan extends NetworkPacket {
     private String airline;
     private String route;
     private String remark;
+    private boolean active = false;
+    private String controllerComments;
+    @Lob
+    @Column(length = 65535)
+    private RegisteredUser assignedController;
+    
+    @Lob
+    @Column(length = 65535)
+    private RegisteredUser flightPlanOwner;
 
     public String getIcaoFrom() {
         return icaoFrom;
@@ -112,6 +140,48 @@ public class SubmittedFlightPlan extends NetworkPacket {
     public void setRemark(String remark) {
         this.remark = remark;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getControllerComments() {
+        return controllerComments;
+    }
+
+    public void setControllerComments(String controllerComments) {
+        this.controllerComments = controllerComments;
+    }
+
+    public RegisteredUser getAssignedController() {
+        return assignedController;
+    }
+
+    public void setAssignedController(RegisteredUser assignedController) {
+        this.assignedController = assignedController;
+    }
+
+    public RegisteredUser getFlightPlanOwner() {
+        return flightPlanOwner;
+    }
+
+    public void setFlightPlanOwner(RegisteredUser flightPlanOwner) {
+        this.flightPlanOwner = flightPlanOwner;
+    }
+    
+    
     
     
     

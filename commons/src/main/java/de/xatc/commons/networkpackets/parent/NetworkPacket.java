@@ -15,6 +15,7 @@ public abstract class NetworkPacket implements Serializable {
 
     private String sessionID;
     private String channelID;
+    private String flightNumber;
 
     public String getSessionID() {
         return sessionID;
@@ -31,6 +32,15 @@ public abstract class NetworkPacket implements Serializable {
     public void setChannelID(String channelID) {
         this.channelID = channelID;
     }
+
+    public String getFlightNumber() {
+        return flightNumber;
+    }
+
+    public void setFlightNumber(String flightNumber) {
+        this.flightNumber = flightNumber;
+    }
+    
     
 
 }

@@ -12,6 +12,7 @@ package de.xatc.controllerclient.config;
 import de.mytools.encoding.ObjectsMarshaller;
 import de.mytools.tools.swing.SwingTools;
 import de.xatc.commons.beans.sharedgui.ChatFrame;
+import de.xatc.controllerclient.gui.FlightPlanStrips.SubmittedFlightPlansFrame;
 import de.xatc.controllerclient.gui.config.ConnectionConfigFrame;
 import de.xatc.controllerclient.gui.config.FolderPropertiesFrame;
 import de.xatc.controllerclient.gui.connect.ConnectFrame;
@@ -59,6 +60,8 @@ public class XHSConfig {
     private static FolderPropertiesFrame folderPropertiesFrame;
     private static ATCSetupFrame atcSetupFrame;
     private static ChatFrame chatFrame;
+    private static SubmittedFlightPlansFrame myFlightPlansFrame;
+    private static SubmittedFlightPlansFrame submittedFlightPlansPoolFrame;
     
     private static boolean aptIndexingRunning = false;
     
@@ -452,6 +455,22 @@ public class XHSConfig {
 
     public static void setChatFrame(ChatFrame chatFrame) {
         XHSConfig.chatFrame = chatFrame;
+    }
+
+    public static SubmittedFlightPlansFrame getMyFlightPlans() {
+        return myFlightPlansFrame;
+    }
+
+    public static void setMyFlightPlans(SubmittedFlightPlansFrame myFlightPlans) {
+        XHSConfig.myFlightPlansFrame = myFlightPlans;
+    }
+
+    public static SubmittedFlightPlansFrame getSubmittedFlightPlansPoolFrame() {
+        return submittedFlightPlansPoolFrame;
+    }
+
+    public static void setSubmittedFlightPlansPoolFrame(SubmittedFlightPlansFrame submittedFlightPlansPoolFrame) {
+        XHSConfig.submittedFlightPlansPoolFrame = submittedFlightPlansPoolFrame;
     }
     
     

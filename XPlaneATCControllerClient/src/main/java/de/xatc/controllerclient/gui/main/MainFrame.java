@@ -14,6 +14,7 @@ import de.xatc.commons.beans.sharedgui.ChatMessageRenderer;
 import de.xatc.commons.networkpackets.client.TextMessagePacket;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
+import de.xatc.controllerclient.gui.FlightPlanStrips.SubmittedFlightPlansFrame;
 import de.xatc.controllerclient.gui.config.ConnectionConfigFrame;
 import de.xatc.controllerclient.gui.config.FolderPropertiesFrame;
 import de.xatc.controllerclient.gui.connect.ConnectFrame;
@@ -82,8 +83,8 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
     private JMenuItem disconnectItem;
     private JMenuItem configurtationItem;
     private JMenuItem serverControlItem;
-    private JMenuItem flightPlansItem;
-    private JMenuItem myStripesItem;
+
+
     private JMenuItem setUpATCArea;
     private JMenuItem exitItem;
 
@@ -96,6 +97,8 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
     private JMenuItem serverSyncItem;
     private JMenuItem xPlaneFileIndexerItem;
     private JMenuItem folderOptionsItem;
+    private JMenuItem flightPlansPoolItem;
+    private JMenuItem myFlightPlansItem;
 
     /**
      * the goto airport text field inside the file menu
@@ -209,11 +212,9 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
         serverControlItem = new JMenuItem("ServerControl");
         serverControlItem.addActionListener(this);
 
-        flightPlansItem = new JMenuItem("FlightPlan Pool");
-        flightPlansItem.addActionListener(this);
+   
 
-        myStripesItem = new JMenuItem("my Stripes");
-        myStripesItem.addActionListener(this);
+       
 
         setUpATCArea = new JMenuItem("Setup ATC");
         setUpATCArea.addActionListener(this);
@@ -238,6 +239,12 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
 
         xPlaneFileIndexerItem = new JMenuItem("XPlane File Indexer");
         xPlaneFileIndexerItem.addActionListener(this);
+        
+        flightPlansPoolItem = new JMenuItem("Unassigned Flightplans");
+        flightPlansPoolItem.addActionListener(this);
+        
+        myFlightPlansItem = new JMenuItem("My Flightplans");
+        myFlightPlansItem.addActionListener(this);
 
         //end now add all the stuff
         fileMenu.add(connectItem);
@@ -259,8 +266,9 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
 
         //windows
         windows.add(serverControlItem);
-        windows.add(flightPlansItem);
-        windows.add(myStripesItem);
+        windows.add(this.flightPlansPoolItem);
+        
+        windows.add(myFlightPlansItem);
         windows.add(userManagementItem);
         windows.add(new JSeparator());
         windows.add(setUpATCArea);
@@ -418,6 +426,12 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
             XHSConfig.getAtcSetupFrame().setVisible(true);
 
         }
+        else if (ae.getSource() == flightPlansPoolItem) {
+            
+            XHSConfig.setSubmittedFlightPlansPoolFrame(new SubmittedFlightPlansFrame(false));
+            XHSConfig.getSubmittedFlightPlansPoolFrame().setVisible(true);
+            
+        }
 
     }
 
@@ -534,22 +548,6 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
 
     public void setServerControlItem(JMenuItem serverControlItem) {
         this.serverControlItem = serverControlItem;
-    }
-
-    public JMenuItem getFlightPlansItem() {
-        return flightPlansItem;
-    }
-
-    public void setFlightPlansItem(JMenuItem flightPlansItem) {
-        this.flightPlansItem = flightPlansItem;
-    }
-
-    public JMenuItem getMyStripesItem() {
-        return myStripesItem;
-    }
-
-    public void setMyStripesItem(JMenuItem myStripesItem) {
-        this.myStripesItem = myStripesItem;
     }
 
     public JMenuItem getSetUpATCArea() {

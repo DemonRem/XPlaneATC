@@ -69,6 +69,7 @@ public class FlightPlanFrame extends javax.swing.JFrame {
         sendButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
         jLabel18 = new javax.swing.JLabel();
+        deactivateButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -144,9 +145,9 @@ public class FlightPlanFrame extends javax.swing.JFrame {
                 .addContainerGap(34, Short.MAX_VALUE))
         );
 
-        jLabel6.setText("Take Off Time");
+        jLabel6.setText("Take Off Time (UTC)");
 
-        jLabel7.setText("Arrival Time");
+        jLabel7.setText("Arrival Time (UTC)");
 
         jLabel10.setText("Aircraft-Type*");
 
@@ -186,7 +187,7 @@ public class FlightPlanFrame extends javax.swing.JFrame {
                     .addComponent(jLabel10))
                 .addGap(37, 37, 37)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(arrivalTimeField, javax.swing.GroupLayout.DEFAULT_SIZE, 99, Short.MAX_VALUE)
+                    .addComponent(arrivalTimeField, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE)
                     .addComponent(aircraftTypeField)
                     .addComponent(takeOffTimeField))
                 .addGap(18, 18, 18)
@@ -253,6 +254,8 @@ public class FlightPlanFrame extends javax.swing.JFrame {
 
         jLabel18.setText("e.g. BKD L619 BUMIL M748 RARUP");
 
+        deactivateButton.setText("revoke Plan");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -262,16 +265,18 @@ public class FlightPlanFrame extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
                     .addComponent(routeField)
+                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel9)
+                            .addComponent(jLabel8)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addComponent(sendButton)
                                 .addGap(18, 18, 18)
-                                .addComponent(cancelButton))
-                            .addComponent(jLabel8))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(cancelButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(deactivateButton)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -290,7 +295,8 @@ public class FlightPlanFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(sendButton)
-                    .addComponent(cancelButton))
+                    .addComponent(cancelButton)
+                    .addComponent(deactivateButton))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -408,6 +414,7 @@ public class FlightPlanFrame extends javax.swing.JFrame {
     private javax.swing.JTextField airlineField;
     private javax.swing.JTextField arrivalTimeField;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JButton deactivateButton;
     private javax.swing.JTextField flightLevelField;
     private javax.swing.JTextField flightNumberField;
     private javax.swing.JTextField icaoFromField;

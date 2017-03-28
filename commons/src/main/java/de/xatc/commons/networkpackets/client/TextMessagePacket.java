@@ -32,7 +32,7 @@ public class TextMessagePacket extends NetworkPacket {
     @Id
     private int id;
     
-    
+    private boolean status;
     private Timestamp timestamp;
     private String message;
     private String fromUserName;
@@ -42,6 +42,7 @@ public class TextMessagePacket extends NetworkPacket {
     private String fromFAlias;
     private String frequency;
     private String toUsername;
+
 
     public int getId() {
         return id;
@@ -99,6 +100,18 @@ public class TextMessagePacket extends NetworkPacket {
         this.toUsername = toUsername;
     }
 
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+    
+
+  
+
+    
     
     
     

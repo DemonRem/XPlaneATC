@@ -23,14 +23,21 @@ public class SetupATCHandler {
     
     public static void handleAirportSetup(SupportedAirportStation airport, Channel c) {
         
+        TextMessagePacket message = new TextMessagePacket();
         Session s = DBSessionManager.getSession();
         airport.setId(0);
         XATCUserSession userSession = SessionManagement.findUserSessionByChannelID(c.id().asLongText(), SessionManagement.getAtcSessionList());
+        if (userSession == null) {
+            message.setStatus(false);
+            message.setMessage("Could not find your user. Session is not active.");
+        }
+        
         airport.setRegjsteredUser(userSession.getRegisteredUser());
         airport.setActive(true);
         s.saveOrUpdate(airport);
-        TextMessagePacket message = new TextMessagePacket();
+        
         message.setFromFAlias("|SERVER|");
+        message.setStatus(true);
         message.setMessage("Your ATC Session was confirmed! " + airport.getAirport() + " - " + airport.getStationName() + ". Start your ATC Duty now!");
         c.writeAndFlush(message);
         DBSessionManager.closeSession(s);

@@ -175,7 +175,7 @@
                   </Group>
                   <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="arrivalTimeField" pref="99" max="32767" attributes="0"/>
+                      <Component id="arrivalTimeField" pref="72" max="32767" attributes="0"/>
                       <Component id="aircraftTypeField" max="32767" attributes="0"/>
                       <Component id="takeOffTimeField" alignment="0" max="32767" attributes="0"/>
                   </Group>
@@ -239,14 +239,14 @@
       <SubComponents>
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Take Off Time"/>
+            <Property name="text" type="java.lang.String" value="Take Off Time (UTC)"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="takeOffTimeField">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Arrival Time"/>
+            <Property name="text" type="java.lang.String" value="Arrival Time (UTC)"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="arrivalTimeField">
@@ -313,19 +313,21 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jScrollPane3" alignment="0" pref="560" max="32767" attributes="0"/>
                       <Component id="routeField" max="32767" attributes="0"/>
+                      <Component id="jLabel18" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jLabel9" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="sendButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Component id="cancelButton" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="deactivateButton" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
-                      <Component id="jLabel18" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -348,6 +350,7 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="sendButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="cancelButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="deactivateButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
@@ -398,6 +401,11 @@
         <Component class="javax.swing.JLabel" name="jLabel18">
           <Properties>
             <Property name="text" type="java.lang.String" value="e.g. BKD L619 BUMIL M748 RARUP"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="deactivateButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="revoke Plan"/>
           </Properties>
         </Component>
       </SubComponents>

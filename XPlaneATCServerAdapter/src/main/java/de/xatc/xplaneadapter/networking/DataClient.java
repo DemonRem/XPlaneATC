@@ -45,6 +45,11 @@ public class DataClient extends ChannelInboundHandlerAdapter {
             NetworkPacket p = (NetworkPacket) msg;
             p.setChannelID(AdapterConfig.getCurrentChannelID());
             p.setSessionID(AdapterConfig.getCurrentSessionID());
+            
+            if(!StringUtils.isEmpty(AdapterConfig.getCurrentFlightNumber())) {
+                p.setFlightNumber(AdapterConfig.getCurrentFlightNumber());
+            }
+            
             sendPacket(p);
 
         }

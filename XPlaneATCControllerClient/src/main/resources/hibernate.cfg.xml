@@ -47,6 +47,7 @@
         <mapping class="de.xatc.commons.networkpackets.atc.stations.SupportedStationStatistics"/>
         
         <mapping class="de.xatc.commons.networkpackets.client.TextMessagePacket"/>
+        <mapping class="de.xatc.commons.networkpackets.client.SubmittedFlightPlan"/>
    
     </session-factory>
 </hibernate-configuration>
