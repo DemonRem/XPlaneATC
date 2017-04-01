@@ -5,7 +5,6 @@
  */
 package de.xatc.server.networking.protocol.controller;
 
-import de.xatc.commons.networkpackets.client.ServerMessageToClient;
 import de.xatc.commons.networkpackets.atc.stations.SupportedAirportStation;
 import de.xatc.commons.networkpackets.atc.stations.SupportedFirStation;
 import de.xatc.commons.networkpackets.client.TextMessagePacket;

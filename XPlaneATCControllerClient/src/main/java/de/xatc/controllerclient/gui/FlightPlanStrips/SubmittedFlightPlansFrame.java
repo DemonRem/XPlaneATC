@@ -3,13 +3,7 @@ package de.xatc.controllerclient.gui.FlightPlanStrips;
 
 import de.mytools.tools.swing.SwingTools;
 import de.xatc.commons.networkpackets.atc.stripsmgt.ATCRequestStripsPacket;
-import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
 import de.xatc.controllerclient.config.XHSConfig;
-import de.xatc.controllerclient.db.DBSessionManager;
-import java.util.ArrayList;
-import java.util.List;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.jdesktop.swingx.VerticalLayout;
 
 /**
@@ -101,6 +95,8 @@ public class SubmittedFlightPlansFrame extends javax.swing.JFrame {
         
         if (XHSConfig.getDataClient() == null) {
             SwingTools.alertWindow("Not connected!", this);
+            XHSConfig.setSubmittedFlightPlansPoolFrame(null);
+            this.dispose();
             return;
         }
         this.jScrollPane1.removeAll();

@@ -9,9 +9,6 @@
  */
 package de.xatc.controllerclient.gui.main;
 
-import de.xatc.commons.beans.sharedgui.ChatFrame;
-import de.xatc.commons.beans.sharedgui.ChatMessageRenderer;
-import de.xatc.commons.networkpackets.client.TextMessagePacket;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
 import de.xatc.controllerclient.gui.FlightPlanStrips.SubmittedFlightPlansFrame;
@@ -34,13 +31,11 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
-import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JScrollBar;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -83,7 +78,6 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
     private JMenuItem disconnectItem;
     private JMenuItem configurtationItem;
     private JMenuItem serverControlItem;
-
 
     private JMenuItem setUpATCArea;
     private JMenuItem exitItem;
@@ -212,10 +206,6 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
         serverControlItem = new JMenuItem("ServerControl");
         serverControlItem.addActionListener(this);
 
-   
-
-       
-
         setUpATCArea = new JMenuItem("Setup ATC");
         setUpATCArea.addActionListener(this);
 
@@ -239,10 +229,10 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
 
         xPlaneFileIndexerItem = new JMenuItem("XPlane File Indexer");
         xPlaneFileIndexerItem.addActionListener(this);
-        
+
         flightPlansPoolItem = new JMenuItem("Unassigned Flightplans");
         flightPlansPoolItem.addActionListener(this);
-        
+
         myFlightPlansItem = new JMenuItem("My Flightplans");
         myFlightPlansItem.addActionListener(this);
 
@@ -267,7 +257,7 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
         //windows
         windows.add(serverControlItem);
         windows.add(this.flightPlansPoolItem);
-        
+
         windows.add(myFlightPlansItem);
         windows.add(userManagementItem);
         windows.add(new JSeparator());
@@ -419,18 +409,39 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
             System.out.println("CHATFRAME: " + XHSConfig.getChatFrame());
 
             ControllerClientGuiTools.showChatFrame();
-          
+
         } else if (ae.getSource() == setUpATCArea) {
 
             XHSConfig.setAtcSetupFrame(new ATCSetupFrame());
             XHSConfig.getAtcSetupFrame().setVisible(true);
 
-        }
-        else if (ae.getSource() == flightPlansPoolItem) {
-            
-            XHSConfig.setSubmittedFlightPlansPoolFrame(new SubmittedFlightPlansFrame(false));
-            XHSConfig.getSubmittedFlightPlansPoolFrame().setVisible(true);
-            
+        } else if (ae.getSource() == flightPlansPoolItem) {
+
+             if (!XHSConfig.getSubmittedFlightPlansPoolFrame().isVisible()) {
+                XHSConfig.getSubmittedFlightPlansPoolFrame().setVisible(true);
+                XHSConfig.getSubmittedFlightPlansPoolFrame().toFront();
+                XHSConfig.getSubmittedFlightPlansPoolFrame().repaint();
+                return;
+            }
+            if (XHSConfig.getSubmittedFlightPlansPoolFrame() == null) {
+                XHSConfig.setSubmittedFlightPlansPoolFrame(new SubmittedFlightPlansFrame(false));
+                XHSConfig.getSubmittedFlightPlansPoolFrame().setTitle("Unassigned FlightPlans");
+                XHSConfig.getSubmittedFlightPlansPoolFrame().setVisible(true);
+            }
+
+        } else if (ae.getSource() == myFlightPlansItem) {
+
+            if (!XHSConfig.getSubmittedFlightPlansPoolFrame().isVisible()) {
+                XHSConfig.getSubmittedFlightPlansPoolFrame().setVisible(true);
+                XHSConfig.getSubmittedFlightPlansPoolFrame().toFront();
+                XHSConfig.getSubmittedFlightPlansPoolFrame().repaint();
+                return;
+            }
+            if (XHSConfig.getSubmittedFlightPlansPoolFrame() == null) {
+                XHSConfig.setSubmittedFlightPlansPoolFrame(new SubmittedFlightPlansFrame(true));
+                XHSConfig.getSubmittedFlightPlansPoolFrame().setTitle("My FlightPlans");
+                XHSConfig.getSubmittedFlightPlansPoolFrame().setVisible(true);
+            }
         }
 
     }

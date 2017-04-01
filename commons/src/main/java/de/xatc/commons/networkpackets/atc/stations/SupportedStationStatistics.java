@@ -5,9 +5,6 @@
  */
 package de.xatc.commons.networkpackets.atc.stations;
 
-import de.xatc.commons.db.sharedentities.atcdata.Fir;
-import de.xatc.commons.db.sharedentities.atcdata.PlainAirport;
-import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import java.sql.Timestamp;
 import javax.persistence.Column;

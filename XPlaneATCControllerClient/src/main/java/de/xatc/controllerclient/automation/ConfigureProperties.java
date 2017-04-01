@@ -2,8 +2,6 @@
 package de.xatc.controllerclient.automation;
 
 import de.xatc.controllerclient.automation.tools.AutomationTools;
-import de.xatc.controllerclient.config.ConfigBean;
-import de.xatc.controllerclient.config.XHSConfig;
 import java.io.IOException;
 
 /**

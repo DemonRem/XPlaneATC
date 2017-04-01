@@ -7,14 +7,13 @@ package de.xatc.controllerclient.network;
 
 
 import de.mytools.tools.swing.SwingTools;
-import de.xatc.commons.beans.sharedgui.ChatFrame;
-import de.xatc.commons.networkpackets.client.ServerMessageToClient;
 import de.xatc.commons.networkpackets.atc.datasync.DataSyncPacket;
 import de.xatc.commons.networkpackets.atc.servercontrol.ServerMetrics;
 import de.xatc.commons.networkpackets.atc.usermgt.UserListResponse;
 import de.xatc.commons.networkpackets.client.LoginPacket;
 import de.xatc.commons.networkpackets.client.PlanePosition;
 import de.xatc.commons.networkpackets.client.RegisterPacket;
+import de.xatc.commons.networkpackets.client.ServerMessageToClient;
 import de.xatc.commons.networkpackets.client.TextMessagePacket;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.controllerclient.config.XHSConfig;

@@ -5,14 +5,7 @@
  */
 package de.xatc.xplaneadapter;
 
-import de.mytools.tools.dateandtime.SQLDateTimeTools;
 import de.xatc.xplaneadapter.config.AdapterConfig;
-import java.util.List;
-import java.util.Map;
-import org.hibernate.Session;
-import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Property;
 
 /**
  *

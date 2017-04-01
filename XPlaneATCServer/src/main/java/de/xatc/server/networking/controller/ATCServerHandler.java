@@ -18,6 +18,7 @@ import de.xatc.commons.networkpackets.atc.servercontrol.StopMessagingConsumers;
 import de.xatc.commons.networkpackets.atc.servercontrol.StopMessagingProducers;
 import de.xatc.commons.networkpackets.atc.stations.SupportedAirportStation;
 import de.xatc.commons.networkpackets.atc.stations.SupportedFirStation;
+import de.xatc.commons.networkpackets.atc.stripsmgt.ATCRequestStripsPacket;
 import de.xatc.commons.networkpackets.atc.usermgt.DeleteUser;
 import de.xatc.commons.networkpackets.atc.usermgt.NewUser;
 import de.xatc.commons.networkpackets.atc.usermgt.RequestUserList;
@@ -157,7 +158,13 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
                 System.out.println("Incoming SupportedAirportStation");
                 SupportedFirStation fir = (SupportedFirStation) msg;
                 SetupATCHandler.handleFirSetup(fir,ctx.channel());
+                
             }
+            if (msg instanceof ATCRequestStripsPacket) {
+                
+                
+            }
+            
             
             if (msg instanceof SubmittedFlightPlan) {
                 SubmittedFlightPlan plan = (SubmittedFlightPlan) msg;

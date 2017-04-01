@@ -9,11 +9,13 @@ import de.xatc.commons.networkpackets.client.FMSPlan;
 import de.xatc.commons.networkpackets.client.LoginPacket;
 import de.xatc.commons.networkpackets.client.PlanePosition;
 import de.xatc.commons.networkpackets.client.RegisterPacket;
+import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
 import de.xatc.commons.networkpackets.client.TextMessagePacket;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.server.config.ServerConfig;
 import de.xatc.server.networking.protocol.client.LoginHandler;
 import de.xatc.server.networking.protocol.client.RegisterHandler;
+import de.xatc.server.networking.protocol.controller.FligtPlanManagementHandler;
 import de.xatc.server.networking.protocol.controller.TextMessageHandler;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
@@ -68,7 +70,16 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
                 if (SessionManagement.getAtcChannelGroup().size() > 0) {
                     ServerConfig.getMessageSenders().get("planePosition").sendObjectMessage((PlanePosition) msg);
                 }
-            } else if (msg instanceof FMSPlan) {
+                
+            } else if (msg instanceof SubmittedFlightPlan) {
+                SubmittedFlightPlan f = (SubmittedFlightPlan) msg;
+                FligtPlanManagementHandler.handleNewIncomingSubmittedFlightPlan(f, channel);
+                return;
+            } 
+            
+            
+            
+            else if (msg instanceof FMSPlan) {
                 System.out.println("FMSPlAN received");
                 //TODO
             }
