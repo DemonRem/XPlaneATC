@@ -417,31 +417,34 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
 
         } else if (ae.getSource() == flightPlansPoolItem) {
 
+            if (XHSConfig.getSubmittedFlightPlansPoolFrame() == null) {
+                XHSConfig.setSubmittedFlightPlansPoolFrame(new SubmittedFlightPlansFrame(false));
+                XHSConfig.getSubmittedFlightPlansPoolFrame().setTitle("Unassigned FlightPlans");
+                XHSConfig.getSubmittedFlightPlansPoolFrame().setVisible(true);
+            }
              if (!XHSConfig.getSubmittedFlightPlansPoolFrame().isVisible()) {
                 XHSConfig.getSubmittedFlightPlansPoolFrame().setVisible(true);
                 XHSConfig.getSubmittedFlightPlansPoolFrame().toFront();
                 XHSConfig.getSubmittedFlightPlansPoolFrame().repaint();
                 return;
             }
-            if (XHSConfig.getSubmittedFlightPlansPoolFrame() == null) {
-                XHSConfig.setSubmittedFlightPlansPoolFrame(new SubmittedFlightPlansFrame(false));
-                XHSConfig.getSubmittedFlightPlansPoolFrame().setTitle("Unassigned FlightPlans");
-                XHSConfig.getSubmittedFlightPlansPoolFrame().setVisible(true);
-            }
+            
 
         } else if (ae.getSource() == myFlightPlansItem) {
 
+            if (XHSConfig.getSubmittedFlightPlansPoolFrame() == null) {
+                XHSConfig.setSubmittedFlightPlansPoolFrame(new SubmittedFlightPlansFrame(true));
+                XHSConfig.getSubmittedFlightPlansPoolFrame().setTitle("My FlightPlans");
+                XHSConfig.getSubmittedFlightPlansPoolFrame().setVisible(true);
+            }
+            
             if (!XHSConfig.getSubmittedFlightPlansPoolFrame().isVisible()) {
                 XHSConfig.getSubmittedFlightPlansPoolFrame().setVisible(true);
                 XHSConfig.getSubmittedFlightPlansPoolFrame().toFront();
                 XHSConfig.getSubmittedFlightPlansPoolFrame().repaint();
                 return;
             }
-            if (XHSConfig.getSubmittedFlightPlansPoolFrame() == null) {
-                XHSConfig.setSubmittedFlightPlansPoolFrame(new SubmittedFlightPlansFrame(true));
-                XHSConfig.getSubmittedFlightPlansPoolFrame().setTitle("My FlightPlans");
-                XHSConfig.getSubmittedFlightPlansPoolFrame().setVisible(true);
-            }
+            
         }
 
     }

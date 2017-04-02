@@ -1,9 +1,12 @@
 
 package de.xatc.controllerclient.gui.FlightPlanStrips;
 
-import de.mytools.tools.swing.SwingTools;
-import de.xatc.commons.networkpackets.atc.stripsmgt.ATCRequestStripsPacket;
+import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
 import de.xatc.controllerclient.config.XHSConfig;
+import de.xatc.controllerclient.db.DBSessionManager;
+import java.util.List;
+import javax.swing.JPanel;
+import org.hibernate.Session;
 import org.jdesktop.swingx.VerticalLayout;
 
 /**
@@ -93,25 +96,46 @@ public class SubmittedFlightPlansFrame extends javax.swing.JFrame {
 
     private void loadStrips() {
         
-        if (XHSConfig.getDataClient() == null) {
-            SwingTools.alertWindow("Not connected!", this);
-            XHSConfig.setSubmittedFlightPlansPoolFrame(null);
-            this.dispose();
-            return;
-        }
+        
+        System.out.println("READING Flightstrips");
+        
         this.jScrollPane1.removeAll();
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new VerticalLayout());
+        jScrollPane1.add(mainPanel);
+        das hier geht noch nicht. es wird nichts dargestellt. Daten sind aber vorhanden
         this.revalidate();
         this.repaint();
         
-        ATCRequestStripsPacket p = new ATCRequestStripsPacket();
+       
+        Session session = DBSessionManager.getSession();
+        List<SubmittedFlightPlan> list = session.createCriteria(SubmittedFlightPlan.class).list();
         
-        if (this.myStrips) {
-            p.setRequestATCStrips(true);            
-        }   
-        else {
-            p.setRequestATCStrips(false);
+        System.out.println("FOUND STRIPS: " + list.size());
+        
+        for (SubmittedFlightPlan p : list) {
+            
+            FligtPlanStripsPanel panel = new FligtPlanStripsPanel();
+            panel.getUserNameLabel().setText(p.getFlightPlanOwner().getRegisteredUserName());
+            panel.getFlightNumberLabel().setText(p.getFlightNumber());
+            panel.getAircraftTypeLabel().setText(p.getAircraftType());
+            panel.getAirlineLabel().setText(p.getAirline());
+            panel.getCurrentSpeedLabel().setText("-");
+            panel.getCurrentAltLabel().setText("-");
+            panel.getCurrentHeadingLabel().setText("-");
+            panel.getFromIcaoLabel().setText(p.getIcaoFrom());
+            panel.getToIcaoLabel().setText(p.getIcaoTo());
+            panel.getRemarkLabel().setText(p.getRemark());
+            panel.getRouteLabel().setText(p.getRemark());
+            mainPanel.add(panel);
+            
         }
-        XHSConfig.getDataClient().writeMessage(p);
+        this.revalidate();
+        this.repaint();
+        DBSessionManager.closeSession(session);
+        
+        
+        
         
         
     }

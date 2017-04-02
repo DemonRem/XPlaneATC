@@ -1,6 +1,13 @@
  
 package de.xatc.controllerclient.gui.FlightPlanStrips;
 
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+
 /**
  *
  * @author Mirko
@@ -287,4 +294,232 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel toIcaoLabel;
     private javax.swing.JLabel userNameLabel;
     // End of variables declaration//GEN-END:variables
+
+    public JLabel getAircraftTypeLabel() {
+        return aircraftTypeLabel;
+    }
+
+    public void setAircraftTypeLabel(JLabel aircraftTypeLabel) {
+        this.aircraftTypeLabel = aircraftTypeLabel;
+    }
+
+    public JLabel getAirlineLabel() {
+        return airlineLabel;
+    }
+
+    public void setAirlineLabel(JLabel airlineLabel) {
+        this.airlineLabel = airlineLabel;
+    }
+
+    public JLabel getArrivalTimeLabel() {
+        return arrivalTimeLabel;
+    }
+
+    public void setArrivalTimeLabel(JLabel arrivalTimeLabel) {
+        this.arrivalTimeLabel = arrivalTimeLabel;
+    }
+
+    public JButton getAssignButton() {
+        return assignButton;
+    }
+
+    public void setAssignButton(JButton assignButton) {
+        this.assignButton = assignButton;
+    }
+
+    public JTextArea getCommentsTextArea() {
+        return commentsTextArea;
+    }
+
+    public void setCommentsTextArea(JTextArea commentsTextArea) {
+        this.commentsTextArea = commentsTextArea;
+    }
+
+    public JButton getContactMeButton() {
+        return contactMeButton;
+    }
+
+    public void setContactMeButton(JButton contactMeButton) {
+        this.contactMeButton = contactMeButton;
+    }
+
+    public JLabel getCurrentAltLabel() {
+        return currentAltLabel;
+    }
+
+    public void setCurrentAltLabel(JLabel currentAltLabel) {
+        this.currentAltLabel = currentAltLabel;
+    }
+
+    public JLabel getCurrentHeadingLabel() {
+        return currentHeadingLabel;
+    }
+
+    public void setCurrentHeadingLabel(JLabel currentHeadingLabel) {
+        this.currentHeadingLabel = currentHeadingLabel;
+    }
+
+    public JLabel getCurrentSpeedLabel() {
+        return currentSpeedLabel;
+    }
+
+    public void setCurrentSpeedLabel(JLabel currentSpeedLabel) {
+        this.currentSpeedLabel = currentSpeedLabel;
+    }
+
+    public JLabel getDepartureTimeLabel() {
+        return departureTimeLabel;
+    }
+
+    public void setDepartureTimeLabel(JLabel departureTimeLabel) {
+        this.departureTimeLabel = departureTimeLabel;
+    }
+
+    public JLabel getFlightLevelLabel() {
+        return flightLevelLabel;
+    }
+
+    public void setFlightLevelLabel(JLabel flightLevelLabel) {
+        this.flightLevelLabel = flightLevelLabel;
+    }
+
+    public JLabel getFlightNumberLabel() {
+        return flightNumberLabel;
+    }
+
+    public void setFlightNumberLabel(JLabel flightNumberLabel) {
+        this.flightNumberLabel = flightNumberLabel;
+    }
+
+    public JLabel getFromIcaoLabel() {
+        return fromIcaoLabel;
+    }
+
+    public void setFromIcaoLabel(JLabel fromIcaoLabel) {
+        this.fromIcaoLabel = fromIcaoLabel;
+    }
+
+    public JLabel getIfrVfrLabel() {
+        return ifrVfrLabel;
+    }
+
+    public void setIfrVfrLabel(JLabel ifrVfrLabel) {
+        this.ifrVfrLabel = ifrVfrLabel;
+    }
+
+    public JLabel getjLabel1() {
+        return jLabel1;
+    }
+
+    public void setjLabel1(JLabel jLabel1) {
+        this.jLabel1 = jLabel1;
+    }
+
+    public JLabel getjLabel2() {
+        return jLabel2;
+    }
+
+    public void setjLabel2(JLabel jLabel2) {
+        this.jLabel2 = jLabel2;
+    }
+
+    public JPanel getjPanel1() {
+        return jPanel1;
+    }
+
+    public void setjPanel1(JPanel jPanel1) {
+        this.jPanel1 = jPanel1;
+    }
+
+    public JPanel getjPanel2() {
+        return jPanel2;
+    }
+
+    public void setjPanel2(JPanel jPanel2) {
+        this.jPanel2 = jPanel2;
+    }
+
+    public JPanel getjPanel3() {
+        return jPanel3;
+    }
+
+    public void setjPanel3(JPanel jPanel3) {
+        this.jPanel3 = jPanel3;
+    }
+
+    public JScrollPane getjScrollPane1() {
+        return jScrollPane1;
+    }
+
+    public void setjScrollPane1(JScrollPane jScrollPane1) {
+        this.jScrollPane1 = jScrollPane1;
+    }
+
+    public JSeparator getjSeparator1() {
+        return jSeparator1;
+    }
+
+    public void setjSeparator1(JSeparator jSeparator1) {
+        this.jSeparator1 = jSeparator1;
+    }
+
+    public JSeparator getjSeparator2() {
+        return jSeparator2;
+    }
+
+    public void setjSeparator2(JSeparator jSeparator2) {
+        this.jSeparator2 = jSeparator2;
+    }
+
+    public JLabel getRemarkLabel() {
+        return remarkLabel;
+    }
+
+    public void setRemarkLabel(JLabel remarkLabel) {
+        this.remarkLabel = remarkLabel;
+    }
+
+    public JButton getRevokeButton() {
+        return revokeButton;
+    }
+
+    public void setRevokeButton(JButton revokeButton) {
+        this.revokeButton = revokeButton;
+    }
+
+    public JLabel getRouteLabel() {
+        return routeLabel;
+    }
+
+    public void setRouteLabel(JLabel routeLabel) {
+        this.routeLabel = routeLabel;
+    }
+
+    public JButton getSendMessageButton() {
+        return sendMessageButton;
+    }
+
+    public void setSendMessageButton(JButton sendMessageButton) {
+        this.sendMessageButton = sendMessageButton;
+    }
+
+    public JLabel getToIcaoLabel() {
+        return toIcaoLabel;
+    }
+
+    public void setToIcaoLabel(JLabel toIcaoLabel) {
+        this.toIcaoLabel = toIcaoLabel;
+    }
+
+    public JLabel getUserNameLabel() {
+        return userNameLabel;
+    }
+
+    public void setUserNameLabel(JLabel userNameLabel) {
+        this.userNameLabel = userNameLabel;
+    }
+
+
+
+
 }

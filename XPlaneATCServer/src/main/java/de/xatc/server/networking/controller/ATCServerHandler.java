@@ -27,6 +27,7 @@ import de.xatc.commons.networkpackets.client.LoginPacket;
 import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.server.networking.protocol.controller.ATCLoginHandler;
+import de.xatc.server.networking.protocol.controller.FligtPlanManagementHandler;
 import de.xatc.server.networking.protocol.controller.MetricsHandler;
 import de.xatc.server.networking.protocol.controller.RequestUserListHandler;
 import de.xatc.server.networking.protocol.controller.ServerControlHandler;
@@ -152,23 +153,26 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
                 System.out.println("Incoming SupportedAirportStation");
                 SupportedAirportStation airport = (SupportedAirportStation) msg;
                 SetupATCHandler.handleAirportSetup(airport,ctx.channel());
+                return;
             }
             
             if (msg instanceof SupportedFirStation) {
                 System.out.println("Incoming SupportedAirportStation");
                 SupportedFirStation fir = (SupportedFirStation) msg;
                 SetupATCHandler.handleFirSetup(fir,ctx.channel());
+                return;
                 
             }
             if (msg instanceof ATCRequestStripsPacket) {
-                
-                
+                ATCRequestStripsPacket p = (ATCRequestStripsPacket) msg;
+                FligtPlanManagementHandler.sendStripsToController(p, channel);
+                return;
             }
             
             
             if (msg instanceof SubmittedFlightPlan) {
                 SubmittedFlightPlan plan = (SubmittedFlightPlan) msg;
-                
+                //hier muss dann noch das management gemacht werden, zuweisen, revoke usw.
             }
             
             

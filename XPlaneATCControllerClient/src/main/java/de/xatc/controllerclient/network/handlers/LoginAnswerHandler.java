@@ -6,9 +6,14 @@
 package de.xatc.controllerclient.network.handlers;
 
 import de.mytools.tools.swing.SwingTools;
+import de.xatc.commons.networkpackets.atc.stripsmgt.ATCRequestStripsPacket;
 import de.xatc.commons.networkpackets.client.LoginPacket;
 import de.xatc.controllerclient.config.XHSConfig;
+import de.xatc.controllerclient.db.DBSessionManager;
 import java.awt.Color;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 /**
  *
@@ -36,6 +41,17 @@ public class LoginAnswerHandler {
         XHSConfig.setCurrentSessionID(l.getSessionID());
         XHSConfig.setCurrentChannelID(l.getChannelID());
         System.out.println("Login successful");
+        
+        Session s = DBSessionManager.getSession();
+
+        Transaction tx = s.beginTransaction();
+        Query q = s.createQuery("delete from SubmittedFlightPlan");
+        q.executeUpdate();
+        tx.commit();
+
+        DBSessionManager.closeSession(s);
+        ATCRequestStripsPacket p = new ATCRequestStripsPacket();
+        XHSConfig.getDataClient().writeMessage(p);
         
     }
     

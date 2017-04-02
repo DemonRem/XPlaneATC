@@ -5,6 +5,7 @@
  */
 package de.xatc.server.networking.clients;
 
+import de.xatc.commons.networkpackets.atc.stripsmgt.ATCRequestStripsPacket;
 import de.xatc.commons.networkpackets.client.FMSPlan;
 import de.xatc.commons.networkpackets.client.LoginPacket;
 import de.xatc.commons.networkpackets.client.PlanePosition;
@@ -73,9 +74,10 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
                 
             } else if (msg instanceof SubmittedFlightPlan) {
                 SubmittedFlightPlan f = (SubmittedFlightPlan) msg;
-                FligtPlanManagementHandler.handleNewIncomingSubmittedFlightPlan(f, channel);
+                ServerConfig.getMessageSenders().get("submittedFlightPlans").sendObjectMessage(f);
                 return;
             } 
+            
             
             
             

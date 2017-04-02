@@ -32,6 +32,7 @@ public class SubmittedFlightPlan extends NetworkPacket {
     @Column(nullable = false)
     @Id
     private int id;
+    private int serversID;
     private String icaoFrom;
     private String icaoTo;
     private String aircraftType;
@@ -179,6 +180,14 @@ public class SubmittedFlightPlan extends NetworkPacket {
 
     public void setFlightPlanOwner(RegisteredUser flightPlanOwner) {
         this.flightPlanOwner = flightPlanOwner;
+    }
+
+    public int getServersID() {
+        return serversID;
+    }
+
+    public void setServersID(int serversID) {
+        this.serversID = serversID;
     }
     
     

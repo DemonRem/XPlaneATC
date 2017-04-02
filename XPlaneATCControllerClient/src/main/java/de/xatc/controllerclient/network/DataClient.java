@@ -14,6 +14,8 @@ import de.xatc.commons.networkpackets.client.LoginPacket;
 import de.xatc.commons.networkpackets.client.PlanePosition;
 import de.xatc.commons.networkpackets.client.RegisterPacket;
 import de.xatc.commons.networkpackets.client.ServerMessageToClient;
+import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
+import de.xatc.commons.networkpackets.client.SubmittedFlightPlansPacket;
 import de.xatc.commons.networkpackets.client.TextMessagePacket;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.controllerclient.config.XHSConfig;
@@ -21,9 +23,11 @@ import de.xatc.controllerclient.gui.tools.ControllerClientGuiTools;
 import de.xatc.controllerclient.network.handlers.DataSyncHandler;
 import de.xatc.controllerclient.network.handlers.LoginAnswerHandler;
 import de.xatc.controllerclient.network.handlers.MetricsAnswerHandler;
+import de.xatc.controllerclient.network.handlers.SubmittedFlightPlansHandler;
 import de.xatc.controllerclient.network.handlers.UserListResponseHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -128,7 +132,15 @@ public class DataClient extends ChannelInboundHandlerAdapter {
            
        }
        
-
+       if (msg instanceof SubmittedFlightPlansPacket) {   
+           System.out.println("SAVING FLIGHTPLANS");
+           SubmittedFlightPlansPacket p = (SubmittedFlightPlansPacket) msg; 
+           SubmittedFlightPlansHandler.saveFlightSubmittedFlightPlans(p.getList());
+       }
+       
+       
+       
+       
     }
 
     @Override

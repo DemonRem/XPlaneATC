@@ -10,6 +10,7 @@ import de.xatc.server.mq.MQBrokerManager;
 import de.xatc.server.mq.consumers.FMSPlanConsumer;
 import de.xatc.server.mq.consumers.LoginConsumer;
 import de.xatc.server.mq.consumers.PlanePositionConsumer;
+import de.xatc.server.mq.consumers.SubmittedFlightPlansConsumer;
 import de.xatc.server.mq.consumers.TextMessageBroadCastConsumer;
 import de.xatc.server.mq.producers.MQMessageSender;
 import de.xatc.server.networking.clients.DataServerBootstrap;
@@ -53,6 +54,9 @@ public class StartupHook {
         loginSender.startProducer();
         ServerConfig.getMessageSenders().put("login", loginSender);
         
+        MQMessageSender submittedFlightPlanSender = new MQMessageSender("submittedFlightPlans");
+        submittedFlightPlanSender.startProducer();
+        ServerConfig.getMessageSenders().put("submittedFlightPlans", submittedFlightPlanSender);
         
         //MQRECEIVERS
 
@@ -70,6 +74,8 @@ public class StartupHook {
         LoginConsumer loginConsumer = new LoginConsumer("login");
         ServerConfig.getMessageReceivers().put("login", loginConsumer);
         
+        SubmittedFlightPlansConsumer submittedFlightPlansConsumer = new SubmittedFlightPlansConsumer("submittedFlightPlans");
+        ServerConfig.getMessageReceivers().put("submittedFlightPlans", submittedFlightPlansConsumer);
         
         System.out.println("Messaging Consumers started");
 
