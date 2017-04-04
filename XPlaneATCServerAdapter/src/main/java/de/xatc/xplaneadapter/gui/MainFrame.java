@@ -197,9 +197,9 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener,
         }
         else if (cmd.equals("Send FlightPlan")) {
             
-            if (AdapterConfig.getFlightPlaneFrame() == null) {
-                AdapterConfig.setFlightPlaneFrame(new FlightPlanFrame());
-                AdapterConfig.getFlightPlaneFrame().setVisible(true);
+            if (AdapterConfig.getFlightPlanFrame() == null) {
+                AdapterConfig.setFlightPlanFrame(new FlightPlanFrame());
+                AdapterConfig.getFlightPlanFrame().setVisible(true);
             }
             
             

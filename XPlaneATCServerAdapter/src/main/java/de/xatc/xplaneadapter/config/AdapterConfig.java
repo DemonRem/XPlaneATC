@@ -216,13 +216,6 @@ public class AdapterConfig {
         AdapterConfig.xplaneUDPListener = xplaneUDPListener;
     }
 
-    public static FlightPlanFrame getFlightPlaneFrame() {
-        return flightPlanFrame;
-    }
-
-    public static void setFlightPlaneFrame(FlightPlanFrame flightPlaneFrame) {
-        AdapterConfig.flightPlanFrame = flightPlaneFrame;
-    }
 
     public static String getCurrentConnectionName() {
         return currentConnectionName;
@@ -284,14 +277,6 @@ public class AdapterConfig {
         return doDebug;
     }
 
-    public static FlightPlanFrame getFlightPlanFrame() {
-        return flightPlanFrame;
-    }
-
-    public static void setFlightPlanFrame(FlightPlanFrame flightPlanFrame) {
-        AdapterConfig.flightPlanFrame = flightPlanFrame;
-    }
-
     public static String getRecordingDirectory() {
         return recordingDirectory;
     }
@@ -310,6 +295,14 @@ public class AdapterConfig {
 
     public static void setCurrentFlightNumber(String f) {
         currentFlightNumber = f;
+    }
+
+    public static FlightPlanFrame getFlightPlanFrame() {
+        return flightPlanFrame;
+    }
+
+    public static void setFlightPlanFrame(FlightPlanFrame flightPlanFrame) {
+        AdapterConfig.flightPlanFrame = flightPlanFrame;
     }
   
     

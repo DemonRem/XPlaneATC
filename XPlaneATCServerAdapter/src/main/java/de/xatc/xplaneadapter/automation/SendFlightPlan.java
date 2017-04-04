@@ -5,30 +5,22 @@
  */
 package de.xatc.xplaneadapter.automation;
 
-import de.xatc.xplaneadapter.Start;
-import de.xatc.xplaneadapter.config.AdapterConfig;
-import de.xatc.xplaneadapter.config.ConfigBean;
-import de.xatc.xplaneadapter.networking.XPlaneUDPListener;
-import java.awt.event.ActionEvent;
-
 /**
  *
- * @author Mirko
+ * @author C047
  */
-public class Login {
+public class SendFlightPlan {
+
 
     public static void main(String[] arg) {
-
         
         AutomationTools tools = new AutomationTools();
         tools.startUp();
         tools.login();
+        tools.createAndSendFlightPlan();
         
         
-       
-
         
-
     }
-
+    
 }

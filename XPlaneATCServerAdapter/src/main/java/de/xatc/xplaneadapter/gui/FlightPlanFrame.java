@@ -8,6 +8,13 @@ package de.xatc.xplaneadapter.gui;
 import de.mytools.tools.swing.SwingTools;
 import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
 import de.xatc.xplaneadapter.config.AdapterConfig;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -448,4 +455,310 @@ public class FlightPlanFrame extends javax.swing.JFrame {
     private javax.swing.JTextField takeOffTimeField;
     private javax.swing.JRadioButton vfrRadio;
     // End of variables declaration//GEN-END:variables
+
+    public void pressSendButtonFromAutomation(java.awt.event.ActionEvent e) {
+        
+        this.sendButtonActionPerformed(e);
+        
+    }
+    
+    
+    public JTextField getAircraftTypeField() {
+        return aircraftTypeField;
+    }
+
+    public void setAircraftTypeField(JTextField aircraftTypeField) {
+        this.aircraftTypeField = aircraftTypeField;
+    }
+
+    public JTextField getAirlineField() {
+        return airlineField;
+    }
+
+    public void setAirlineField(JTextField airlineField) {
+        this.airlineField = airlineField;
+    }
+
+    public JTextField getArrivalTimeField() {
+        return arrivalTimeField;
+    }
+
+    public void setArrivalTimeField(JTextField arrivalTimeField) {
+        this.arrivalTimeField = arrivalTimeField;
+    }
+
+    public JButton getCancelButton() {
+        return cancelButton;
+    }
+
+    public void setCancelButton(JButton cancelButton) {
+        this.cancelButton = cancelButton;
+    }
+
+    public JButton getDeactivateButton() {
+        return deactivateButton;
+    }
+
+    public void setDeactivateButton(JButton deactivateButton) {
+        this.deactivateButton = deactivateButton;
+    }
+
+    public JTextField getFlightLevelField() {
+        return flightLevelField;
+    }
+
+    public void setFlightLevelField(JTextField flightLevelField) {
+        this.flightLevelField = flightLevelField;
+    }
+
+    public JTextField getFlightNumberField() {
+        return flightNumberField;
+    }
+
+    public void setFlightNumberField(JTextField flightNumberField) {
+        this.flightNumberField = flightNumberField;
+    }
+
+    public JTextField getIcaoFromField() {
+        return icaoFromField;
+    }
+
+    public void setIcaoFromField(JTextField icaoFromField) {
+        this.icaoFromField = icaoFromField;
+    }
+
+    public JTextField getIcaoToField() {
+        return icaoToField;
+    }
+
+    public void setIcaoToField(JTextField icaoToField) {
+        this.icaoToField = icaoToField;
+    }
+
+    public JRadioButton getIfrRadio() {
+        return ifrRadio;
+    }
+
+    public void setIfrRadio(JRadioButton ifrRadio) {
+        this.ifrRadio = ifrRadio;
+    }
+
+    public JLabel getjLabel1() {
+        return jLabel1;
+    }
+
+    public void setjLabel1(JLabel jLabel1) {
+        this.jLabel1 = jLabel1;
+    }
+
+    public JLabel getjLabel10() {
+        return jLabel10;
+    }
+
+    public void setjLabel10(JLabel jLabel10) {
+        this.jLabel10 = jLabel10;
+    }
+
+    public JLabel getjLabel11() {
+        return jLabel11;
+    }
+
+    public void setjLabel11(JLabel jLabel11) {
+        this.jLabel11 = jLabel11;
+    }
+
+    public JLabel getjLabel12() {
+        return jLabel12;
+    }
+
+    public void setjLabel12(JLabel jLabel12) {
+        this.jLabel12 = jLabel12;
+    }
+
+    public JLabel getjLabel13() {
+        return jLabel13;
+    }
+
+    public void setjLabel13(JLabel jLabel13) {
+        this.jLabel13 = jLabel13;
+    }
+
+    public JLabel getjLabel14() {
+        return jLabel14;
+    }
+
+    public void setjLabel14(JLabel jLabel14) {
+        this.jLabel14 = jLabel14;
+    }
+
+    public JLabel getjLabel15() {
+        return jLabel15;
+    }
+
+    public void setjLabel15(JLabel jLabel15) {
+        this.jLabel15 = jLabel15;
+    }
+
+    public JLabel getjLabel16() {
+        return jLabel16;
+    }
+
+    public void setjLabel16(JLabel jLabel16) {
+        this.jLabel16 = jLabel16;
+    }
+
+    public JLabel getjLabel17() {
+        return jLabel17;
+    }
+
+    public void setjLabel17(JLabel jLabel17) {
+        this.jLabel17 = jLabel17;
+    }
+
+    public JLabel getjLabel18() {
+        return jLabel18;
+    }
+
+    public void setjLabel18(JLabel jLabel18) {
+        this.jLabel18 = jLabel18;
+    }
+
+    public JLabel getjLabel2() {
+        return jLabel2;
+    }
+
+    public void setjLabel2(JLabel jLabel2) {
+        this.jLabel2 = jLabel2;
+    }
+
+    public JLabel getjLabel3() {
+        return jLabel3;
+    }
+
+    public void setjLabel3(JLabel jLabel3) {
+        this.jLabel3 = jLabel3;
+    }
+
+    public JLabel getjLabel4() {
+        return jLabel4;
+    }
+
+    public void setjLabel4(JLabel jLabel4) {
+        this.jLabel4 = jLabel4;
+    }
+
+    public JLabel getjLabel5() {
+        return jLabel5;
+    }
+
+    public void setjLabel5(JLabel jLabel5) {
+        this.jLabel5 = jLabel5;
+    }
+
+    public JLabel getjLabel6() {
+        return jLabel6;
+    }
+
+    public void setjLabel6(JLabel jLabel6) {
+        this.jLabel6 = jLabel6;
+    }
+
+    public JLabel getjLabel7() {
+        return jLabel7;
+    }
+
+    public void setjLabel7(JLabel jLabel7) {
+        this.jLabel7 = jLabel7;
+    }
+
+    public JLabel getjLabel8() {
+        return jLabel8;
+    }
+
+    public void setjLabel8(JLabel jLabel8) {
+        this.jLabel8 = jLabel8;
+    }
+
+    public JLabel getjLabel9() {
+        return jLabel9;
+    }
+
+    public void setjLabel9(JLabel jLabel9) {
+        this.jLabel9 = jLabel9;
+    }
+
+    public JPanel getjPanel1() {
+        return jPanel1;
+    }
+
+    public void setjPanel1(JPanel jPanel1) {
+        this.jPanel1 = jPanel1;
+    }
+
+    public JPanel getjPanel2() {
+        return jPanel2;
+    }
+
+    public void setjPanel2(JPanel jPanel2) {
+        this.jPanel2 = jPanel2;
+    }
+
+    public JPanel getjPanel3() {
+        return jPanel3;
+    }
+
+    public void setjPanel3(JPanel jPanel3) {
+        this.jPanel3 = jPanel3;
+    }
+
+    public JScrollPane getjScrollPane3() {
+        return jScrollPane3;
+    }
+
+    public void setjScrollPane3(JScrollPane jScrollPane3) {
+        this.jScrollPane3 = jScrollPane3;
+    }
+
+    public JTextArea getRemarkField() {
+        return remarkField;
+    }
+
+    public void setRemarkField(JTextArea remarkField) {
+        this.remarkField = remarkField;
+    }
+
+    public JTextField getRouteField() {
+        return routeField;
+    }
+
+    public void setRouteField(JTextField routeField) {
+        this.routeField = routeField;
+    }
+
+    public JButton getSendButton() {
+        return sendButton;
+    }
+
+    public void setSendButton(JButton sendButton) {
+        this.sendButton = sendButton;
+    }
+
+    public JTextField getTakeOffTimeField() {
+        return takeOffTimeField;
+    }
+
+    public void setTakeOffTimeField(JTextField takeOffTimeField) {
+        this.takeOffTimeField = takeOffTimeField;
+    }
+
+    public JRadioButton getVfrRadio() {
+        return vfrRadio;
+    }
+
+    public void setVfrRadio(JRadioButton vfrRadio) {
+        this.vfrRadio = vfrRadio;
+    }
+
+
+
 }
