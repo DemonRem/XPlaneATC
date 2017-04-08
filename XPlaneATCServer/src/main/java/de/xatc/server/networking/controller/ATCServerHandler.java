@@ -25,9 +25,11 @@ import de.xatc.commons.networkpackets.atc.usermgt.RequestUserList;
 import de.xatc.commons.networkpackets.atc.usermgt.UpdateUser;
 import de.xatc.commons.networkpackets.client.LoginPacket;
 import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
+import de.xatc.commons.networkpackets.client.SubmittedFlightPlansActionPacket;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
+import de.xatc.server.config.ServerConfig;
 import de.xatc.server.networking.protocol.controller.ATCLoginHandler;
-import de.xatc.server.networking.protocol.controller.FligtPlanManagementHandler;
+import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanHandler;
 import de.xatc.server.networking.protocol.controller.MetricsHandler;
 import de.xatc.server.networking.protocol.controller.RequestUserListHandler;
 import de.xatc.server.networking.protocol.controller.ServerControlHandler;
@@ -165,14 +167,15 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
             }
             if (msg instanceof ATCRequestStripsPacket) {
                 ATCRequestStripsPacket p = (ATCRequestStripsPacket) msg;
-                FligtPlanManagementHandler.sendStripsToController(p, channel);
+                SubmittedFlightPlanHandler.sendStripsToController(p, channel);
                 return;
             }
             
             
-            if (msg instanceof SubmittedFlightPlan) {
-                SubmittedFlightPlan plan = (SubmittedFlightPlan) msg;
-                //hier muss dann noch das management gemacht werden, zuweisen, revoke usw.
+            if (msg instanceof SubmittedFlightPlansActionPacket) {
+                SubmittedFlightPlansActionPacket action = (SubmittedFlightPlansActionPacket) msg;
+                ServerConfig.getMessageSenders().get("submittedFlightPlanActions").sendObjectMessage(action);
+                return;
             }
             
             

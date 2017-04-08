@@ -14,41 +14,42 @@ import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
 import java.util.List;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 
 /**
  *
  * @author Mirko
  */
-public class FligtPlanManagementHandler {
-    
+public class SubmittedFlightPlanHandler {
+
     public static void handleNewIncomingSubmittedFlightPlan(SubmittedFlightPlan plan) {
-        
+
         System.out.println("Saving new submitted FlightPlan!");
         XATCUserSession user = SessionManagement.findUserSessionBySessionID(plan.getSessionID(), SessionManagement.getUserSessionList());
         if (user == null) {
             System.out.println("Could not find UserSession");
             return;
-            
+
         }
         plan.setFlightPlanOwner(user.getRegisteredUser());
         Session session = DBSessionManager.getSession();
         session.saveOrUpdate(plan);
         DBSessionManager.closeSession(session);
-       
-        
+        if (!SessionManagement.getAtcChannelGroup().isEmpty()) {
+            System.out.println("sending new FlightPlan to all controllers!");
+            SessionManagement.getAtcChannelGroup().writeAndFlush(plan);
+        }
+
     }
-    
+
     public static void sendStripsToController(ATCRequestStripsPacket requester, Channel channel) {
-        
+
         Session session = DBSessionManager.getSession();
-        
-            List<SubmittedFlightPlan> list = session.createCriteria(SubmittedFlightPlan.class).list();
-            SubmittedFlightPlansPacket p = new SubmittedFlightPlansPacket();
-            p.setList(list);
-            channel.writeAndFlush(p);
-        
-        
+
+        List<SubmittedFlightPlan> list = session.createCriteria(SubmittedFlightPlan.class).list();
+        SubmittedFlightPlansPacket p = new SubmittedFlightPlansPacket();
+        p.setList(list);
+        channel.writeAndFlush(p);
+
     }
-    
+
 }

@@ -1,6 +1,9 @@
  
 package de.xatc.controllerclient.gui.FlightPlanStrips;
 
+import de.mytools.tools.swing.SwingTools;
+import de.xatc.commons.networkpackets.client.SubmittedFlightPlansActionPacket;
+import de.xatc.controllerclient.config.XHSConfig;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,6 +19,8 @@ import javax.swing.JTextArea;
 
 public class FligtPlanStripsPanel extends javax.swing.JPanel {
 
+    
+    private int serversID;
     /**
      * Creates new form NewJPanel
      */
@@ -217,6 +222,11 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
         jScrollPane1.setViewportView(commentsTextArea);
 
         revokeButton.setText("revoke");
+        revokeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                revokeButtonActionPerformed(evt);
+            }
+        });
 
         assignButton.setText("assign");
 
@@ -238,13 +248,13 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(revokeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(assignButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(sendMessageButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(contactMeButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(contactMeButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(revokeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -262,6 +272,17 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
                 .addComponent(contactMeButton))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void revokeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revokeButtonActionPerformed
+        SubmittedFlightPlansActionPacket action = new SubmittedFlightPlansActionPacket();
+        action.setServersID(this.serversID);
+        action.setAction("revoke");
+        if (XHSConfig.getDataClient() == null) {
+            SwingTools.alertWindow("Not Connected!", XHSConfig.getSubmittedFlightPlansPoolFrame());
+            return;
+        }
+        XHSConfig.getDataClient().writeMessage(action);
+    }//GEN-LAST:event_revokeButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -519,7 +540,12 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
         this.userNameLabel = userNameLabel;
     }
 
+    public int getServersID() {
+        return serversID;
+    }
 
-
+    public void setServersID(int serversID) {
+        this.serversID = serversID;
+    }
 
 }

@@ -16,7 +16,7 @@ import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.server.config.ServerConfig;
 import de.xatc.server.networking.protocol.client.LoginHandler;
 import de.xatc.server.networking.protocol.client.RegisterHandler;
-import de.xatc.server.networking.protocol.controller.FligtPlanManagementHandler;
+import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanHandler;
 import de.xatc.server.networking.protocol.controller.TextMessageHandler;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;

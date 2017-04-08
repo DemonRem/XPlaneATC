@@ -5,30 +5,39 @@
  */
 package de.xatc.server.mq.consumers;
 
-import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
+import de.xatc.commons.networkpackets.client.SubmittedFlightPlansActionPacket;
+import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanActionHandler;
 import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
 
 /**
  *
- * @author C047
+ * @author Mirko
  */
-public class SubmittedFlightPlansConsumer extends MQAbstractConsumer {
+public class SubmittedFlighPlanActionsConsumer extends MQAbstractConsumer {
 
-    public SubmittedFlightPlansConsumer(String queueName) {
+    public SubmittedFlighPlanActionsConsumer(String queueName) {
         super(queueName);
     }
 
     @Override
     public void onObjectMessage(ObjectMessage message) {
+        
         try {
-            SubmittedFlightPlan f = (SubmittedFlightPlan) message.getObject();
-            SubmittedFlightPlanHandler.handleNewIncomingSubmittedFlightPlan(f);
+            SubmittedFlightPlansActionPacket p = (SubmittedFlightPlansActionPacket) message.getObject();
+            if (p.getAction().equals("revoke")) {
+                SubmittedFlightPlanActionHandler.revokeSubmittedFlightPlan(p);
+            }
         } catch (JMSException ex) {
             ex.printStackTrace(System.err);
         }
+        
+        
+        
     }
 
     @Override

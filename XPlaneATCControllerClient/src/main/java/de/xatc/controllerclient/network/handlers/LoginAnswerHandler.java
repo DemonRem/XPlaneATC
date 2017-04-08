@@ -42,16 +42,8 @@ public class LoginAnswerHandler {
         XHSConfig.setCurrentChannelID(l.getChannelID());
         System.out.println("Login successful");
         
-        Session s = DBSessionManager.getSession();
-
-        Transaction tx = s.beginTransaction();
-        Query q = s.createQuery("delete from SubmittedFlightPlan");
-        q.executeUpdate();
-        tx.commit();
-
-        DBSessionManager.closeSession(s);
-        ATCRequestStripsPacket p = new ATCRequestStripsPacket();
-        XHSConfig.getDataClient().writeMessage(p);
+        SubmittedFlightPlansHandler.deleteLocalFlightPlans();
+        SubmittedFlightPlansHandler.sendFlightPlansSyncRequest();
         
     }
     

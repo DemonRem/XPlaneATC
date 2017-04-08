@@ -7,12 +7,16 @@ package de.xatc.controllerclient.gui.FlightPlanStrips;
 
 import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
 import de.xatc.controllerclient.db.DBSessionManager;
+import de.xatc.controllerclient.network.handlers.SubmittedFlightPlansHandler;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import org.hibernate.Session;
 import org.jdesktop.swingx.VerticalLayout;
 
@@ -20,11 +24,12 @@ import org.jdesktop.swingx.VerticalLayout;
  *
  * @author C047
  */
-public class SubmittedFlightPlansFrame extends JFrame {
-    
+public class SubmittedFlightPlansFrame extends JFrame implements ActionListener {
+
     private JPanel headPanel;
     private JPanel centerPanel;
     private JButton refreshButton;
+    private JScrollPane scrollPane;
     private boolean loadControllersStrips;
 
     public SubmittedFlightPlansFrame(boolean myStrips) {
@@ -32,76 +37,129 @@ public class SubmittedFlightPlansFrame extends JFrame {
         this.loadControllersStrips = myStrips;
         initComponents();
     }
-    
+
     private void initComponents() {
-        
-        this.setSize(new Dimension(400,400));
-        this.setLocation(40,40);
+
+        this.setSize(new Dimension(400, 400));
+        this.setLocation(40, 40);
         this.setLayout(new BorderLayout());
         headPanel = new JPanel();
         refreshButton = new JButton("refresh");
+        refreshButton.addActionListener(this);
         headPanel.add(refreshButton);
-        this.add(headPanel,BorderLayout.NORTH);
-        
-        
-        
+        this.add(headPanel, BorderLayout.NORTH);
+
         centerPanel = new JPanel();
         centerPanel.setLayout(new VerticalLayout());
-        
-        this.add(centerPanel,BorderLayout.CENTER);
-      
+
+        this.scrollPane = new JScrollPane(centerPanel);
+
+        this.add(scrollPane, BorderLayout.CENTER);
+
         this.loadStrips();
         this.pack();
+        this.revalidate();
+        this.setSize(new Dimension(this.getWidth() + 40, 400));
         this.setVisible(true);
-        
+
     }
 
-    
-     private void loadStrips() {
-        
-        
+    private void loadStrips() {
+
         System.out.println("READING Flightstrips");
-        
+
         this.centerPanel.removeAll();
-        
-      
+
         this.revalidate();
         this.repaint();
-        
-       
+
         Session session = DBSessionManager.getSession();
         List<SubmittedFlightPlan> list = session.createCriteria(SubmittedFlightPlan.class).list();
-        
+
         System.out.println("FOUND STRIPS: " + list.size());
-        
+
         for (SubmittedFlightPlan p : list) {
-            
-            hier fehlen noch felder und es sieht noch scheisse aus.
-            FligtPlanStripsPanel panel = new FligtPlanStripsPanel();
-            panel.setVisible(true);
-            panel.getUserNameLabel().setText(p.getFlightPlanOwner().getRegisteredUserName());
-            panel.getFlightNumberLabel().setText(p.getFlightNumber());
-            panel.getAircraftTypeLabel().setText(p.getAircraftType());
-            panel.getAirlineLabel().setText(p.getAirline());
-            panel.getCurrentSpeedLabel().setText("-");
-            panel.getCurrentAltLabel().setText("-");
-            panel.getCurrentHeadingLabel().setText("-");
-            panel.getFromIcaoLabel().setText(p.getIcaoFrom());
-            panel.getToIcaoLabel().setText(p.getIcaoTo());
-            panel.getRemarkLabel().setText(p.getRemark());
-            panel.getRouteLabel().setText(p.getRemark());
-            centerPanel.add(panel);
-            
+
+            centerPanel.add(mapSubmittedFlightPlanToStrip(p));
+
         }
         this.revalidate();
         this.repaint();
         DBSessionManager.closeSession(session);
-        
-        
-        
-        
-        
+
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
 
+        String cmd = e.getActionCommand();
+        if (cmd.equals("refresh")) {
+            this.centerPanel.removeAll();
+            this.revalidate();
+            this.repaint();
+            SubmittedFlightPlansHandler.deleteLocalFlightPlans();
+            SubmittedFlightPlansHandler.sendFlightPlansSyncRequest();
+        }
+    }
+
+    public FligtPlanStripsPanel mapSubmittedFlightPlanToStrip(SubmittedFlightPlan p) {
+        FligtPlanStripsPanel panel = new FligtPlanStripsPanel();
+        panel.setServersID(p.getServersID());
+        panel.setVisible(true);
+        panel.getUserNameLabel().setText(p.getFlightPlanOwner().getRegisteredUserName());
+        panel.getFlightNumberLabel().setText(p.getFlightNumber());
+        panel.getAircraftTypeLabel().setText(p.getAircraftType());
+        panel.getAirlineLabel().setText(p.getAirline());
+        panel.getCurrentSpeedLabel().setText("-");
+        panel.getCurrentAltLabel().setText("-");
+        panel.getCurrentHeadingLabel().setText("-");
+        panel.getFromIcaoLabel().setText(p.getIcaoFrom());
+        panel.getToIcaoLabel().setText(p.getIcaoTo());
+        panel.getRemarkLabel().setText(p.getRemark());
+        panel.getRouteLabel().setText(p.getRemark());
+        return panel;
+    }
+
+    public JPanel getHeadPanel() {
+        return headPanel;
+    }
+
+    public void setHeadPanel(JPanel headPanel) {
+        this.headPanel = headPanel;
+    }
+
+    public JPanel getCenterPanel() {
+        return centerPanel;
+    }
+
+    public void setCenterPanel(JPanel centerPanel) {
+        this.centerPanel = centerPanel;
+    }
+
+    public JButton getRefreshButton() {
+        return refreshButton;
+    }
+
+    public void setRefreshButton(JButton refreshButton) {
+        this.refreshButton = refreshButton;
+    }
+
+    public JScrollPane getScrollPane() {
+        return scrollPane;
+    }
+
+    public void setScrollPane(JScrollPane scrollPane) {
+        this.scrollPane = scrollPane;
+    }
+
+    public boolean isLoadControllersStrips() {
+        return loadControllersStrips;
+    }
+
+    public void setLoadControllersStrips(boolean loadControllersStrips) {
+        this.loadControllersStrips = loadControllersStrips;
+    }
+
+    
+    
 }
