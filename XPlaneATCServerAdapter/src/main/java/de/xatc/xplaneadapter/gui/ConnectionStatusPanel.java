@@ -6,7 +6,14 @@
 package de.xatc.xplaneadapter.gui;
 
 import de.mytools.tools.swing.IconPainter;
+import de.xatc.xplaneadapter.audio.AudioTest;
 import java.awt.Color;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.LineUnavailableException;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.jdesktop.swingx.HorizontalLayout;
@@ -15,9 +22,9 @@ import org.jdesktop.swingx.HorizontalLayout;
  *
  * @author Mirko Bubel (mirko_bubel@hotmail.com)
  */
-public class ConnectionStatusPanel extends JPanel {
+public class ConnectionStatusPanel extends JPanel implements MouseListener {
     
-    
+    private AudioTest audioTest;
     private JPanel listenToXPlanePanel;
     private JPanel connectedToXPlaneATCServerDataPanel;
     private JPanel connectedToXPlaneATCServerVoicePanel;
@@ -28,6 +35,7 @@ public class ConnectionStatusPanel extends JPanel {
     private IconPainter listenToXPlaneIcon;
     private IconPainter connectedToXPlaneATCServerDataIcon;
     private IconPainter connectedToXPlaneATCServerVoiceIcon;
+    private JButton recordButton;
     
     public ConnectionStatusPanel() {
         super();
@@ -61,6 +69,11 @@ public class ConnectionStatusPanel extends JPanel {
         
         
         this.add(listenToXPlanePanel);
+        
+        recordButton = new JButton("record");
+        recordButton.addMouseListener(this);
+        
+        this.add(recordButton);
         this.add(connectedToXPlaneATCServerDataPanel);
         this.add(connectedToXPlaneATCServerVoicePanel);
         
@@ -138,6 +151,44 @@ public class ConnectionStatusPanel extends JPanel {
 
     public void setConnectedToXPlaneATCServerVoiceIcon(IconPainter connectedToXPlaneATCServerVoiceIcon) {
         this.connectedToXPlaneATCServerVoiceIcon = connectedToXPlaneATCServerVoiceIcon;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+       
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        System.out.println("Mouse pressed");
+        try {
+        audioTest = new AudioTest();
+        audioTest.setRecording(true);
+        audioTest.record();
+        }
+        catch (LineUnavailableException ex) {
+            ex.printStackTrace(System.err);
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        audioTest.setRecording(false);
+        try {
+            audioTest.playAudio(audioTest.getAudioData());
+        } catch (LineUnavailableException ex) {
+            Logger.getLogger(ConnectionStatusPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        System.out.println("Mouse entered");
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        System.out.println("Mouse exited");
     }
  
     
