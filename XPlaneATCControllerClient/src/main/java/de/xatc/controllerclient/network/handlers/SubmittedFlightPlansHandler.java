@@ -34,7 +34,8 @@ public class SubmittedFlightPlansHandler {
                 XHSConfig.getSubmittedFlightPlansPoolFrame().getCenterPanel().add(XHSConfig.getSubmittedFlightPlansPoolFrame().mapSubmittedFlightPlanToStrip(p));
                 XHSConfig.getSubmittedFlightPlansPoolFrame().revalidate();
                 XHSConfig.getSubmittedFlightPlansPoolFrame().repaint();
-                ok, hier muss noch etwas getan werden, dass zwischen unassigned and my strips unterschieden wird.
+//TODO                
+//ok, hier muss noch etwas getan werden, dass zwischen unassigned and my strips unterschieden wird.
             }
             
             
