@@ -30,43 +30,57 @@ public class AudioTest extends Thread {
     private int CHUNK_SIZE = 1024;
     private boolean recording = false;
     private byte audioData[];
+    private boolean running;
 
     public AudioTest() throws LineUnavailableException {
 
         microphone = AudioSystem.getTargetDataLine(audioFormat);
         info = new DataLine.Info(TargetDataLine.class, audioFormat);
         microphone = (TargetDataLine) AudioSystem.getLine(info);
+        this.running = true;
     }
 
-    
+    public void record() {
 
-    public void record() throws LineUnavailableException {
-
-        microphone.open(audioFormat);
-        microphone.start();
-        
-        byte[] data = new byte[microphone.getBufferSize() / 5];
-        int bytesRead = 0;
-        try {
-            while (this.recording) { // Just so I can test if recording
-                // my mic works...
-                numBytesRead = microphone.read(data, 0, CHUNK_SIZE);
-                bytesRead = bytesRead + numBytesRead;
-                System.out.println(bytesRead);
-                out.write(data, 0, numBytesRead);
+        while (running) {
+            if (!this.recording) {
+                continue;
             }
-        } catch (Exception e) {
-            e.printStackTrace(System.err);
+            try {
+                microphone.open(audioFormat);
+                microphone.start();
+
+                byte[] data = new byte[microphone.getBufferSize() / 5];
+                int bytesRead = 0;
+                try {
+                    while (this.recording) { // Just so I can test if recording
+                        // my mic works...
+                        numBytesRead = microphone.read(data, 0, CHUNK_SIZE);
+                        bytesRead = bytesRead + numBytesRead;
+                        System.out.println(bytesRead);
+                        out.write(data, 0, numBytesRead);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace(System.err);
+                }
+
+                out.flush();
+                out.close();
+                audioData = out.toByteArray();
+
+                microphone.stop();
+                microphone.close();
+            } catch (LineUnavailableException ex) {
+                ex.printStackTrace(System.err);
+            }
+            catch  (IOException ex) {
+                ex.printStackTrace(System.err);
+            }
         }
-
-        audioData = out.toByteArray();
-
-        microphone.stop();
-        microphone.close();
     }
-    
+
     public void playAudio(byte[] audioData) throws LineUnavailableException {
-        
+
         InputStream byteArrayInputStream = new ByteArrayInputStream(
                 audioData);
         audioInputStream = new AudioInputStream(byteArrayInputStream, audioFormat, audioData.length / audioFormat.getFrameSize());
@@ -92,8 +106,8 @@ public class AudioTest extends Thread {
         // data line to empty.
         sourceDataLine.drain();
         sourceDataLine.close();
-        
-    }    
+
+    }
 
     public AudioFormat getAudioFormat() {
         return audioFormat;
@@ -174,8 +188,14 @@ public class AudioTest extends Thread {
     public void setAudioData(byte[] audioData) {
         this.audioData = audioData;
     }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
     
 
-    
-    
 }

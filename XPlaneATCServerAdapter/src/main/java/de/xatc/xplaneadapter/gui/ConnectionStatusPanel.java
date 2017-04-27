@@ -6,7 +6,9 @@
 package de.xatc.xplaneadapter.gui;
 
 import de.mytools.tools.swing.IconPainter;
+import de.xatc.xplaneadapter.audio.AudioPlayer;
 import de.xatc.xplaneadapter.audio.AudioTest;
+import de.xatc.xplaneadapter.audio.Capture;
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -23,62 +25,61 @@ import org.jdesktop.swingx.HorizontalLayout;
  * @author Mirko Bubel (mirko_bubel@hotmail.com)
  */
 public class ConnectionStatusPanel extends JPanel implements MouseListener {
-    
+
     private AudioTest audioTest;
+    private Capture capture;
     private JPanel listenToXPlanePanel;
     private JPanel connectedToXPlaneATCServerDataPanel;
     private JPanel connectedToXPlaneATCServerVoicePanel;
     private JLabel listenToXPlaneLabel;
     private JLabel connectedToXPlaneATCServerDataLabel;
     private JLabel connectedToXPlaneATCServerVoiceLabel;
-    
+
     private IconPainter listenToXPlaneIcon;
     private IconPainter connectedToXPlaneATCServerDataIcon;
     private IconPainter connectedToXPlaneATCServerVoiceIcon;
     private JButton recordButton;
-    
+
     public ConnectionStatusPanel() {
         super();
+
+        capture = new Capture();
+
         initComponents();
     }
-    
+
     private void initComponents() {
-        
-        
+
         this.setLayout(new HorizontalLayout());
         this.listenToXPlanePanel = new JPanel();
         this.connectedToXPlaneATCServerDataPanel = new JPanel();
         this.connectedToXPlaneATCServerVoicePanel = new JPanel();
-        
+
         this.listenToXPlaneLabel = new JLabel("Listen to XPlane");
-        this.listenToXPlaneIcon = new IconPainter(0,0,20,20,Color.RED);
+        this.listenToXPlaneIcon = new IconPainter(0, 0, 20, 20, Color.RED);
         this.listenToXPlaneLabel.setIcon(listenToXPlaneIcon);
-        
-        
+
         this.connectedToXPlaneATCServerDataLabel = new JLabel("Data");
-        this.connectedToXPlaneATCServerDataIcon = new IconPainter(0,0,20,20,Color.RED);
+        this.connectedToXPlaneATCServerDataIcon = new IconPainter(0, 0, 20, 20, Color.RED);
         this.connectedToXPlaneATCServerDataLabel.setIcon(connectedToXPlaneATCServerDataIcon);
-        
+
         this.connectedToXPlaneATCServerVoiceLabel = new JLabel("Voice");
-        this.connectedToXPlaneATCServerVoiceIcon = new IconPainter(0,0,20,20,Color.RED);
+        this.connectedToXPlaneATCServerVoiceIcon = new IconPainter(0, 0, 20, 20, Color.RED);
         this.connectedToXPlaneATCServerVoiceLabel.setIcon(connectedToXPlaneATCServerVoiceIcon);
-        
+
         this.listenToXPlanePanel.add(listenToXPlaneLabel);
         this.connectedToXPlaneATCServerDataPanel.add(connectedToXPlaneATCServerDataLabel);
         this.connectedToXPlaneATCServerVoicePanel.add(connectedToXPlaneATCServerVoiceLabel);
-        
-        
+
         this.add(listenToXPlanePanel);
-        
+
         recordButton = new JButton("record");
         recordButton.addMouseListener(this);
-        
+
         this.add(recordButton);
         this.add(connectedToXPlaneATCServerDataPanel);
         this.add(connectedToXPlaneATCServerVoicePanel);
-        
-        
-        
+
     }
 
     public JPanel getListenToXPlanePanel() {
@@ -155,30 +156,23 @@ public class ConnectionStatusPanel extends JPanel implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-       
+
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         System.out.println("Mouse pressed");
-        try {
-        audioTest = new AudioTest();
-        audioTest.setRecording(true);
-        audioTest.record();
-        }
-        catch (LineUnavailableException ex) {
-            ex.printStackTrace(System.err);
-        }
+       this.capture.setRunning(true);
+       this.capture.captureAudio();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        audioTest.setRecording(false);
-        try {
-            audioTest.playAudio(audioTest.getAudioData());
-        } catch (LineUnavailableException ex) {
-            Logger.getLogger(ConnectionStatusPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        capture.setRunning(false);
+     
+        AudioPlayer player = new AudioPlayer(capture.getOut().toByteArray());
+        player.start();
+        this.capture = new Capture();
     }
 
     @Override
@@ -190,8 +184,5 @@ public class ConnectionStatusPanel extends JPanel implements MouseListener {
     public void mouseExited(MouseEvent e) {
         System.out.println("Mouse exited");
     }
- 
-    
-    
-    
+
 }
