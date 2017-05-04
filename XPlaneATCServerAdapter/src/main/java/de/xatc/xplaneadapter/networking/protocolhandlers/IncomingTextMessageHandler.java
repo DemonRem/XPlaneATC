@@ -5,7 +5,7 @@
  */
 package de.xatc.xplaneadapter.networking.protocolhandlers;
 
-import de.xatc.commons.networkpackets.client.TextMessagePacket;
+import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
 import de.xatc.xplaneadapter.config.AdapterConfig;
 
 /**

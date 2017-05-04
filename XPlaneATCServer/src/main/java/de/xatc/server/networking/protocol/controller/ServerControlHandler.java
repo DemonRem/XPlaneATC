@@ -19,7 +19,7 @@ import de.xatc.server.mq.MQBrokerManager;
 import de.xatc.server.mq.consumers.MQAbstractConsumer;
 import de.xatc.server.mq.consumers.TextMessageBroadCastConsumer;
 import de.xatc.server.mq.producers.MQMessageSender;
-import de.xatc.server.networking.clients.DataServerBootstrap;
+import de.xatc.server.nettybootstrap.pilot.DataServerBootstrap;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import java.util.Map;
 

@@ -5,7 +5,7 @@
  */
 package de.xatc.server.mq.consumers;
 
-import de.xatc.commons.networkpackets.client.PlanePosition;
+import de.xatc.commons.networkpackets.pilot.PlanePosition;
 import de.xatc.server.db.DBSessionManager;
 import de.xatc.server.db.entities.XATCUserSession;
 import de.xatc.server.sessionmanagment.SessionManagement;

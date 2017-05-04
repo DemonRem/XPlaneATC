@@ -2,7 +2,7 @@
 package de.xatc.controllerclient.gui.FlightPlanStrips;
 
 import de.mytools.tools.swing.SwingTools;
-import de.xatc.commons.networkpackets.client.SubmittedFlightPlansActionPacket;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.controllerclient.config.XHSConfig;
 import javax.swing.JButton;
 import javax.swing.JLabel;

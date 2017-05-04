@@ -9,7 +9,7 @@ import de.xatc.server.db.DBSessionManager;
 import de.xatc.server.db.entities.LastRun;
 import de.xatc.server.db.startup.DataBaseStartUp;
 import de.xatc.server.db.startup.DataInitializer;
-import de.xatc.server.networking.controller.ATCServerBootstrap;
+import de.xatc.server.nettybootstrap.atc.ATCServerBootstrap;
 import java.util.List;
 import org.hibernate.Session;
 

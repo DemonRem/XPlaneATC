@@ -6,10 +6,10 @@
 package de.xatc.controllerclient.gui.connect;
 
 import de.mytools.tools.swing.SwingTools;
-import de.xatc.commons.networkpackets.client.LoginPacket;
+import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.controllerclient.config.ConfigBean;
 import de.xatc.controllerclient.config.XHSConfig;
-import de.xatc.controllerclient.network.DataClientBootstrap;
+import de.xatc.controllerclient.nettyclient.DataClientBootstrap;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;

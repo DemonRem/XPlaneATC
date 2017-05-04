@@ -41,13 +41,13 @@
         
         
    
-        <mapping class="de.xatc.commons.networkpackets.atc.stations.SupportedATISStation"/>
-        <mapping class="de.xatc.commons.networkpackets.atc.stations.SupportedAirportStation"/>
-        <mapping class="de.xatc.commons.networkpackets.atc.stations.SupportedFirStation"/>
-        <mapping class="de.xatc.commons.networkpackets.atc.stations.SupportedStationStatistics"/>
+        <mapping class="de.xatc.commons.networkpackets.atc.supportedstations.SupportedATISStation"/>
+        <mapping class="de.xatc.commons.networkpackets.atc.supportedstations.SupportedAirportStation"/>
+        <mapping class="de.xatc.commons.networkpackets.atc.supportedstations.SupportedFirStation"/>
+        <mapping class="de.xatc.commons.networkpackets.atc.supportedstations.SupportedStationStatistics"/>
         
-        <mapping class="de.xatc.commons.networkpackets.client.TextMessagePacket"/>
-        <mapping class="de.xatc.commons.networkpackets.client.SubmittedFlightPlan"/>
+        <mapping class="de.xatc.commons.networkpackets.pilot.TextMessagePacket"/>
+        <mapping class="de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan"/>
    
     </session-factory>
 </hibernate-configuration>

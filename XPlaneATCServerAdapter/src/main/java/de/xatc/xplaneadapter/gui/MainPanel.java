@@ -7,8 +7,8 @@ package de.xatc.xplaneadapter.gui;
 
 import de.mytools.tools.screen.MyScreenProperties;
 import de.mytools.tools.swing.SwingTools;
-import de.xatc.commons.networkpackets.client.TextMessagePacket;
-import de.xatc.commons.networkpackets.generic.RadioFrequencyChange;
+import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
+import de.xatc.commons.networkpackets.radio.RadioFrequencyChange;
 import de.xatc.xplaneadapter.config.AdapterConfig;
 import de.xatc.xplaneadapter.gui.cellrenderrer.TextMessageCellRenderer;
 import java.awt.BorderLayout;

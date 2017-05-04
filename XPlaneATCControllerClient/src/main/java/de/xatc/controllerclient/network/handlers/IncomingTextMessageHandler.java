@@ -1,7 +1,7 @@
 
 package de.xatc.controllerclient.network.handlers;
 
-import de.xatc.commons.networkpackets.client.TextMessagePacket;
+import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
 
 
 

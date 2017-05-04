@@ -6,7 +6,7 @@
 package de.xatc.xplaneadapter.networking.protocolhandlers;
 
 import de.mytools.tools.swing.SwingTools;
-import de.xatc.commons.networkpackets.client.RegisterPacket;
+import de.xatc.commons.networkpackets.pilot.RegisterPacket;
 import de.xatc.xplaneadapter.config.AdapterConfig;
 
 /**

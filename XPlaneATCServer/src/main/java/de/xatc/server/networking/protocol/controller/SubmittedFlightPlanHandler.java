@@ -6,8 +6,8 @@
 package de.xatc.server.networking.protocol.controller;
 
 import de.xatc.commons.networkpackets.atc.stripsmgt.ATCRequestStripsPacket;
-import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
-import de.xatc.commons.networkpackets.client.SubmittedFlightPlansPacket;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansPacket;
 import de.xatc.server.db.DBSessionManager;
 import de.xatc.server.db.entities.XATCUserSession;
 import de.xatc.server.sessionmanagment.SessionManagement;

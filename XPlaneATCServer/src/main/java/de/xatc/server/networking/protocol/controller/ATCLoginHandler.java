@@ -9,7 +9,7 @@ import de.mytools.encoding.UUIDCreator;
 import de.mytools.tools.dateandtime.SQLDateTimeTools;
 import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import de.xatc.commons.db.sharedentities.user.UserRole;
-import de.xatc.commons.networkpackets.client.LoginPacket;
+import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.server.db.DBSessionManager;
 import de.xatc.server.db.entities.XATCUserSession;
 import de.xatc.server.sessionmanagment.SessionManagement;

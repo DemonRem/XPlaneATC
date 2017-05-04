@@ -8,7 +8,7 @@ package de.xatc.xplaneadapter.automation;
 import de.xatc.xplaneadapter.Start;
 import de.xatc.xplaneadapter.config.AdapterConfig;
 import de.xatc.xplaneadapter.config.ConfigBean;
-import de.xatc.xplaneadapter.networking.XPlaneUDPListener;
+import de.xatc.xplaneadapter.nettyclient.XPlaneUDPListener;
 import java.awt.event.ActionEvent;
 
 /**

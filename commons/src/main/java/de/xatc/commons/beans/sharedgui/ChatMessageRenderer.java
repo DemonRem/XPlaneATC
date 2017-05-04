@@ -5,7 +5,7 @@
  */
 package de.xatc.commons.beans.sharedgui;
 
-import de.xatc.commons.networkpackets.client.TextMessagePacket;
+import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
 import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;

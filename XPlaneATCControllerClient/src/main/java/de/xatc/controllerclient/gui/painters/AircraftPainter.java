@@ -10,7 +10,7 @@
 package de.xatc.controllerclient.gui.painters;
 
 
-import de.xatc.commons.networkpackets.client.PlanePosition;
+import de.xatc.commons.networkpackets.pilot.PlanePosition;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.log.DebugMessageLevel;
 import java.awt.Color;

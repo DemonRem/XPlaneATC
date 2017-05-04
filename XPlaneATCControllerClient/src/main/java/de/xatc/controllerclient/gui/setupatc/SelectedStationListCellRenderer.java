@@ -1,8 +1,8 @@
 
 package de.xatc.controllerclient.gui.setupatc;
 
-import de.xatc.commons.networkpackets.atc.stations.SupportedAirportStation;
-import de.xatc.commons.networkpackets.atc.stations.SupportedFirStation;
+import de.xatc.commons.networkpackets.atc.supportedstations.SupportedAirportStation;
+import de.xatc.commons.networkpackets.atc.supportedstations.SupportedFirStation;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;

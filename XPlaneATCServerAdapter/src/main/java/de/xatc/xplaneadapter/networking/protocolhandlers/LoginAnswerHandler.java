@@ -6,7 +6,7 @@
 package de.xatc.xplaneadapter.networking.protocolhandlers;
 
 import de.mytools.tools.swing.SwingTools;
-import de.xatc.commons.networkpackets.client.LoginPacket;
+import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.xplaneadapter.config.AdapterConfig;
 
 /**

@@ -7,7 +7,7 @@ package de.xatc.controllerclient.network.handlers;
 
 import de.mytools.tools.swing.SwingTools;
 import de.xatc.commons.networkpackets.atc.stripsmgt.ATCRequestStripsPacket;
-import de.xatc.commons.networkpackets.client.LoginPacket;
+import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
 import java.awt.Color;

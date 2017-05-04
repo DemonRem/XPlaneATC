@@ -5,7 +5,7 @@
  */
 package de.xatc.server.mq.consumers;
 
-import de.xatc.commons.networkpackets.client.SubmittedFlightPlansActionPacket;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanActionHandler;
 import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanHandler;
 import java.util.logging.Level;

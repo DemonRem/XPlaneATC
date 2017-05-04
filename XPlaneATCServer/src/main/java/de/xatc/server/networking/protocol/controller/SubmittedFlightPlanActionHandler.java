@@ -5,7 +5,7 @@
  */
 package de.xatc.server.networking.protocol.controller;
 
-import de.xatc.commons.networkpackets.client.SubmittedFlightPlansActionPacket;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.server.db.DBSessionManager;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import org.hibernate.Query;

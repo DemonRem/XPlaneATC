@@ -9,7 +9,7 @@ import de.mytools.tools.screen.MyScreenProperties;
 import de.xatc.commons.networktools.NetworkingTools;
 import de.xatc.xplaneadapter.config.AdapterConfig;
 import de.xatc.xplaneadapter.config.ConfigBean;
-import de.xatc.xplaneadapter.networking.XPlaneUDPListener;
+import de.xatc.xplaneadapter.nettyclient.XPlaneUDPListener;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

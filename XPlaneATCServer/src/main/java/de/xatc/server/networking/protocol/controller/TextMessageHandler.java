@@ -5,7 +5,7 @@
  */
 package de.xatc.server.networking.protocol.controller;
 
-import de.xatc.commons.networkpackets.client.TextMessagePacket;
+import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
 import de.xatc.server.config.ServerConfig;
 import de.xatc.server.db.entities.XATCUserSession;
 import de.xatc.server.mq.producers.MQMessageSender;

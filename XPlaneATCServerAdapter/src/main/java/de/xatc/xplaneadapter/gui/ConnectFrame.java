@@ -6,10 +6,10 @@
 package de.xatc.xplaneadapter.gui;
 
 import de.mytools.tools.swing.SwingTools;
-import de.xatc.commons.networkpackets.client.LoginPacket;
+import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.xplaneadapter.config.AdapterConfig;
 import de.xatc.xplaneadapter.config.ConfigBean;
-import de.xatc.xplaneadapter.networking.DataClientBootstrap;
+import de.xatc.xplaneadapter.nettyclient.DataClientBootstrap;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;

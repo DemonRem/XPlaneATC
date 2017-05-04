@@ -5,7 +5,7 @@
  */
 package de.xatc.controllerclient.gui.FlightPlanStrips;
 
-import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.controllerclient.db.DBSessionManager;
 import de.xatc.controllerclient.network.handlers.SubmittedFlightPlansHandler;
 import java.awt.BorderLayout;

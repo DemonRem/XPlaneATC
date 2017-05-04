@@ -14,7 +14,7 @@ import de.xatc.server.mq.consumers.SubmittedFlighPlanActionsConsumer;
 import de.xatc.server.mq.consumers.SubmittedFlightPlansConsumer;
 import de.xatc.server.mq.consumers.TextMessageBroadCastConsumer;
 import de.xatc.server.mq.producers.MQMessageSender;
-import de.xatc.server.networking.clients.DataServerBootstrap;
+import de.xatc.server.nettybootstrap.pilot.DataServerBootstrap;
 
 /**
  *

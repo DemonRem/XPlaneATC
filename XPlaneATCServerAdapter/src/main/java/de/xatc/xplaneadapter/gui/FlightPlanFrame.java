@@ -6,7 +6,7 @@
 package de.xatc.xplaneadapter.gui;
 
 import de.mytools.tools.swing.SwingTools;
-import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.xplaneadapter.config.AdapterConfig;
 import javax.swing.JButton;
 import javax.swing.JLabel;

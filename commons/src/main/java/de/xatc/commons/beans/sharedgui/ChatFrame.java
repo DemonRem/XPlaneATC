@@ -5,7 +5,7 @@
  */
 package de.xatc.commons.beans.sharedgui;
 
-import de.xatc.commons.networkpackets.client.TextMessagePacket;
+import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;

@@ -1,6 +1,6 @@
 package de.xatc.controllerclient.network.handlers;
 
-import de.xatc.commons.networkpackets.client.SubmittedFlightPlansActionPacket;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
 import de.xatc.controllerclient.gui.FlightPlanStrips.FligtPlanStripsPanel;

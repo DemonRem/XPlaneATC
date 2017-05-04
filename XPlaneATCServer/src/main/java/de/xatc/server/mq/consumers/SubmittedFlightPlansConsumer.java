@@ -5,7 +5,7 @@
  */
 package de.xatc.server.mq.consumers;
 
-import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanHandler;
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;

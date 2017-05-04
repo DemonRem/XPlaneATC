@@ -6,7 +6,7 @@
 package de.xatc.controllerclient.network.handlers;
 
 import de.xatc.commons.networkpackets.atc.stripsmgt.ATCRequestStripsPacket;
-import de.xatc.commons.networkpackets.client.SubmittedFlightPlan;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
 import java.util.List;
