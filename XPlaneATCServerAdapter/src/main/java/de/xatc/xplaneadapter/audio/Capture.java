@@ -29,8 +29,10 @@ public class Capture {
             Runnable runner = new Runnable() {
                 int bufferSize = (int) format.getSampleRate()
                         * format.getFrameSize();
+                
                 byte buffer[] = new byte[bufferSize];
 
+                
                 public void run() {
                     out = new ByteArrayOutputStream();
                   
@@ -59,7 +61,7 @@ public class Capture {
                         System.err.println("I/O problems: " + e);
                         System.exit(-1);
                     }
-                    
+                    line.drain();
                     line.stop();
                     line.close();
                 }
