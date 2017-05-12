@@ -6,15 +6,14 @@
 package de.xatc.xplaneadapter.gui;
 
 import de.mytools.tools.swing.IconPainter;
-import de.xatc.xplaneadapter.audio.AudioPlayer;
-import de.xatc.xplaneadapter.audio.AudioTest;
 import de.xatc.xplaneadapter.audio.Capture;
+import de.xatc.xplaneadapter.audio.Playback;
+import de.xatc.xplaneadapter.audio.SiloWatcher;
+
+
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,8 +25,11 @@ import org.jdesktop.swingx.HorizontalLayout;
  */
 public class ConnectionStatusPanel extends JPanel implements MouseListener {
 
-    private AudioTest audioTest;
-    private Capture capture;
+    
+    private Capture capture = new Capture();
+
+    private Playback playback = new Playback();
+
     private JPanel listenToXPlanePanel;
     private JPanel connectedToXPlaneATCServerDataPanel;
     private JPanel connectedToXPlaneATCServerVoicePanel;
@@ -42,8 +44,9 @@ public class ConnectionStatusPanel extends JPanel implements MouseListener {
 
     public ConnectionStatusPanel() {
         super();
-
-        capture = new Capture();
+        SiloWatcher watcher = new SiloWatcher();
+        watcher.start();
+       
 
         initComponents();
     }
@@ -162,17 +165,15 @@ public class ConnectionStatusPanel extends JPanel implements MouseListener {
     @Override
     public void mousePressed(MouseEvent e) {
         System.out.println("Mouse pressed");
-       this.capture.setRunning(true);
-       this.capture.captureAudio();
+        capture.startCapture();
+      
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        capture.setRunning(false);
-     
-        AudioPlayer player = new AudioPlayer(capture.getOut().toByteArray());
-        player.start();
-        this.capture = new Capture();
+       
+        capture.stopCapture();
+        
     }
 
     @Override

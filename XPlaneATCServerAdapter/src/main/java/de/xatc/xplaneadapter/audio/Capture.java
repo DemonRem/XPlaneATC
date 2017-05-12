@@ -6,90 +6,85 @@
 package de.xatc.xplaneadapter.audio;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
 import javax.sound.sampled.TargetDataLine;
 
-public class Capture {
+/**
+ *
+ * @author Mirko
+ */
+public class Capture implements Runnable {
 
-    protected boolean running;
-    ByteArrayOutputStream out;
+    private Thread thread;
 
-    public void captureAudio() {
+    private AudioFormat format = new AudioFormat(8000.0f, 16, 1, true, true);
+    private TargetDataLine microphone;
+
+    private boolean recording = true;
+
+    public Capture() {
         try {
-            final AudioFormat format = AudioTools.getFormat();
-            DataLine.Info info = new DataLine.Info(
-                    TargetDataLine.class, format);
-            final TargetDataLine line = (TargetDataLine) AudioSystem.getLine(info);
-            line.open(format);
-            line.start();
-            Runnable runner = new Runnable() {
-                int bufferSize = (int) format.getSampleRate()
-                        * format.getFrameSize();
-                
-                byte buffer[] = new byte[bufferSize];
-
-                
-                public void run() {
-                    out = new ByteArrayOutputStream();
-                  
-                    try {
-                        boolean inputFloating = true;
-                        while (running && inputFloating) {
-                           
-                            int count = line.read(buffer, 0, buffer.length);
-
-                            line.flush();
-                            
-                            out.write(buffer, 0, count);
-                            
-                            if (count > 0) {
-                                inputFloating = true;
-                               
-                            }
-                            else {
-                                inputFloating = false;
-                            }
-                            System.out.println("b: " + count);
-                        }
-                        out.flush();
-                        out.close();
-                    } catch (IOException e) {
-                        System.err.println("I/O problems: " + e);
-                        System.exit(-1);
-                    }
-                    line.drain();
-                    line.stop();
-                    line.close();
-                }
-            };
-            Thread captureThread = new Thread(runner);
-            captureThread.start();
-        } catch (LineUnavailableException e) {
-            System.err.println("Line unavailable: " + e);
-
+            microphone = AudioSystem.getTargetDataLine(format);
+            DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+            microphone = (TargetDataLine) AudioSystem.getLine(info);
+            microphone.open(format);
+            
+        } catch (LineUnavailableException ex) {
+            ex.printStackTrace(System.err);
         }
     }
 
-    public boolean isRunning() {
-        return running;
+    public void startCapture() {
+
+        this.recording = true;
+        thread = new Thread(this);
+        thread.setName("Capture");
+        thread.start();
     }
 
-    public void setRunning(boolean running) {
-        this.running = running;
+    public void stopCapture() {
+        this.recording = false;
+        thread = null;
     }
 
-    public ByteArrayOutputStream getOut() {
-        return out;
+    private void shutDown(String message) {
+        this.thread = null;
     }
 
-    public void setOut(ByteArrayOutputStream out) {
-        this.out = out;
+    @Override
+    public void run() {
+
+   
+
+            microphone.start();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            int numBytesRead;
+            int CHUNK_SIZE = 1024;
+            byte[] data = new byte[microphone.getBufferSize() / 5];
+
+            int bytesRead = 0;
+
+            try {
+                while (recording) { // Just so I can test if recording
+                    // my mic works...
+                    numBytesRead = microphone.read(data, 0, CHUNK_SIZE);
+                    bytesRead = bytesRead + numBytesRead;
+                    System.out.println(bytesRead);
+                    out.write(data, 0, numBytesRead);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            byte audioData[] = out.toByteArray();
+            AudioSilo.getAudioList().add(audioData);
+            
+            microphone.stop();
+      
+
     }
-
-    
-
-}
+} // End class Capture
