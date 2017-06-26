@@ -36,7 +36,6 @@ public class ATCMapPanel extends JPanel {
     private JXMapKit jkit;
 
     private RosePainter rosePainter;
-    private AircraftPainter aircraftPainter;
 
     private AptPainter aptPainter;
 
@@ -86,15 +85,10 @@ public class ATCMapPanel extends JPanel {
         rosePainter.getRoseMap().put(50, XHSConfig.getInitialPos());
 
         aptPainter = new AptPainter();
-        
-        
-        aircraftPainter = new AircraftPainter();
-        
-        
+
         this.paintersList = new ArrayList<>();
 
         paintersList.add(rosePainter);
-        paintersList.add(aircraftPainter);
 
         paintersList.add(aptPainter);
 
@@ -106,6 +100,12 @@ public class ATCMapPanel extends JPanel {
 
         this.add(jkit, BorderLayout.CENTER);
 
+    }
+    
+    public void reloadPainter() {
+        
+        this.compoundPainters = new CompoundPainter<>(paintersList);
+        this.jkit.getMainMap().setOverlayPainter(compoundPainters);
     }
 
     /**
@@ -149,15 +149,6 @@ public class ATCMapPanel extends JPanel {
         this.rosePainter = rosePainter;
     }
 
-    public AircraftPainter getAircraftPainter() {
-        return aircraftPainter;
-    }
-
-    public void setAircraftPainter(AircraftPainter aircraftPainter) {
-        this.aircraftPainter = aircraftPainter;
-    }
-
-
     public AptPainter getAptPainter() {
         return aptPainter;
     }
@@ -165,10 +156,5 @@ public class ATCMapPanel extends JPanel {
     public void setAptPainter(AptPainter aptPainter) {
         this.aptPainter = aptPainter;
     }
-    
-   
-    
-    
-    
 
 }

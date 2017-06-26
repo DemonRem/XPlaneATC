@@ -5,24 +5,24 @@
  */
 package de.xatc.server.nettybootstrap.pilot;
 
-import de.xatc.commons.networkpackets.atc.stripsmgt.ATCRequestStripsPacket;
+import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.commons.networkpackets.pilot.FMSPlan;
 import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.commons.networkpackets.pilot.PlanePosition;
 import de.xatc.commons.networkpackets.pilot.RegisterPacket;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
-import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.server.config.ServerConfig;
+import de.xatc.server.networking.protocol.controller.TextMessageHandler;
 import de.xatc.server.networking.protocol.pilot.LoginHandler;
 import de.xatc.server.networking.protocol.pilot.RegisterHandler;
-import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanHandler;
-import de.xatc.server.networking.protocol.controller.TextMessageHandler;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang.StringUtils;
+
+
 
 /**
  *
@@ -68,7 +68,7 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
 
             } else if (msg instanceof PlanePosition) {
                 System.out.println("received PlanePosition");
-                if (SessionManagement.getAtcChannelGroup().size() > 0) {
+                if (SessionManagement.getAtcDataStructures().size() > 0) {
                     ServerConfig.getMessageSenders().get("planePosition").sendObjectMessage((PlanePosition) msg);
                 }
                 
@@ -92,8 +92,8 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 
-        SessionManagement.removeDataChannel(ctx.channel());
-        SessionManagement.removeUserSession(SessionManagement.findUserSessionByChannelID(ctx.channel().id().asLongText(), SessionManagement.getUserSessionList()));
+        SessionManagement.removePilotSessionByChannel(ctx.channel());
+
         System.out.println("client disconnected");
 
         channel.close();
@@ -103,8 +103,7 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("Client connected");
         this.channel = ctx.channel();
-        SessionManagement.addDataChannel(ctx.channel());
-        //TODO, das darf hier erst passieren, wenn ein Login packet kommt!
+
 
     }
 
@@ -113,7 +112,8 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
 
         System.out.println("SERVER EXCEPTION CAUGHT!!!!!!!!!!!!!!!!!");
         cause.printStackTrace(System.err);
-        SessionManagement.getDataChannelGroup().remove(ctx.channel());
+        SessionManagement.removePilotSessionByChannel(ctx.channel());
+        
         channel.close();
     }
 

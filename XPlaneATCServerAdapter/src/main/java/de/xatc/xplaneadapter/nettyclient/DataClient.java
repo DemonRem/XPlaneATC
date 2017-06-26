@@ -5,10 +5,10 @@
  */
 package de.xatc.xplaneadapter.nettyclient;
 
+import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.commons.networkpackets.pilot.RegisterPacket;
 import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
-import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.xplaneadapter.config.AdapterConfig;
 import de.xatc.xplaneadapter.networking.protocolhandlers.IncomingTextMessageHandler;
 import de.xatc.xplaneadapter.networking.protocolhandlers.LoginAnswerHandler;

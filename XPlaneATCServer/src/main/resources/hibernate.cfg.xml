@@ -33,7 +33,7 @@
         <mapping class="de.xatc.commons.networkpackets.pilot.PlanePosition"/>
         <mapping class="de.xatc.commons.db.sharedentities.user.UserRole"/>
        
-        <mapping class="de.xatc.server.db.entities.XATCUserSession"/>
+        <mapping class="de.xatc.commons.db.sharedentities.user.XATCUserSession"/>
         <mapping class="de.xatc.server.db.entities.TextMessageEntity"/>
 
         <mapping class="de.xatc.commons.db.sharedentities.atcdata.Country"/>

@@ -22,7 +22,7 @@ public class MetricsHandler {
 
         System.out.println("Handle Metrics");
         RequestServerMetrics m = (RequestServerMetrics) msg;
-        UserRole u = SessionManagement.getUserRoleBySessionID(m.getSessionID(), SessionManagement.getAtcSessionList());
+        UserRole u = SessionManagement.getATCUserRoleBySessionID(m.getSessionID());
 
         System.out.println("UserRole is: " + u);
 
@@ -34,8 +34,8 @@ public class MetricsHandler {
         String b = "";
         b += "<HTML><BODY>\n";
 
-        b += "Client Sessions: " + SessionManagement.getDataChannelGroup().size() + "<br>";
-        b += "ATC Sessions: " + SessionManagement.getAtcChannelGroup().size() + "<br>";
+        b += "Client Sessions: " + SessionManagement.getPilotDataStructures().size() + "<br>";
+        b += "ATC Sessions: " + SessionManagement.getAtcDataStructures().size() + "<br>";
 
         if (ServerConfig.getDataServerBootStrap() == null) {
             b += "Accepting Client Connections: false<br>";
@@ -53,11 +53,6 @@ public class MetricsHandler {
         else {
             b += "MQ Broker running: true <br>";
         }
-
-        b += "Size of ATCChannelGroup: " + SessionManagement.getAtcChannelGroup().size() + "<br>";
-        b += "Size of ClientChannelGroup" + SessionManagement.getDataChannelGroup().size() + "<br>";
-        
-        
         
         
         b += "</BODY></HTML>";

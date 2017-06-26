@@ -11,5 +11,6 @@
     <module>XPlaneATCServerAdapter</module>
     <module>XPlaneATCServer</module>
     <module>commons</module>
+    <module>XPlaneATCFMSPlayer</module>
   </modules>
 </project>

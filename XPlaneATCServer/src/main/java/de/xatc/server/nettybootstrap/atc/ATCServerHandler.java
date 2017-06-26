@@ -5,6 +5,7 @@
  */
 package de.xatc.server.nettybootstrap.atc;
 
+import de.xatc.commons.networkpackets.atc.datasync.RequestDataStructuresPacket;
 import de.xatc.commons.networkpackets.atc.datasync.RequestSyncPacket;
 import de.xatc.commons.networkpackets.atc.servercontrol.RequestServerMetrics;
 import de.xatc.commons.networkpackets.atc.servercontrol.ShutdownServer;
@@ -16,25 +17,24 @@ import de.xatc.commons.networkpackets.atc.servercontrol.StopClientConnector;
 import de.xatc.commons.networkpackets.atc.servercontrol.StopMQBroker;
 import de.xatc.commons.networkpackets.atc.servercontrol.StopMessagingConsumers;
 import de.xatc.commons.networkpackets.atc.servercontrol.StopMessagingProducers;
+import de.xatc.commons.networkpackets.atc.stripsmgt.ATCRequestStripsPacket;
 import de.xatc.commons.networkpackets.atc.supportedstations.SupportedAirportStation;
 import de.xatc.commons.networkpackets.atc.supportedstations.SupportedFirStation;
-import de.xatc.commons.networkpackets.atc.stripsmgt.ATCRequestStripsPacket;
 import de.xatc.commons.networkpackets.atc.usermgt.DeleteUser;
 import de.xatc.commons.networkpackets.atc.usermgt.NewUser;
 import de.xatc.commons.networkpackets.atc.usermgt.RequestUserList;
 import de.xatc.commons.networkpackets.atc.usermgt.UpdateUser;
-import de.xatc.commons.networkpackets.pilot.LoginPacket;
-import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
-import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
+import de.xatc.commons.networkpackets.pilot.LoginPacket;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.server.config.ServerConfig;
 import de.xatc.server.networking.protocol.controller.ATCLoginHandler;
-import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanHandler;
 import de.xatc.server.networking.protocol.controller.MetricsHandler;
 import de.xatc.server.networking.protocol.controller.RequestUserListHandler;
 import de.xatc.server.networking.protocol.controller.ServerControlHandler;
 import de.xatc.server.networking.protocol.controller.ServerSyncHandler;
 import de.xatc.server.networking.protocol.controller.SetupATCHandler;
+import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanHandler;
 import de.xatc.server.networking.protocol.controller.UserManagementHander;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
@@ -90,7 +90,7 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
                 ServerControlHandler.handleStartClientConnections(msg);
                 return;
             }
-            
+
             if (msg instanceof StopClientConnector) {
                 ServerControlHandler.handleStopClientConnections(msg);
                 return;
@@ -143,51 +143,55 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
                 return;
             }
             if (msg instanceof RequestSyncPacket) {
-                
+
                 RequestSyncPacket p = (RequestSyncPacket) msg;
-                
-                ServerSyncHandler.handleServerSyncRequest(channel, p.getDataSetToSync());
+
+                ServerSyncHandler.handleServerSyncRequest(ctx.channel(), p.getDataSetToSync());
                 return;
-                
+
             }
-            
+
             if (msg instanceof SupportedAirportStation) {
                 System.out.println("Incoming SupportedAirportStation");
                 SupportedAirportStation airport = (SupportedAirportStation) msg;
-                SetupATCHandler.handleAirportSetup(airport,ctx.channel());
+                SetupATCHandler.handleAirportSetup(airport, ctx.channel());
                 return;
             }
-            
+
             if (msg instanceof SupportedFirStation) {
                 System.out.println("Incoming SupportedAirportStation");
                 SupportedFirStation fir = (SupportedFirStation) msg;
-                SetupATCHandler.handleFirSetup(fir,ctx.channel());
+                SetupATCHandler.handleFirSetup(fir, ctx.channel());
                 return;
-                
+
             }
             if (msg instanceof ATCRequestStripsPacket) {
                 ATCRequestStripsPacket p = (ATCRequestStripsPacket) msg;
-                SubmittedFlightPlanHandler.sendStripsToController(p, channel);
+                SubmittedFlightPlanHandler.sendStripsToController(p, ctx.channel());
                 return;
             }
-            
-            
+
             if (msg instanceof SubmittedFlightPlansActionPacket) {
                 SubmittedFlightPlansActionPacket action = (SubmittedFlightPlansActionPacket) msg;
                 ServerConfig.getMessageSenders().get("submittedFlightPlanActions").sendObjectMessage(action);
                 return;
             }
-            
-            
-            
+            if (msg instanceof RequestDataStructuresPacket) {
+
+                System.out.println("data structures sync request incoming......");
+                System.out.println("Assembling data structure response packet...");
+                ServerSyncHandler.handleStructuresSyncRequest(ctx.channel());
+
+            }
+
         }
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 
-        SessionManagement.removeATCChannel(ctx.channel());
-        SessionManagement.removeATCSession(ctx.channel().id().asLongText());
+        SessionManagement.removeATCSessionByChannel(ctx.channel());
+
         System.out.println("client disconnected");
 
         channel.close();
@@ -197,9 +201,8 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("Client connected");
         this.channel = ctx.channel();
-        SessionManagement.addATCChannel(ctx.channel());
-        //Die Session wird allerdinsg vom Login handler zugefuegt
 
+        //Die Session wird allerdinsg vom Login handler zugefuegt
     }
 
     @Override
@@ -207,8 +210,9 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
 
         System.out.println("SERVER EXCEPTION CAUGHT!!!!!!!!!!!!!!!!!");
         cause.printStackTrace(System.err);
-        SessionManagement.getAtcChannelGroup().remove(ctx.channel());
-        SessionManagement.removeATCChannel(ctx.channel());
+
+        SessionManagement.removeATCSessionByChannel(ctx.channel());
+
         channel.close();
     }
 

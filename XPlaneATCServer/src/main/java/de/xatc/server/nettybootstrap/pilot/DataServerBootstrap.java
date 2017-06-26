@@ -5,9 +5,11 @@
  */
 package de.xatc.server.nettybootstrap.pilot;
 
+import de.xatc.commons.datastructure.pilot.PilotStructure;
 import de.xatc.server.config.ServerConfig;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -18,6 +20,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import java.util.Map.Entry;
 
 /**
  *
@@ -74,8 +77,13 @@ public class DataServerBootstrap {
                 
 
                 try {
-                    SessionManagement.getDataChannelGroup().close().sync();
-                    SessionManagement.getDataChannelGroup().clear();
+                         for (Entry<String,Channel> entry : SessionManagement.getPilotChannels().entrySet()) {
+                        
+                        entry.getValue().close().sync();
+                        
+                    }
+                    
+                    SessionManagement.getPilotDataStructures().clear();
                     channelFuture.channel().closeFuture().sync();
                     
                 } catch (InterruptedException ex) {

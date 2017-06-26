@@ -5,9 +5,9 @@
  */
 package de.xatc.server.networking.protocol.controller;
 
+import de.xatc.commons.db.sharedentities.user.XATCUserSession;
 import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
 import de.xatc.server.config.ServerConfig;
-import de.xatc.server.db.entities.XATCUserSession;
 import de.xatc.server.mq.producers.MQMessageSender;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
@@ -23,7 +23,9 @@ public class TextMessageHandler {
         
         TextMessagePacket p = (TextMessagePacket) msg;
         System.out.println("Incoming TextMessage in Handler");
-        XATCUserSession s = SessionManagement.findUserSessionByChannelID(n.id().asLongText(), SessionManagement.getUserSessionList());
+        XATCUserSession s = SessionManagement.findOverallUserSessionByChannelID(n.id().asLongText());
+       
+        
         if (s == null) {
             System.out.println("No session found, returning");
             return;

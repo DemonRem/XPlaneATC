@@ -33,7 +33,7 @@ public class SubmittedFlightPlansConsumer extends MQAbstractConsumer {
 
     @Override
     public void onTextMessage(TextMessage message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       //nothing here to do yet
     }
     
 }

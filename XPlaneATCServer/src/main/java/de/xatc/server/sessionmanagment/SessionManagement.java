@@ -5,16 +5,18 @@
  */
 package de.xatc.server.sessionmanagment;
 
+import de.xatc.commons.datastructure.atc.ATCStructure;
+import de.xatc.commons.datastructure.pilot.PilotStructure;
 import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import de.xatc.commons.db.sharedentities.user.UserRole;
-import de.xatc.server.db.entities.XATCUserSession;
+import de.xatc.commons.db.sharedentities.user.XATCUserSession;
 import io.netty.channel.Channel;
-import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
@@ -22,65 +24,44 @@ import java.util.Map.Entry;
  */
 public class SessionManagement {
 
-    private static ChannelGroup dataChannelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    private static ChannelGroup atcChannelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-    
-    private static Map<String,XATCUserSession> userSessionList = new HashMap<>();
 
-    private static Map<String,XATCUserSession> atcSessionList = new HashMap<>();
     
     private static Map<String,DefaultChannelGroup> frequencyList = new HashMap<>();
     
+    private static ConcurrentHashMap<String,PilotStructure> pilotDataStructures = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, ATCStructure> atcDataStructures = new ConcurrentHashMap<>();
+    
+    private static ConcurrentHashMap<String,Channel> atcChannels = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String,Channel> pilotChannels = new ConcurrentHashMap();
     
     
     
     
     
-    public static synchronized void removeChannelFromFrequencyChannelGroup(String freq, Channel n) {
+    public static RegisteredUser findOverallUserByUsername(String userName) {
         
-        if (frequencyList.containsKey(freq)) {
-            frequencyList.get(freq).remove(n);
+        
+        RegisteredUser user = findRegisteredPilotUserByUserName(userName);
+        if (user != null) {
+            return user;
         }
-        
-        
-    }
-    
-    public static synchronized void addChannelToFrequencyChannelGroup(String freq,Channel n) {
-        
-        if (frequencyList.containsKey(freq)) {
-            
-            frequencyList.get(freq).add(n);
-            
-            
+        user = findRegisteredATCUserByUserName(userName);
+        if (user != null) {
+            return user;
         }
+        return null;
         
         
     }
     
-    
-    public static synchronized void removeFrequencyChannelGroup(String freq) {
+ 
+    public static RegisteredUser findRegisteredPilotUserByUserName(String userName) {
         
-        frequencyList.remove(freq);
-        
-    }
-    
-    public static synchronized void addFrequencyChannelGroup(String freq) {
-        
-        DefaultChannelGroup g = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-        frequencyList.put(freq,g);
-        
-        
-    }
-    
-    
-    
-    public static RegisteredUser findRegisteredUserByUserName(String userName, Map<String,XATCUserSession> sessionList) {
-        
-        for (Entry<String,XATCUserSession> entry : sessionList.entrySet()) {
+        for (Entry<String,PilotStructure> entry : pilotDataStructures.entrySet()) {
             
-            RegisteredUser u = entry.getValue().getRegisteredUser();
-            if (u.getRegisteredUserName().equals(userName)) {
-                return u;
+            
+            if (entry.getValue().getUserName().equals(userName)) {
+                return entry.getValue().getUser();
             }
             
             
@@ -88,26 +69,72 @@ public class SessionManagement {
         return null;
         
     }
+    public static RegisteredUser findRegisteredATCUserByUserName(String userName) {
+        
+        for (Entry<String,ATCStructure> entry : atcDataStructures.entrySet()) {
+            
+            
+            if (entry.getValue().getUserName().equals(userName)) {
+                return entry.getValue().getUser();
+            }
+            
+        }
+        return null;
+    }
     
     
     
-    
-    public static synchronized UserRole getUserRoleBySessionID(String sessionID, Map<String,XATCUserSession> sessionList) {
+    public static UserRole getATCUserRoleBySessionID(String sessionID) {
         System.out.println("Finding UserRole by SessionID");
-        XATCUserSession s = findUserSessionBySessionID(sessionID,sessionList);
+        XATCUserSession s = findATCUserSessionBySessionID(sessionID);
         if (s == null) {
             System.out.println("Session is null. Could not be found");
             return null;
         }
         return s.getRegisteredUser().getUserRole();
         
+    }
+    
+    
+    
+    
+    
+    public static void removeATCSessionByChannel(Channel c) {
         
+        for (Entry<String,Channel> entry : atcChannels.entrySet()) {
+            
+            if (entry.getValue() == c) {
+                atcDataStructures.remove(entry.getKey());
+                return;
+            }
+            
+        }
         
     }
     
-    public static boolean isAdmin(String sessionID, Map<String,XATCUserSession> sessionList) {
+    
+    public static void removePilotSessionByChannel(Channel c) {
         
-        UserRole r = getUserRoleBySessionID(sessionID, sessionList);
+        for (Entry<String,Channel> entry : pilotChannels.entrySet()) {
+            
+            if (entry.getValue() == c) {
+                atcDataStructures.remove(entry.getKey());
+                return;
+            }   
+        }    
+    }
+    
+    
+    
+    
+    
+    public static boolean isAdmin(String sessionID) {
+        
+    
+        
+        
+        
+        UserRole r = getATCUserRoleBySessionID(sessionID);
         if (r == null) {
             return false;
         }
@@ -123,55 +150,44 @@ public class SessionManagement {
     
     
     
-    public static synchronized void addUserSession(XATCUserSession session) {
-        
-        userSessionList.put(session.getSessionID(),session);
-        
-    }
-    
-    public static synchronized void removeUserSession(XATCUserSession session) {
-        if (session == null) {
-            return;
-        }
-        userSessionList.remove(session);
-        
-    }
-    
-    public static synchronized void addATCSession(XATCUserSession session) {
-        
-        atcSessionList.put(session.getSessionID(),session);
-        
-    }
-    
-    public static synchronized void removeATCSession(String sessionID) {
-        if (sessionID == null) {
-            return;
-        }
-        atcSessionList.remove(sessionID);
-        
-    }
-    
+  
     
     public static XATCUserSession findUserSessionByUsername(String userName) {
 
-        for (Entry<String,XATCUserSession> entry  : userSessionList.entrySet()) {
+        for (Entry<String,PilotStructure> entry  : pilotDataStructures.entrySet()) {
 
-            if (entry.getValue().getSessionUserName().equals(userName)) {
-                return entry.getValue();
+            if (entry.getValue().getUserName().equals(userName)) {
+                return entry.getValue().getUserSession();
             }
 
         }
         return null;
 
     }
-    
-    
-     public static XATCUserSession findUserSessionByChannelID(String channelID, Map<String,XATCUserSession> sessionList) {
+
+
+    public static XATCUserSession findOverallUserSessionByChannelID(String channelID) {
         
-        for (Entry<String,XATCUserSession> entry : sessionList.entrySet()) {
+        
+        XATCUserSession u = findPilotUserSessionByChannelID(channelID);
+        if (u != null) {
+            return u;
+        }
+        u = findATCUserSessionByChannelID(channelID);
+        if (u != null) {
+            return u;
+        }
+        return null;
+        
+        
+    }
+    
+     public static XATCUserSession findATCUserSessionByChannelID(String channelID) {
+        
+        for (Entry<String,ATCStructure> entry : atcDataStructures.entrySet()) {
 
             if (entry.getValue().getChannelID().equals(channelID)) {
-                return entry.getValue();
+                return entry.getValue().getUserSession();
             }
 
         }
@@ -181,58 +197,34 @@ public class SessionManagement {
     }
     
     
-    public static XATCUserSession findUserSessionBySessionID(String sessionID, Map<String,XATCUserSession> sessionList) {
+     public static XATCUserSession findPilotUserSessionByChannelID(String channelID) {
         
-        return sessionList.get(sessionID);
+        for (Entry<String,PilotStructure> entry : pilotDataStructures.entrySet()) {
+
+            if (entry.getValue().getChannelID().equals(channelID)) {
+                return entry.getValue().getUserSession();
+            }
+
+        }
+        return null;
+        
+        
     }
     
-    public static synchronized void addATCChannel(Channel c) {
-        atcChannelGroup.add(c);
+     public static XATCUserSession findATCUserSessionBySessionID(String sessionID) {
+         ATCStructure s = atcDataStructures.get(sessionID);
+         if (s == null) {
+             return null;
+         }
+         return s.getUserSession();
+     }
+    
+    public static XATCUserSession findUserSessionBySessionID(String sessionID, Map<String,PilotStructure> sessionList) {
+        
+        return sessionList.get(sessionID).getUserSession();
     }
-    public static synchronized void removeATCChannel(Channel c) {
-        atcChannelGroup.remove(c);
-    }
+   
 
-    public static synchronized void addDataChannel(Channel c) {
-        dataChannelGroup.add(c);
-    }
-
-    public static synchronized void removeDataChannel(Channel c) {
-        dataChannelGroup.remove(c);
-
-    }
-
-    public static ChannelGroup getDataChannelGroup() {
-        return dataChannelGroup;
-    }
-
-    public static void setDataChannelGroup(ChannelGroup dataChannelGroup) {
-        SessionManagement.dataChannelGroup = dataChannelGroup;
-    }
-
-    public static ChannelGroup getAtcChannelGroup() {
-        return atcChannelGroup;
-    }
-
-    public static void setAtcChannelGroup(ChannelGroup atcChannelGroup) {
-        SessionManagement.atcChannelGroup = atcChannelGroup;
-    }
-
-    public static Map<String, XATCUserSession> getUserSessionList() {
-        return userSessionList;
-    }
-
-    public static void setUserSessionList(Map<String, XATCUserSession> userSessionList) {
-        SessionManagement.userSessionList = userSessionList;
-    }
-
-    public static Map<String, XATCUserSession> getAtcSessionList() {
-        return atcSessionList;
-    }
-
-    public static void setAtcSessionList(Map<String, XATCUserSession> atcSessionList) {
-        SessionManagement.atcSessionList = atcSessionList;
-    }
 
     public static void addProvidedFrequency(String freq) {
         
@@ -280,7 +272,48 @@ public class SessionManagement {
         return frequencyList.get(freq);
         
     }
+
+    public static Map<String, DefaultChannelGroup> getFrequencyList() {
+        return frequencyList;
+    }
+
+    public static void setFrequencyList(Map<String, DefaultChannelGroup> frequencyList) {
+        SessionManagement.frequencyList = frequencyList;
+    }
+
+    public static ConcurrentHashMap<String, PilotStructure> getPilotDataStructures() {
+        return pilotDataStructures;
+    }
+
+    public static void setPilotDataStructures(ConcurrentHashMap<String, PilotStructure> pilotDataStructures) {
+        SessionManagement.pilotDataStructures = pilotDataStructures;
+    }
+
+    public static ConcurrentHashMap<String, ATCStructure> getAtcDataStructures() {
+        return atcDataStructures;
+    }
+
+    public static void setAtcDataStructures(ConcurrentHashMap<String, ATCStructure> atcDataStructures) {
+        SessionManagement.atcDataStructures = atcDataStructures;
+    }
+
+    public static ConcurrentHashMap<String, Channel> getAtcChannels() {
+        return atcChannels;
+    }
+
+    public static void setAtcChannels(ConcurrentHashMap<String, Channel> atcChannels) {
+        SessionManagement.atcChannels = atcChannels;
+    }
+
+    public static ConcurrentHashMap<String, Channel> getPilotChannels() {
+        return pilotChannels;
+    }
+
+    public static void setPilotChannels(ConcurrentHashMap<String, Channel> pilotChannels) {
+        SessionManagement.pilotChannels = pilotChannels;
+    }
   
    
+    
 
 }

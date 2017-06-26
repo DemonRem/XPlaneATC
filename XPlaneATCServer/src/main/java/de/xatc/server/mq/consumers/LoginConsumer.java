@@ -7,6 +7,7 @@ package de.xatc.server.mq.consumers;
 
 import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import de.xatc.server.db.DBSessionManager;
+import de.xatc.server.sessionmanagment.NetworkBroadcaster;
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
@@ -40,6 +41,9 @@ public class LoginConsumer extends MQAbstractConsumer {
             Session s = DBSessionManager.getSession();
             s.saveOrUpdate(u);
             DBSessionManager.closeSession(s);
+            
+            NetworkBroadcaster.broadcastATC(u);
+            
             
             
         } catch (JMSException ex) {

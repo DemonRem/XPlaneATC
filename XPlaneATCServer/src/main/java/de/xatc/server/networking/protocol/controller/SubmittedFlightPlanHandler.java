@@ -5,11 +5,12 @@
  */
 package de.xatc.server.networking.protocol.controller;
 
+import de.xatc.commons.db.sharedentities.user.XATCUserSession;
 import de.xatc.commons.networkpackets.atc.stripsmgt.ATCRequestStripsPacket;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansPacket;
 import de.xatc.server.db.DBSessionManager;
-import de.xatc.server.db.entities.XATCUserSession;
+import de.xatc.server.sessionmanagment.NetworkBroadcaster;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
 import java.util.List;
@@ -24,7 +25,7 @@ public class SubmittedFlightPlanHandler {
     public static void handleNewIncomingSubmittedFlightPlan(SubmittedFlightPlan plan) {
 
         System.out.println("Saving new submitted FlightPlan!");
-        XATCUserSession user = SessionManagement.findUserSessionBySessionID(plan.getSessionID(), SessionManagement.getUserSessionList());
+        XATCUserSession user = SessionManagement.findUserSessionBySessionID(plan.getSessionID(), SessionManagement.getPilotDataStructures());
         if (user == null) {
             System.out.println("Could not find UserSession");
             return;
@@ -34,9 +35,11 @@ public class SubmittedFlightPlanHandler {
         Session session = DBSessionManager.getSession();
         session.saveOrUpdate(plan);
         DBSessionManager.closeSession(session);
-        if (!SessionManagement.getAtcChannelGroup().isEmpty()) {
+        if (!SessionManagement.getAtcDataStructures().isEmpty()) {
             System.out.println("sending new FlightPlan to all controllers!");
-            SessionManagement.getAtcChannelGroup().writeAndFlush(plan);
+            
+            //TODO with structures
+            NetworkBroadcaster.broadcastATC(plan);
         }
 
     }

@@ -5,9 +5,6 @@
  */
 package de.xatc.xplaneadapter.audio;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Mirko

@@ -5,6 +5,7 @@ import de.xatc.commons.db.sharedentities.atcdata.Country;
 import de.xatc.commons.db.sharedentities.atcdata.Fir;
 import de.xatc.commons.db.sharedentities.atcdata.PlainAirport;
 import de.xatc.commons.networkpackets.atc.datasync.DataSyncPacket;
+import de.xatc.commons.networkpackets.atc.datasync.RequestDataStructuresPacket;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
 import org.hibernate.Session;
@@ -105,6 +106,25 @@ public class DataSyncHandler {
         
         
     }
+
+    public static void sendSyncStructuresRequestPacket() {
+
+        System.out.println("sending data strcuture sync request to server!");
+        if (XHSConfig.getDataClient() == null) {
+            System.out.println("Not Connected");
+            return;
+        }
+        System.out.println("We are connected!");
+        
+        
+        
+        RequestDataStructuresPacket p = new RequestDataStructuresPacket();
+        XHSConfig.getDataClient().writeMessage(p);
+        
+        System.out.println("Data Structure Sync packet sent!!!!!!!");
+        
+    }
+    
     
     
 }

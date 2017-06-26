@@ -59,6 +59,7 @@ public class DataClientBootstrap {
                     DataClient client = new DataClient();
 
                     XHSConfig.setDataClient(client);
+                    
                     ch.pipeline().addLast(new ObjectEncoder());
                     ch.pipeline().addLast(new ObjectDecoder(ClassResolvers.cacheDisabled(null)));
                     ch.pipeline().addLast(client);

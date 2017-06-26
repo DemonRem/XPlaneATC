@@ -7,11 +7,12 @@ package de.xatc.server.networking.protocol.pilot;
 
 import de.mytools.encoding.UUIDCreator;
 import de.mytools.tools.dateandtime.SQLDateTimeTools;
+import de.xatc.commons.datastructure.pilot.PilotStructure;
 import de.xatc.commons.db.sharedentities.user.RegisteredUser;
+import de.xatc.commons.db.sharedentities.user.XATCUserSession;
 import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.server.config.ServerConfig;
 import de.xatc.server.db.DBSessionManager;
-import de.xatc.server.db.entities.XATCUserSession;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
 import java.util.List;
@@ -75,13 +76,26 @@ public class LoginHandler {
             n.writeAndFlush(returnPacket);
             return;
         }
+        
+        PilotStructure pilotStructure = new PilotStructure();
+        
 
         String sessionID = UUIDCreator.createUUID();
         returnPacket.setSessionID(sessionID);
         returnPacket.setSuccessful(true);
 
+        pilotStructure.setStructureSessionID(sessionID);
+        pilotStructure.setUser(u);
+       
+        SessionManagement.getPilotChannels().put(sessionID,n);
+        
+        pilotStructure.setChannelID(n.id().asLongText());
+        pilotStructure.setUserName(u.getRegisteredUserName());
+        pilotStructure.setSessionActive(true);
+        
+        
         returnPacket.setChannelID(n.id().asLongText());
-        SessionManagement.addDataChannel(n);
+        
 
         XATCUserSession userSession = new XATCUserSession();
         userSession.setChannelID(n.id().asLongText());
@@ -93,7 +107,11 @@ public class LoginHandler {
 
         session.save(userSession);
         DBSessionManager.closeSession(session);
-        SessionManagement.addUserSession(userSession);
+        
+        
+        pilotStructure.setUserSession(userSession);
+        SessionManagement.getPilotDataStructures().put(sessionID, pilotStructure);
+        
         System.out.println("Logging in successful! " + n.toString());
         System.out.println("Logging in successful! " + n.remoteAddress().toString());
         u.setSourceIP(n.remoteAddress().toString());

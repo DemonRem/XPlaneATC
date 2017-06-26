@@ -5,13 +5,23 @@
  */
 package de.xatc.server.networking.protocol.controller;
 
+import com.thoughtworks.xstream.XStream;
+import de.xatc.commons.datastructure.atc.ATCStructure;
+import de.xatc.commons.datastructure.pilot.PilotStructure;
 import de.xatc.commons.db.sharedentities.atcdata.Country;
 import de.xatc.commons.db.sharedentities.atcdata.Fir;
 import de.xatc.commons.db.sharedentities.atcdata.PlainAirport;
+import de.xatc.commons.networkpackets.atc.datasync.DataStructuresResponsePacket;
 import de.xatc.commons.networkpackets.atc.datasync.DataSyncPacket;
 import de.xatc.server.db.DBSessionManager;
+import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 import java.util.List;
+import java.util.Map.Entry;
 import org.hibernate.Session;
 
 /**
@@ -83,8 +93,7 @@ public class ServerSyncHandler {
             n.writeAndFlush(finishedPacket);
             airportRunning = false;
 
-        }
-        else if (what.equals("country")) {
+        } else if (what.equals("country")) {
 
             if (countryRunning) {
                 return;
@@ -114,6 +123,45 @@ public class ServerSyncHandler {
             countryRunning = false;
 
         }
+
+    }
+
+    public static void handleStructuresSyncRequest(Channel n) {
+
+        System.out.println("\n\n\n");
+        System.out.println("handle Structure Sync Request.... assembling...");
+
+        System.out.println("Sending pilot structures...");
+
+        XStream x = new XStream();
+        for (Entry<String, PilotStructure> entry : SessionManagement.getPilotDataStructures().entrySet()) {
+
+            DataStructuresResponsePacket p = new DataStructuresResponsePacket();
+            p.setPilotStructure(entry.getValue());
+            p.setStructureSsessionID(entry.getKey());
+            n.writeAndFlush(p);
+            System.out.println("Sending pilot structure with SessionID: " + p.getStructureSsessionID());
+        }
+
+        System.out.println("Sending atc strcutures....");
+        for (Entry<String, ATCStructure> entry : SessionManagement.getAtcDataStructures().entrySet()) {
+            DataStructuresResponsePacket p = new DataStructuresResponsePacket();
+           
+            p.setAtcStructure(entry.getValue());
+            p.setStructureSsessionID(entry.getKey());
+  
+            try {
+                n.writeAndFlush(p);
+
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
+            }
+            
+            System.out.println("Sending ATC Structure with sessionID: " + p.getStructureSsessionID());
+
+        }
+
+        System.out.println("data structzure response packet sent!!!!!!!!!!!!!!!!\n\n\n");
 
     }
 

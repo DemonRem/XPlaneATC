@@ -5,9 +5,11 @@
  */
 package de.xatc.server.mq.consumers;
 
+import de.xatc.commons.datastructure.pilot.PilotStructure;
+import de.xatc.commons.db.sharedentities.user.XATCUserSession;
 import de.xatc.commons.networkpackets.pilot.PlanePosition;
 import de.xatc.server.db.DBSessionManager;
-import de.xatc.server.db.entities.XATCUserSession;
+import de.xatc.server.sessionmanagment.NetworkBroadcaster;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
@@ -39,20 +41,25 @@ public class PlanePositionConsumer extends MQAbstractConsumer {
         }
         System.out.println(p.getSessionID());
         
-        XATCUserSession userSession = SessionManagement.findUserSessionBySessionID(p.getSessionID(), SessionManagement.getUserSessionList());
+        PilotStructure pilotStructure = SessionManagement.getPilotDataStructures().get(p.getSessionID());
+        
+        
+        XATCUserSession userSession = SessionManagement.findUserSessionBySessionID(p.getSessionID(), SessionManagement.getPilotDataStructures());
         if (userSession == null) {
             return;
         }
         p.setUserName(userSession.getRegisteredUser().getRegisteredUserName());
         
         System.out.println("PlanePositionComsumer.... recived ObejctMessage");
-        if (SessionManagement.getAtcChannelGroup().size() > 0) {
-            SessionManagement.getAtcChannelGroup().writeAndFlush(p);
+        if (SessionManagement.getAtcDataStructures().size() > 0) {
+            NetworkBroadcaster.broadcastATC(p);
+            
         }
         Session s = DBSessionManager.getSession();
         s.saveOrUpdate(p);
         DBSessionManager.closeSession(s);
-        
+        pilotStructure.getPlanePositionList().add(p);
+        pilotStructure.setLastKnownPlanePosition(p);
         
     }
 

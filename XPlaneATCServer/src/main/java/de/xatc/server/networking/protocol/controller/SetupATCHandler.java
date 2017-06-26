@@ -5,11 +5,11 @@
  */
 package de.xatc.server.networking.protocol.controller;
 
+import de.xatc.commons.db.sharedentities.user.XATCUserSession;
 import de.xatc.commons.networkpackets.atc.supportedstations.SupportedAirportStation;
 import de.xatc.commons.networkpackets.atc.supportedstations.SupportedFirStation;
 import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
 import de.xatc.server.db.DBSessionManager;
-import de.xatc.server.db.entities.XATCUserSession;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
 import org.hibernate.Session;
@@ -25,7 +25,7 @@ public class SetupATCHandler {
         TextMessagePacket message = new TextMessagePacket();
         Session s = DBSessionManager.getSession();
         airport.setId(0);
-        XATCUserSession userSession = SessionManagement.findUserSessionByChannelID(c.id().asLongText(), SessionManagement.getAtcSessionList());
+        XATCUserSession userSession = SessionManagement.findATCUserSessionByChannelID(c.id().asLongText());
         if (userSession == null) {
             message.setStatus(false);
             message.setMessage("Could not find your user. Session is not active.");
@@ -48,7 +48,7 @@ public class SetupATCHandler {
         
         Session s = DBSessionManager.getSession();
         fir.setId(0);
-        XATCUserSession userSession = SessionManagement.findUserSessionByChannelID(c.id().asLongText(), SessionManagement.getAtcSessionList());
+        XATCUserSession userSession = SessionManagement.findATCUserSessionByChannelID(c.id().asLongText());
         fir.setRegisteredUser(userSession.getRegisteredUser());
         fir.setActive(true);
         s.saveOrUpdate(fir);

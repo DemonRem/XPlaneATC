@@ -33,7 +33,7 @@ public class ServerControlHandler {
 
         System.out.println("Starting Client Connections");
         StartClientConnector s = (StartClientConnector) msg;
-        if (!SessionManagement.isAdmin(s.getSessionID(), SessionManagement.getAtcSessionList())) {
+        if (!SessionManagement.isAdmin(s.getSessionID())) {
             System.out.println("Not admin.... returning");
             return;
         }
@@ -53,7 +53,7 @@ public class ServerControlHandler {
 
         System.out.println("Stopping Client Connections");
         StopClientConnector s = (StopClientConnector) msg;
-        if (!SessionManagement.isAdmin(s.getSessionID(), SessionManagement.getAtcSessionList())) {
+        if (!SessionManagement.isAdmin(s.getSessionID())) {
             System.out.println("Not admin.... returning");
             return;
         }
@@ -64,8 +64,8 @@ public class ServerControlHandler {
 
         ServerConfig.getDataServerBootStrap().shutdownServer();
         ServerConfig.setDataServerBootStrap(null);
-        SessionManagement.getDataChannelGroup().clear();
-        SessionManagement.getUserSessionList().clear();
+        SessionManagement.getPilotDataStructures().clear();
+        SessionManagement.getAtcDataStructures().clear();
         System.out.println("Client Connections stopped");
 
     }
@@ -74,7 +74,7 @@ public class ServerControlHandler {
 
         System.out.println("shutting down Server");
         ShutdownServer s = (ShutdownServer) msg;
-        if (!SessionManagement.isAdmin(s.getSessionID(), SessionManagement.getAtcSessionList())) {
+        if (!SessionManagement.isAdmin(s.getSessionID())) {
             System.out.println("Not admin.... returning");
             return;
         }
@@ -87,7 +87,7 @@ public class ServerControlHandler {
 
         System.out.println("Starting Messaging Producers");
         StartMessagingProducers s = (StartMessagingProducers) msg;
-        if (!SessionManagement.isAdmin(s.getSessionID(), SessionManagement.getAtcSessionList())) {
+        if (!SessionManagement.isAdmin(s.getSessionID())) {
             System.out.println("Not admin.... returning");
             return;
         }
@@ -109,7 +109,7 @@ public class ServerControlHandler {
 
         System.out.println("Stopping Messaging producers");
         StopMessagingProducers s = (StopMessagingProducers) msg;
-        if (!SessionManagement.isAdmin(s.getSessionID(), SessionManagement.getAtcSessionList())) {
+        if (!SessionManagement.isAdmin(s.getSessionID())) {
             System.out.println("Not admin.... returning");
             return;
         }
@@ -131,7 +131,7 @@ public class ServerControlHandler {
 
         System.out.println("Starting Messaging Consumers");
         StartMessagingConsumers s = (StartMessagingConsumers) msg;
-        if (!SessionManagement.isAdmin(s.getSessionID(), SessionManagement.getAtcSessionList())) {
+        if (!SessionManagement.isAdmin(s.getSessionID())) {
             System.out.println("Not admin.... returning");
             return;
         }
@@ -154,7 +154,7 @@ public class ServerControlHandler {
 
         System.out.println("Stopping Messaging Consumers");
         StopMessagingConsumers s = (StopMessagingConsumers) msg;
-        if (!SessionManagement.isAdmin(s.getSessionID(), SessionManagement.getAtcSessionList())) {
+        if (!SessionManagement.isAdmin(s.getSessionID())) {
             System.out.println("Not admin.... returning");
             return;
         }
@@ -175,7 +175,7 @@ public class ServerControlHandler {
 
         System.out.println("Starting MQ Broker");
         StartMQBroker s = (StartMQBroker) msg;
-        if (!SessionManagement.isAdmin(s.getSessionID(), SessionManagement.getAtcSessionList())) {
+        if (!SessionManagement.isAdmin(s.getSessionID())) {
             System.out.println("Not admin.... returning");
             return;
         }
@@ -200,7 +200,7 @@ public class ServerControlHandler {
         
         System.out.println("Stopping MQ Broker");
         StopMQBroker s = (StopMQBroker) msg;
-        if (!SessionManagement.isAdmin(s.getSessionID(), SessionManagement.getAtcSessionList())) {
+        if (!SessionManagement.isAdmin(s.getSessionID())) {
             System.out.println("Not admin.... returning");
             return;
         }

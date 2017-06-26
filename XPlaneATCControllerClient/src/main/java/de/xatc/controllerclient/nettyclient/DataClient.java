@@ -5,22 +5,23 @@
  */
 package de.xatc.controllerclient.nettyclient;
 
-
 import de.mytools.tools.swing.SwingTools;
+import de.xatc.commons.networkpackets.atc.datasync.DataStructuresResponsePacket;
 import de.xatc.commons.networkpackets.atc.datasync.DataSyncPacket;
 import de.xatc.commons.networkpackets.atc.servercontrol.ServerMetrics;
 import de.xatc.commons.networkpackets.atc.usermgt.UserListResponse;
+import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.commons.networkpackets.pilot.PlanePosition;
 import de.xatc.commons.networkpackets.pilot.RegisterPacket;
 import de.xatc.commons.networkpackets.pilot.ServerMessageToClient;
-import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansPacket;
 import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
-import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.controllerclient.config.XHSConfig;
+import de.xatc.controllerclient.datastructures.DataStructureSilo;
 import de.xatc.controllerclient.gui.tools.ControllerClientGuiTools;
+import de.xatc.controllerclient.network.handlers.DataStructureResponseHandler;
 import de.xatc.controllerclient.network.handlers.DataSyncHandler;
 import de.xatc.controllerclient.network.handlers.LoginAnswerHandler;
 import de.xatc.controllerclient.network.handlers.MetricsAnswerHandler;
@@ -29,7 +30,6 @@ import de.xatc.controllerclient.network.handlers.SubmittedFlightPlansHandler;
 import de.xatc.controllerclient.network.handlers.UserListResponseHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -81,76 +81,91 @@ public class DataClient extends ChannelInboundHandlerAdapter {
 
         System.out.println("Channel Read of DataClient, incoming Packet");
         System.out.println("Packet is: " + msg);
-       if (msg instanceof LoginPacket) {
+        if (msg instanceof LoginPacket) {
             System.out.println("INCOMING LoginPacket");
             LoginAnswerHandler.handleLoginAnswer(msg);
-            
+
+        } else if (msg instanceof ServerMetrics) {
+            System.out.println("Handling ServerMetrics Packet");
+            MetricsAnswerHandler.handleMetricsAnswer(msg);
+            return;
+        } else if (msg instanceof DataSyncPacket) {
+
+            System.out.println("incoming data sync packet");
+            DataSyncPacket p = (DataSyncPacket) msg;
+
+            DataSyncHandler.handleIncomingDataSyncPacket(p);
+            return;
         }
-       else if (msg instanceof ServerMetrics) {
-           System.out.println("Handling ServerMetrics Packet");
-           MetricsAnswerHandler.handleMetricsAnswer(msg);
-       }
-       else if (msg instanceof DataSyncPacket) {
-           
-           DataSyncPacket p = (DataSyncPacket) msg;
-           
-           DataSyncHandler.handleIncomingDataSyncPacket(p);
-           
-       }
-       
-       
-       
-       if (msg instanceof PlanePosition) {
-           
-           
-           PlanePosition p = (PlanePosition) msg;
-           System.out.println("PlanePosition received");
-           XHSConfig.getMainFrame().getMainPanel().getMapPanel().getAircraftPainter().setP(p);
-           XHSConfig.getMainFrame().getMainPanel().getMapPanel().repaint();
-           return;
-       }
-       if (msg instanceof UserListResponse) {
-           
-           UserListResponse u = (UserListResponse) msg;
-           UserListResponseHandler.handleUserListResonse(u);
-           return;
-           
-       }
-       
-       if (msg instanceof ServerMessageToClient) {
-           
-           ServerMessageToClient message = (ServerMessageToClient) msg;
-           SwingTools.alertWindow(message.getMessage(), XHSConfig.getMainFrame());
-           return;
-           
-       }
-       if (msg instanceof TextMessagePacket) {
-           
-           ControllerClientGuiTools.showChatFrame();
-           TextMessagePacket messagePacket = (TextMessagePacket) msg;
-           
-           XHSConfig.getChatFrame().toFront();
-           XHSConfig.getChatFrame().addMessage(messagePacket);
-           return;
-       }
-       
-       if (msg instanceof SubmittedFlightPlansPacket) {   
-           System.out.println("SAVING FLIGHTPLANS");
-           SubmittedFlightPlansPacket p = (SubmittedFlightPlansPacket) msg; 
-           SubmittedFlightPlansHandler.saveFlightSubmittedFlightPlans(p.getList());
-           return;
-       }
-       if (msg instanceof SubmittedFlightPlansActionPacket) {
-           
-           SubmittedFlightPlansActionPacket p = (SubmittedFlightPlansActionPacket) msg;
-           SubmittedFlightPlanActionHandler.handleActionPacket(p);
-           return;
-           
-       }
-       
-       
-       
-       
+
+        if (msg instanceof PlanePosition) {
+
+            PlanePosition p = (PlanePosition) msg;
+            System.out.println("PlanePosition received");
+            DataStructureSilo.getLocalPilotStructure().get(p.getSessionID()).getAircraftPainter().setP(p);
+            //XHSConfig.getMainFrame().getMainPanel().getMapPanel().getAircraftPainter().setP(p);
+            XHSConfig.getMainFrame().getMainPanel().getMapPanel().repaint();
+            return;
+        }
+        if (msg instanceof UserListResponse) {
+
+            System.out.println("User List Response received");
+            UserListResponse u = (UserListResponse) msg;
+            UserListResponseHandler.handleUserListResonse(u);
+            return;
+
+        }
+
+        if (msg instanceof ServerMessageToClient) {
+
+            System.out.println("Server Message To Client received");
+            ServerMessageToClient message = (ServerMessageToClient) msg;
+            SwingTools.alertWindow(message.getMessage(), XHSConfig.getMainFrame());
+            return;
+
+        }
+        if (msg instanceof TextMessagePacket) {
+            System.out.print("Textmessage Packet received");
+
+            ControllerClientGuiTools.showChatFrame();
+            TextMessagePacket messagePacket = (TextMessagePacket) msg;
+
+            XHSConfig.getChatFrame().toFront();
+            XHSConfig.getChatFrame().addMessage(messagePacket);
+            return;
+        }
+
+        if (msg instanceof DataStructuresResponsePacket) {
+
+            
+            System.out.println("DataStructuresREspoinsePacket received");
+            DataStructuresResponsePacket r = (DataStructuresResponsePacket) msg;
+
+            if (r.getAtcStructure() != null) {
+                
+                DataStructureResponseHandler.handleNewATCStructure(r.getAtcStructure());
+                
+            }
+            else if (r.getPilotStructure() != null) {
+                DataStructureResponseHandler.handleNewPilotStructure(r.getPilotStructure());
+            }
+            System.out.println(r.getStructureSsessionID() + "**************************************");
+            
+            return;
+
+        }
+        
+ 
+        if (msg instanceof SubmittedFlightPlansActionPacket) {
+
+            SubmittedFlightPlansActionPacket p = (SubmittedFlightPlansActionPacket) msg;
+            SubmittedFlightPlanActionHandler.handleActionPacket(p);
+            return;
+
+        }
+
+        
+
     }
 
     @Override
@@ -173,6 +188,7 @@ public class DataClient extends ChannelInboundHandlerAdapter {
         System.out.println("EXCEPTION CAUGHT ON DATA-CLIENT.....");
         cause.printStackTrace(System.err);
         ctx.close();
+
     }
 
     public ChannelHandlerContext getCtx() {

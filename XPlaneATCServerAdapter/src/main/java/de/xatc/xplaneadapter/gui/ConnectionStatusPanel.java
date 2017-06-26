@@ -8,9 +8,6 @@ package de.xatc.xplaneadapter.gui;
 import de.mytools.tools.swing.IconPainter;
 import de.xatc.xplaneadapter.audio.Capture;
 import de.xatc.xplaneadapter.audio.Playback;
-import de.xatc.xplaneadapter.audio.SiloWatcher;
-
-
 import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -44,8 +41,10 @@ public class ConnectionStatusPanel extends JPanel implements MouseListener {
 
     public ConnectionStatusPanel() {
         super();
-        SiloWatcher watcher = new SiloWatcher();
-        watcher.start();
+        
+        //TODO - implement a mechanism at startup to enable audo replaying
+       // SiloWatcher watcher = new SiloWatcher();
+       // watcher.start();
        
 
         initComponents();

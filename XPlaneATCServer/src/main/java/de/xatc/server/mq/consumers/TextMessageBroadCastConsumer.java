@@ -10,6 +10,7 @@ import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
 import de.xatc.server.db.DBSessionManager;
 import de.xatc.server.db.entities.TextMessageEntity;
+import de.xatc.server.sessionmanagment.NetworkBroadcaster;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
@@ -37,19 +38,21 @@ public class TextMessageBroadCastConsumer extends MQAbstractConsumer {
         try {
             TextMessagePacket p = (TextMessagePacket) message.getObject();
             
-            if (SessionManagement.getAtcChannelGroup().size() > 0) {
+            if (SessionManagement.getAtcDataStructures().size() > 0) {
                 System.out.println("Writing to ATCGroup!");
-                SessionManagement.getAtcChannelGroup().writeAndFlush(p);
+                NetworkBroadcaster.broadcastATC(p);
+                
             }
-            if (SessionManagement.getDataChannelGroup().size() > 0) {
+            if (SessionManagement.getPilotDataStructures().size() > 0) {
                 System.out.println("Writing to UserGroup");
-                SessionManagement.getDataChannelGroup().writeAndFlush(p);
+                NetworkBroadcaster.broadcastPilots(p);
+                
             }
             
             Session session = DBSessionManager.getSession();
             TextMessageEntity dbMsg = new TextMessageEntity();
             
-            RegisteredUser u = SessionManagement.findRegisteredUserByUserName(p.getFromUserName(), SessionManagement.getUserSessionList());
+            RegisteredUser u = SessionManagement.findOverallUserByUsername(p.getFromUserName());
             if (u != null) {
                 dbMsg.setFromUser(u);
             }

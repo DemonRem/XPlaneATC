@@ -5,9 +5,11 @@
  */
 package de.xatc.server.nettybootstrap.atc;
 
+import de.xatc.commons.datastructure.pilot.PilotStructure;
 import de.xatc.server.config.ServerConfig;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -18,6 +20,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import java.util.Map.Entry;
 
 /**
  *
@@ -38,6 +41,7 @@ public class ATCServerBootstrap {
 
         bossGroup = new NioEventLoopGroup();
         workerGroup = new NioEventLoopGroup();
+        
         try {
             ServerBootstrap b = new ServerBootstrap(); // (2)
             b.group(bossGroup, workerGroup)
@@ -72,7 +76,14 @@ public class ATCServerBootstrap {
                 
 
                 try {
-                    SessionManagement.getAtcChannelGroup().close().sync();
+                    
+                    for (Entry<String,Channel> entry : SessionManagement.getAtcChannels().entrySet()) {
+                        
+                        entry.getValue().close().sync();
+                        
+                    }
+               
+                    
                     channelFuture.channel().closeFuture().sync();
                 } catch (InterruptedException ex) {
                     ex.printStackTrace(System.err);

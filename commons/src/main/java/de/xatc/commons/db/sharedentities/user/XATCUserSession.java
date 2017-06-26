@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.xatc.server.db.entities;
+package de.xatc.commons.db.sharedentities.user;
 
-import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.persistence.Entity;
@@ -27,6 +26,8 @@ public class XATCUserSession implements Serializable {
     @Id
     @Index(name = "sessionID")
     private String sessionID;
+
+    private boolean active = false;
     
     @OneToOne
     private RegisteredUser registeredUser;
@@ -99,6 +100,14 @@ public class XATCUserSession implements Serializable {
 
     public void setSessionUserName(String sessionUserName) {
         this.sessionUserName = sessionUserName;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
     
     

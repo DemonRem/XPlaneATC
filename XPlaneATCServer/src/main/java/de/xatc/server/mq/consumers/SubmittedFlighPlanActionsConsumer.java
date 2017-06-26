@@ -7,9 +7,6 @@ package de.xatc.server.mq.consumers;
 
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanActionHandler;
-import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;

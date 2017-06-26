@@ -7,11 +7,12 @@ package de.xatc.server.networking.protocol.controller;
 
 import de.mytools.encoding.UUIDCreator;
 import de.mytools.tools.dateandtime.SQLDateTimeTools;
+import de.xatc.commons.datastructure.atc.ATCStructure;
 import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import de.xatc.commons.db.sharedentities.user.UserRole;
+import de.xatc.commons.db.sharedentities.user.XATCUserSession;
 import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.server.db.DBSessionManager;
-import de.xatc.server.db.entities.XATCUserSession;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
 import java.util.List;
@@ -37,13 +38,10 @@ public class ATCLoginHandler {
 
         System.out.println("searching for user!");
         RegisteredUser u = (RegisteredUser) session.createCriteria(RegisteredUser.class).add(Restrictions.eq("registeredUserName", p.getUserName())).uniqueResult();
-        
-        
+
         System.out.println("USER FOUND.");
         System.out.println("USER: " + u.getUserRole());
-        
-        
-        
+
         if (u == null) {
             System.out.println("User not found.....");
             returnPacket.setSuccessful(false);
@@ -51,9 +49,9 @@ public class ATCLoginHandler {
             n.writeAndFlush(returnPacket);
             return;
         }
-        
+
         if (u.getUserRole() != UserRole.CONTROLLER && u.getUserRole() != UserRole.ADMINISTRATOR) {
-            
+
             returnPacket.setSuccessful(false);
             returnPacket.setServerMessage("You must be an Controller or an Administrator to log in here!");
             n.writeAndFlush(returnPacket);
@@ -80,15 +78,19 @@ public class ATCLoginHandler {
             return;
         }
 
+        ATCStructure atcStructure = new ATCStructure();
+
         String sessionID = UUIDCreator.createUUID();
+        SessionManagement.getAtcChannels().put(sessionID, n);
+
         returnPacket.setSessionID(sessionID);
+        atcStructure.setStructureSessionID(sessionID);
         returnPacket.setSuccessful(true);
 
         returnPacket.setChannelID(n.id().asLongText());
-        
 
         XATCUserSession userSession = new XATCUserSession();
-      
+
         userSession.setChannelID(n.id().asLongText());
         userSession.setSessionID(sessionID);
         userSession.setRegisteredUser(u);
@@ -98,11 +100,12 @@ public class ATCLoginHandler {
 
         session.save(userSession);
         DBSessionManager.closeSession(session);
-        
-        
-        SessionManagement.addATCSession(userSession);
-        SessionManagement.addATCChannel(n);
-        
+
+        atcStructure.setUserSession(userSession);
+        atcStructure.setUserName(u.getRegisteredUserName());
+        atcStructure.setActive(true);
+
+        SessionManagement.getAtcDataStructures().put(sessionID, atcStructure);
         System.out.println("client LOGGED IN SUCCESSFULLY with long ChannelID: " + n.id().asLongText());
         System.out.println("client LOGGED IN SUCCESSFULLY with short CHANNELID:  " + n.id().asShortText());
         n.writeAndFlush(returnPacket);
