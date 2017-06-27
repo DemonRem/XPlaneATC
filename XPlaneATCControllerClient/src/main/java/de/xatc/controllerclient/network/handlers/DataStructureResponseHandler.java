@@ -19,6 +19,26 @@ import de.xatc.controllerclient.gui.painters.AircraftPainter;
  */
 public class DataStructureResponseHandler {
     
+    public static void handleRemovePilotStructure(String strcutureSessionID) {
+        
+        LocalPilotDataStructure l = DataStructureSilo.getLocalPilotStructure().get(strcutureSessionID);
+        if (l != null) {
+            
+            XHSConfig.getMainFrame().getMainPanel().getMapPanel().getPaintersList().remove(l.getAircraftPainter());
+            DataStructureSilo.getLocalPilotStructure().remove(strcutureSessionID);
+            XHSConfig.getMainFrame().getMainPanel().getMapPanel().reloadPainter();
+            
+        }
+        
+    }
+    
+    public static void removeATCStructure(String structureSessionID) {
+        
+        DataStructureSilo.getLocalATCStructures().remove(structureSessionID);
+        
+        
+    }
+    
     
     public static void handleNewATCStructure(ATCStructure s) {
         

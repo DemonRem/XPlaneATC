@@ -74,6 +74,10 @@
               <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
+                      <Component id="progressPanel" min="-2" pref="450" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
                       <Component id="abortButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="doItButton" min="-2" max="-2" attributes="0"/>
@@ -129,7 +133,9 @@
                   <Component id="doItButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="abortButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="0" pref="20" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="progressPanel" pref="205" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -223,5 +229,31 @@
         <Property name="text" type="java.lang.String" value="Interval"/>
       </Properties>
     </Component>
+    <Container class="de.xatc.flightplayer.gui.ProgressPanel" name="progressPanel">
+      <LayoutCode>
+        <CodeStatement>
+          <CodeExpression id="1_progressPanel">
+            <CodeVariable name="progressPanel" type="8194" declaredType="de.xatc.flightplayer.gui.ProgressPanel"/>
+            <ExpressionOrigin>
+              <ExpressionProvider type="ComponentRef">
+                <ComponentRef name="progressPanel"/>
+              </ExpressionProvider>
+            </ExpressionOrigin>
+          </CodeExpression>
+          <StatementProvider type="CodeMethod">
+            <CodeMethod name="setLayout" class="java.awt.Container" parameterTypes="java.awt.LayoutManager"/>
+          </StatementProvider>
+          <Parameters>
+            <CodeExpression id="2">
+              <ExpressionOrigin>
+                <ExpressionProvider type="CodeConstructor">
+                  <CodeConstructor class="org.jdesktop.swingx.VerticalLayout" parameterTypes=""/>
+                </ExpressionProvider>
+              </ExpressionOrigin>
+            </CodeExpression>
+          </Parameters>
+        </CodeStatement>
+      </LayoutCode>
+    </Container>
   </SubComponents>
 </Form>

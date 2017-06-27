@@ -10,9 +10,11 @@ import de.mytools.tools.dateandtime.SQLDateTimeTools;
 import de.xatc.commons.datastructure.pilot.PilotStructure;
 import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import de.xatc.commons.db.sharedentities.user.XATCUserSession;
+import de.xatc.commons.networkpackets.atc.datasync.DataStructuresResponsePacket;
 import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.server.config.ServerConfig;
 import de.xatc.server.db.DBSessionManager;
+import de.xatc.server.sessionmanagment.NetworkBroadcaster;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
 import java.util.List;
@@ -125,6 +127,10 @@ public class LoginHandler {
         n.writeAndFlush(returnPacket);
         //TODO here noch in die Queue fuer die Datenbank, um die Session in der DB zu halten!
 
+        DataStructuresResponsePacket broadcastPilotStrcuture = new DataStructuresResponsePacket();
+        broadcastPilotStrcuture.setStructureSsessionID(sessionID);
+        broadcastPilotStrcuture.setPilotStructure(pilotStructure);
+        NetworkBroadcaster.broadcastATC(broadcastPilotStrcuture);
     }
 
 }

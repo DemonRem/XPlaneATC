@@ -5,6 +5,8 @@
  */
 package de.xatc.server.nettybootstrap.atc;
 
+import de.xatc.commons.datastructure.atc.ATCStructure;
+import de.xatc.commons.datastructure.structureaction.RemoveATCStructure;
 import de.xatc.commons.networkpackets.atc.datasync.RequestDataStructuresPacket;
 import de.xatc.commons.networkpackets.atc.datasync.RequestSyncPacket;
 import de.xatc.commons.networkpackets.atc.servercontrol.RequestServerMetrics;
@@ -36,6 +38,7 @@ import de.xatc.server.networking.protocol.controller.ServerSyncHandler;
 import de.xatc.server.networking.protocol.controller.SetupATCHandler;
 import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanHandler;
 import de.xatc.server.networking.protocol.controller.UserManagementHander;
+import de.xatc.server.sessionmanagment.NetworkBroadcaster;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -192,6 +195,16 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
 
         SessionManagement.removeATCSessionByChannel(ctx.channel());
 
+        ATCStructure s = SessionManagement.findATCStructureByChannelID(ctx.channel().id().asLongText());
+
+        if (s != null) {
+            System.out.println("boradcasting lost atcstructure to all stations");
+            RemoveATCStructure removePacket = new RemoveATCStructure();
+            removePacket.setStrucutureSessionID(s.getStructureSessionID());
+            SessionManagement.getAtcDataStructures().remove(s.getStructureSessionID());
+            NetworkBroadcaster.broadcastAll(removePacket);
+            
+        }
         System.out.println("client disconnected");
 
         channel.close();

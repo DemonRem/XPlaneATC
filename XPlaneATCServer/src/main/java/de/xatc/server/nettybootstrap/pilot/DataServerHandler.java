@@ -5,6 +5,8 @@
  */
 package de.xatc.server.nettybootstrap.pilot;
 
+import de.xatc.commons.datastructure.pilot.PilotStructure;
+import de.xatc.commons.datastructure.structureaction.RemovePilotStructure;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import de.xatc.commons.networkpackets.pilot.FMSPlan;
 import de.xatc.commons.networkpackets.pilot.LoginPacket;
@@ -16,6 +18,7 @@ import de.xatc.server.config.ServerConfig;
 import de.xatc.server.networking.protocol.controller.TextMessageHandler;
 import de.xatc.server.networking.protocol.pilot.LoginHandler;
 import de.xatc.server.networking.protocol.pilot.RegisterHandler;
+import de.xatc.server.sessionmanagment.NetworkBroadcaster;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -82,8 +85,9 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
             
             
             else if (msg instanceof FMSPlan) {
-                System.out.println("FMSPlAN received");
-                //TODO
+                FMSPlan plan = (FMSPlan) msg;
+                SessionManagement.getPilotDataStructures().get(plan.getSessionID()).setFmsPlan(plan);
+                NetworkBroadcaster.broadcastATC(plan);
             }
 
         }
@@ -94,6 +98,15 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
 
         SessionManagement.removePilotSessionByChannel(ctx.channel());
 
+        PilotStructure s = SessionManagement.findPilotStructureByChannelID(ctx.channel().id().asLongText());
+        if (s != null) {
+            RemovePilotStructure removePacket = new RemovePilotStructure();
+            removePacket.setStructureSessionID(s.getStructureSessionID());
+            SessionManagement.getPilotDataStructures().remove(s.getStructureSessionID());
+            NetworkBroadcaster.broadcastATC(removePacket);
+                    
+        }
+        
         System.out.println("client disconnected");
 
         channel.close();

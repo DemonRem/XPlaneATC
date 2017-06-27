@@ -11,8 +11,10 @@ import de.xatc.commons.datastructure.atc.ATCStructure;
 import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import de.xatc.commons.db.sharedentities.user.UserRole;
 import de.xatc.commons.db.sharedentities.user.XATCUserSession;
+import de.xatc.commons.networkpackets.atc.datasync.DataStructuresResponsePacket;
 import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.server.db.DBSessionManager;
+import de.xatc.server.sessionmanagment.NetworkBroadcaster;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
 import java.util.List;
@@ -111,6 +113,11 @@ public class ATCLoginHandler {
         n.writeAndFlush(returnPacket);
         //TODO here noch in die Queue fuer die Datenbank, um die Session in der DB zu halten!
 
+        DataStructuresResponsePacket broadcatAtc = new DataStructuresResponsePacket();
+        broadcatAtc.setStructureSsessionID(sessionID);
+        broadcatAtc.setAtcStructure(atcStructure);
+        NetworkBroadcaster.broadcastAll(broadcatAtc);
+        
     }
 
 }

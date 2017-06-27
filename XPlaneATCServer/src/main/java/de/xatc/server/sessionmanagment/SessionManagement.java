@@ -95,8 +95,32 @@ public class SessionManagement {
         
     }
     
-    
-    
+    public static ATCStructure findATCStructureByChannelID(String channelID) {
+        
+        for (Entry<String,ATCStructure> entry : atcDataStructures.entrySet()) {
+            
+            if (entry.getValue().getChannelID().equals(channelID)) {
+                
+                return entry.getValue();
+            }
+            
+        }
+        return null;
+        
+    }
+    public static PilotStructure findPilotStructureByChannelID(String channelID) {
+        
+        for (Entry<String,PilotStructure> entry : pilotDataStructures.entrySet()) {
+            
+            if (entry.getValue().getChannelID().equals(channelID)) {
+                
+                return entry.getValue();
+            }
+            
+        }
+        return null;
+        
+    }
     
     
     public static void removeATCSessionByChannel(Channel c) {
@@ -104,11 +128,15 @@ public class SessionManagement {
         for (Entry<String,Channel> entry : atcChannels.entrySet()) {
             
             if (entry.getValue() == c) {
+                System.out.println("Removing ATC Channel");
                 atcDataStructures.remove(entry.getKey());
+                
                 return;
             }
             
+            
         }
+        System.out.println("Could not remove atc channel after losing connection");
         
     }
     

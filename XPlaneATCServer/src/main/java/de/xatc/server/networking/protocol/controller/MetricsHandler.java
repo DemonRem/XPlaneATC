@@ -43,6 +43,10 @@ public class MetricsHandler {
             b += "Accepting Client Connections: true<br>";
         }
         
+        b += "PilotStructures present: " + SessionManagement.getPilotDataStructures().size() + "<br>";
+        b += "ATCSTructures present: " + SessionManagement.getAtcDataStructures().size() + "<br>";
+        
+        
         b += "Messaging Consumers running: " + ServerConfig.getMessageReceivers().size() + "<br>";
         b += "Messaging Producers running: " + ServerConfig.getMessageSenders().size() + "<br>";
         

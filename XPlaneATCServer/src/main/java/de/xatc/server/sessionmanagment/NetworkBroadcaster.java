@@ -17,37 +17,42 @@ public class NetworkBroadcaster {
 
     public static void broadcastPilots(Object o) {
 
-        for (Entry<String, Channel> entry : SessionManagement.getPilotChannels().entrySet()) {
+        if (!SessionManagement.getPilotDataStructures().isEmpty()) {
+            for (Entry<String, Channel> entry : SessionManagement.getPilotChannels().entrySet()) {
 
-            entry.getValue().writeAndFlush(o);
+                entry.getValue().writeAndFlush(o);
 
+            }
         }
-
     }
 
     public static void broadcastATC(Object o) {
 
-        for (Entry<String, Channel> entry : SessionManagement.getAtcChannels().entrySet()) {
+        if (!SessionManagement.getAtcDataStructures().isEmpty()) {
+            for (Entry<String, Channel> entry : SessionManagement.getAtcChannels().entrySet()) {
 
-            entry.getValue().writeAndFlush(o);
+                entry.getValue().writeAndFlush(o);
 
+            }
         }
-
     }
 
     public static void broadcastAll(Object o) {
 
-        for (Entry<String, Channel> entry : SessionManagement.getPilotChannels().entrySet()) {
+        if (!SessionManagement.getPilotDataStructures().isEmpty()) {
+            for (Entry<String, Channel> entry : SessionManagement.getPilotChannels().entrySet()) {
 
-            entry.getValue().writeAndFlush(o);
+                entry.getValue().writeAndFlush(o);
 
+            }
         }
-        for (Entry<String, Channel> entry : SessionManagement.getAtcChannels().entrySet()) {
+        if (!SessionManagement.getAtcDataStructures().isEmpty()) {
+            for (Entry<String, Channel> entry : SessionManagement.getAtcChannels().entrySet()) {
 
-            entry.getValue().writeAndFlush(o);
+                entry.getValue().writeAndFlush(o);
 
+            }
         }
-
     }
 
 }

@@ -149,9 +149,9 @@ public class XPlaneUDPListener extends Thread {
                         w.setId(fmsOutID);
                         w.setLatitude(outLat);
                         w.setLongitude(outLon);
-                        w.setName(outRef);
+                        w.setName(fmsOutID);
                         w.setRemark(fmsOutType);
-                        plan.getWayPointList().put(outRef,w);
+                        plan.getWayPointList().put(fmsOutID,w);
 
                     }
                     System.out.println(plan.hashCode());

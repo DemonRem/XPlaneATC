@@ -9,9 +9,11 @@
  */
 package de.xatc.controllerclient.gui.painters;
 
-
+import de.xatc.commons.networkpackets.pilot.FMSPlan;
+import de.xatc.commons.networkpackets.pilot.FMSWayPoint;
 import de.xatc.commons.networkpackets.pilot.PlanePosition;
 import de.xatc.controllerclient.config.XHSConfig;
+import de.xatc.controllerclient.datastructures.DataStructureSilo;
 import de.xatc.controllerclient.log.DebugMessageLevel;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -23,6 +25,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map.Entry;
 import javax.imageio.ImageIO;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
@@ -36,7 +40,6 @@ import org.jdesktop.swingx.painter.Painter;
  */
 public class AircraftPainter implements Painter<JXMapViewer> {
 
-    
     private PlanePosition p;
     /**
      * do we want AntiAliasing, of course
@@ -48,8 +51,6 @@ public class AircraftPainter implements Painter<JXMapViewer> {
      */
     private BufferedImage image;
     private BufferedImage originalImage;
-
-  
 
     /**
      * to show the heading of the plane we need to rotate the image. This is
@@ -65,7 +66,7 @@ public class AircraftPainter implements Painter<JXMapViewer> {
     public AircraftPainter() {
 
         XHSConfig.debugMessage("PATH: " + Paths.get(".").toAbsolutePath().normalize().toString(), DebugMessageLevel.DEBUG);
-        
+
         try {
             File imageFile = new File("Resources/plugins/PythonScripts/followMeCarScripts/plane.png");
             if (!imageFile.exists()) {
@@ -73,7 +74,6 @@ public class AircraftPainter implements Painter<JXMapViewer> {
             }
             this.image = ImageIO.read(imageFile);
             this.originalImage = ImageIO.read(imageFile);
-            
 
         } catch (IOException ex) {
             XHSConfig.debugMessage("could not load Image: " + ex.getLocalizedMessage(), DebugMessageLevel.EXCEPTION);
@@ -103,8 +103,63 @@ public class AircraftPainter implements Painter<JXMapViewer> {
         }
 
         drawPlane(g, map);
-
+        drawPlaneFlownPath(g, map);
+        drawFMSPlan(g, map);
         g.dispose();
+    }
+
+    private void drawFMSPlan(Graphics2D g, JXMapViewer map) {
+
+        FMSPlan fmsPlan = DataStructureSilo.getLocalPilotStructure().get(p.getSessionID()).getPilotServerStructure().getFmsPlan();
+        if (fmsPlan == null) {
+            return;
+        }
+
+        Point2D fromPoint = null;
+        Point2D toPoint = null;
+        boolean firstLine = true;
+        g.setColor(Color.BLUE);
+        if (fmsPlan.getWayPointList().size() > 0) {
+            for (Entry<String, FMSWayPoint> entry : fmsPlan.getWayPointList().entrySet()) {
+
+                if (firstLine) {
+                    fromPoint = map.getTileFactory().geoToPixel(new GeoPosition(Double.parseDouble(entry.getValue().getLatitude()), Double.parseDouble(entry.getValue().getLongitude())), map.getZoom());
+                    firstLine = false;
+                    continue;
+                }
+
+                toPoint = map.getTileFactory().geoToPixel(new GeoPosition(Double.parseDouble(entry.getValue().getLatitude()), Double.parseDouble(entry.getValue().getLongitude())), map.getZoom());
+                g.drawLine((int) fromPoint.getX(), (int) fromPoint.getY(), (int) toPoint.getX(), (int) toPoint.getY());
+                g.fillOval((int)fromPoint.getX()-5, (int)fromPoint.getY()-5, 10, 10);
+                g.drawString(entry.getKey(), (int)toPoint.getX()+10, (int) toPoint.getY());
+                fromPoint = toPoint;
+
+            }
+        }
+    }
+
+    private void drawPlaneFlownPath(Graphics2D g, JXMapViewer map) {
+
+        List<PlanePosition> posList = DataStructureSilo.getLocalPilotStructure().get(p.getSessionID()).getPilotServerStructure().getPlanePositionList();
+
+        g.setColor(Color.BLACK);
+        Point2D fromPoint = null;
+        Point2D toPoint = null;
+        boolean firstLine = true;
+        if (posList.size() > 2) {
+            for (PlanePosition pos : posList) {
+
+                if (firstLine) {
+                    fromPoint = map.getTileFactory().geoToPixel(new GeoPosition(Double.parseDouble(pos.getLatitude()), Double.parseDouble(pos.getLongitude())), map.getZoom());
+                    firstLine = false;
+                    continue;
+                }
+                toPoint = map.getTileFactory().geoToPixel(new GeoPosition(Double.parseDouble(pos.getLatitude()), Double.parseDouble(pos.getLongitude())), map.getZoom());
+                g.drawLine((int) fromPoint.getX(), (int) fromPoint.getY(), (int) toPoint.getX(), (int) toPoint.getY());
+                fromPoint = toPoint;
+
+            }
+        }
     }
 
     /**
@@ -115,24 +170,18 @@ public class AircraftPainter implements Painter<JXMapViewer> {
      */
     private void drawPlane(Graphics2D g, JXMapViewer map) {
 
-        
-        
-        
         Point2D plane2d = map.getTileFactory().geoToPixel(new GeoPosition(Double.parseDouble(p.getLatitude()), Double.parseDouble(p.getLongitude())), map.getZoom());
 
-        
         this.image = this.originalImage;
         this.image = this.rotateImage(image, Double.parseDouble(p.getHeading()));
-        
+
         int x = (int) plane2d.getX() - (this.image.getWidth() / 2);
-        int y = (int) (int) plane2d.getY() - (this.image.getHeight()/ 2);
+        int y = (int) (int) plane2d.getY() - (this.image.getHeight() / 2);
         g.setColor(Color.BLACK);
-        g.drawString("xPr<b> " + p.getTransponder() + " " + p.getTransponderMode(), x, y-30);
-        g.drawString("iac: " + p.getGroundSpeed(), x, y-20);
-        g.drawString("alt: " + p.getAltitude(), x, y-10);
+        g.drawString("xPr<b> " + p.getTransponder() + " " + p.getTransponderMode(), x, y - 30);
+        g.drawString("iac: " + p.getGroundSpeed(), x, y - 20);
+        g.drawString("alt: " + p.getAltitude(), x, y - 10);
         g.drawImage(image, x, y, null);
-        
-        
 
     }
 
@@ -163,7 +212,5 @@ public class AircraftPainter implements Painter<JXMapViewer> {
     public void setP(PlanePosition p) {
         this.p = p;
     }
-    
-    
 
 }

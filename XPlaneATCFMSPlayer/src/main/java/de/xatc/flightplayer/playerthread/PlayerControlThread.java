@@ -16,10 +16,13 @@ import de.xatc.flightplayer.credentialsgenerator.CredentialsGenerator;
 import de.xatc.flightplayer.netty.DataClientBootstrap;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JProgressBar;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
@@ -42,7 +45,9 @@ public class PlayerControlThread extends Thread {
     private AbstractMap.Entry<String,String> credentials;
     private String sessionID;
     private String channelID;
-    
+    private long linesToProcess;
+    private int currentLine;
+    private JProgressBar progressBar;
     
     
     
@@ -51,6 +56,13 @@ public class PlayerControlThread extends Thread {
         this.interval = interval;
         System.out.println("Control Thread initializing.....");
         this.playerFile = new File(filename);
+        try {
+            this.linesToProcess = Files.lines(Paths.get(filename)).count();
+            int toProcess = java.lang.Math.toIntExact(this.linesToProcess);
+            this.progressBar = PlayerConfig.getMainFrame().getPlayerPanel().getProgressPanel().addProgressBar(this.playerFile.getName(), 0, toProcess, currentLine);
+        } catch (IOException ex) {
+           ex.printStackTrace(System.err);
+        }
         
         
         
@@ -125,6 +137,10 @@ public class PlayerControlThread extends Thread {
                 String line = it.nextLine();
                 System.out.println(line);
                 this.parseLine(line);
+                this.currentLine++;
+                this.progressBar.setValue(this.currentLine);
+                this.progressBar.revalidate();
+                this.progressBar.repaint();
                 sleep(interval * 1000);
                 
             }
@@ -205,9 +221,9 @@ public class PlayerControlThread extends Thread {
                         w.setId(fmsOutID);
                         w.setLatitude(outLat);
                         w.setLongitude(outLon);
-                        w.setName(outRef);
+                        w.setName(fmsOutID);
                         w.setRemark(fmsOutType);
-                        plan.getWayPointList().put(outRef,w);
+                        plan.getWayPointList().put(fmsOutID,w);
 
                     }
                     System.out.println(plan.hashCode());

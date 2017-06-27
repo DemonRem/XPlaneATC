@@ -6,17 +6,18 @@
 package de.xatc.controllerclient.nettyclient;
 
 import de.mytools.tools.swing.SwingTools;
+import de.xatc.commons.datastructure.structureaction.RemovePilotStructure;
 import de.xatc.commons.networkpackets.atc.datasync.DataStructuresResponsePacket;
 import de.xatc.commons.networkpackets.atc.datasync.DataSyncPacket;
 import de.xatc.commons.networkpackets.atc.servercontrol.ServerMetrics;
 import de.xatc.commons.networkpackets.atc.usermgt.UserListResponse;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
+import de.xatc.commons.networkpackets.pilot.FMSPlan;
 import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.commons.networkpackets.pilot.PlanePosition;
 import de.xatc.commons.networkpackets.pilot.RegisterPacket;
 import de.xatc.commons.networkpackets.pilot.ServerMessageToClient;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
-import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansPacket;
 import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.datastructures.DataStructureSilo;
@@ -26,7 +27,6 @@ import de.xatc.controllerclient.network.handlers.DataSyncHandler;
 import de.xatc.controllerclient.network.handlers.LoginAnswerHandler;
 import de.xatc.controllerclient.network.handlers.MetricsAnswerHandler;
 import de.xatc.controllerclient.network.handlers.SubmittedFlightPlanActionHandler;
-import de.xatc.controllerclient.network.handlers.SubmittedFlightPlansHandler;
 import de.xatc.controllerclient.network.handlers.UserListResponseHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -104,6 +104,9 @@ public class DataClient extends ChannelInboundHandlerAdapter {
             System.out.println("PlanePosition received");
             DataStructureSilo.getLocalPilotStructure().get(p.getSessionID()).getAircraftPainter().setP(p);
             //XHSConfig.getMainFrame().getMainPanel().getMapPanel().getAircraftPainter().setP(p);
+            DataStructureSilo.getLocalPilotStructure().get(p.getSessionID()).getPilotServerStructure().setLastKnownPlanePosition(p);
+            DataStructureSilo.getLocalPilotStructure().get(p.getSessionID()).getPilotServerStructure().getPlanePositionList().add(p);
+            System.out.println("SIZE OF positoinLIST: " + DataStructureSilo.getLocalPilotStructure().get(p.getSessionID()).getPilotServerStructure().getPlanePositionList().size());
             XHSConfig.getMainFrame().getMainPanel().getMapPanel().repaint();
             return;
         }
@@ -153,6 +156,18 @@ public class DataClient extends ChannelInboundHandlerAdapter {
             
             return;
 
+        }
+        if (msg instanceof RemovePilotStructure) {
+            
+            RemovePilotStructure r = (RemovePilotStructure) msg;
+            DataStructureResponseHandler.handleRemovePilotStructure(r.getStructureSessionID());
+            return;
+        }
+        if (msg instanceof FMSPlan) {
+            
+            FMSPlan plan = (FMSPlan) msg;
+            DataStructureSilo.getLocalPilotStructure().get(plan.getSessionID()).getPilotServerStructure().setFmsPlan(plan);
+            
         }
         
  

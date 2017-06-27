@@ -57,6 +57,7 @@ public class PlayerPanel extends javax.swing.JPanel {
         abortButton = new javax.swing.JButton();
         intervalField = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
+        progressPanel = new de.xatc.flightplayer.gui.ProgressPanel();
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
@@ -132,6 +133,9 @@ public class PlayerPanel extends javax.swing.JPanel {
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(progressPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(abortButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(doItButton)
@@ -178,7 +182,9 @@ public class PlayerPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(doItButton)
                     .addComponent(abortButton))
-                .addGap(0, 20, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(progressPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -240,6 +246,7 @@ public class PlayerPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList<String> playerFilesList;
+    private de.xatc.flightplayer.gui.ProgressPanel progressPanel;
     private javax.swing.JButton reloadButton;
     // End of variables declaration//GEN-END:variables
 
@@ -372,6 +379,15 @@ public class PlayerPanel extends javax.swing.JPanel {
         this.reloadButton = reloadButton;
     }
 
+    public ProgressPanel getProgressPanel() {
+        return progressPanel;
+    }
+
+    public void setProgressPanel(ProgressPanel progressPanel) {
+        this.progressPanel = progressPanel;
+    }
+
+    
     
     
 }
