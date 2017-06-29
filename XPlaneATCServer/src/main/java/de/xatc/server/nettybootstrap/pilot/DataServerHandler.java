@@ -80,9 +80,7 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
                 ServerConfig.getMessageSenders().get("submittedFlightPlans").sendObjectMessage(f);
                 return;
             } 
-            
-            
-            
+        
             
             else if (msg instanceof FMSPlan) {
                 FMSPlan plan = (FMSPlan) msg;

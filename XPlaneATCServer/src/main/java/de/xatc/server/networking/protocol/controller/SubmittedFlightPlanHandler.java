@@ -35,10 +35,10 @@ public class SubmittedFlightPlanHandler {
         Session session = DBSessionManager.getSession();
         session.saveOrUpdate(plan);
         DBSessionManager.closeSession(session);
+        SessionManagement.getPilotDataStructures().get(plan.getSessionID()).setSubmittedFlightPlan(plan);
         if (!SessionManagement.getAtcDataStructures().isEmpty()) {
             System.out.println("sending new FlightPlan to all controllers!");
             
-            //TODO with structures
             NetworkBroadcaster.broadcastATC(plan);
         }
 

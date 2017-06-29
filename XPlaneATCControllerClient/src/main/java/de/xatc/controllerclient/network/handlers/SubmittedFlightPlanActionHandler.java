@@ -1,7 +1,12 @@
 package de.xatc.controllerclient.network.handlers;
 
+import de.mytools.tools.swing.SwingTools;
+import de.xatc.commons.datastructure.pilot.PilotStructure;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.controllerclient.config.XHSConfig;
+import de.xatc.controllerclient.datastructures.DataStructureSilo;
+import de.xatc.controllerclient.datastructures.LocalPilotDataStructure;
 import de.xatc.controllerclient.db.DBSessionManager;
 import de.xatc.controllerclient.gui.FlightPlanStrips.FligtPlanStripsPanel;
 import java.awt.Component;
@@ -15,6 +20,28 @@ import org.hibernate.Transaction;
  * @author Mirko
  */
 public class SubmittedFlightPlanActionHandler {
+    
+    
+    
+    public static void handleNewSubmittedFlightPlan(SubmittedFlightPlan p) {
+        
+        LocalPilotDataStructure s = DataStructureSilo.getLocalPilotStructure().get(p.getSessionID());
+        if (s == null) {
+            System.out.println("No session found for submitted flight plan. returning");
+            SwingTools.alertWindow("A Flightplan was Subbmitted of a user which could not be found in SessionManagement!", XHSConfig.getMainFrame());
+            return;
+        }
+        Session session = DBSessionManager.getSession();
+        session.saveOrUpdate(s);
+        DBSessionManager.closeSession(session);
+        
+        Also das mit den Subbmitted Flight Plans muss nochmal komplett überdacht werden, vor allem die Actions mit der ServierID::::
+        Whatever this is.
+                
+        
+        if (XHSConfig.getSubmittedFlightPlansPoolFrame().)
+    }
+    
     
     public static void handleActionPacket(SubmittedFlightPlansActionPacket p) {
         

@@ -7,6 +7,9 @@ package de.xatc.server.nettybootstrap.atc;
 
 import de.xatc.commons.datastructure.atc.ATCStructure;
 import de.xatc.commons.datastructure.structureaction.RemoveATCStructure;
+import de.xatc.commons.datastructure.structureaction.RequestATCStructure;
+import de.xatc.commons.datastructure.structureaction.RequestPilotStructure;
+import de.xatc.commons.datastructure.structureaction.RequestPlanePositionSync;
 import de.xatc.commons.networkpackets.atc.datasync.RequestDataStructuresPacket;
 import de.xatc.commons.networkpackets.atc.datasync.RequestSyncPacket;
 import de.xatc.commons.networkpackets.atc.servercontrol.RequestServerMetrics;
@@ -184,7 +187,22 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
                 System.out.println("data structures sync request incoming......");
                 System.out.println("Assembling data structure response packet...");
                 ServerSyncHandler.handleStructuresSyncRequest(ctx.channel());
-
+                return;
+            }
+            if (msg instanceof RequestATCStructure) {
+                RequestATCStructure r = (RequestATCStructure) msg;
+                ServerSyncHandler.handleSingleATCStructureRequest(ctx.channel(), r.getStructureSessionID());
+                return;
+            }
+            if (msg instanceof RequestPilotStructure) {
+                RequestPilotStructure r = (RequestPilotStructure) msg;
+                ServerSyncHandler.handleSinglePilotStructureRequest(ctx.channel(), r.getStructureSessionID());
+                return;
+            }
+            if (msg instanceof RequestPlanePositionSync) {
+                RequestPlanePositionSync s = (RequestPlanePositionSync) msg;
+                ServerSyncHandler.syncPlanePositionsOfPilot(ctx.channel(), s.getStructureSessionID());
+                return;
             }
 
         }

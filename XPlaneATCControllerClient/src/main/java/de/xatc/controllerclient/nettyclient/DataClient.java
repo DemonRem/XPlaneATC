@@ -6,6 +6,7 @@
 package de.xatc.controllerclient.nettyclient;
 
 import de.mytools.tools.swing.SwingTools;
+import de.xatc.commons.datastructure.structureaction.PlanePositoinSyncResponse;
 import de.xatc.commons.datastructure.structureaction.RemovePilotStructure;
 import de.xatc.commons.networkpackets.atc.datasync.DataStructuresResponsePacket;
 import de.xatc.commons.networkpackets.atc.datasync.DataSyncPacket;
@@ -17,6 +18,7 @@ import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.commons.networkpackets.pilot.PlanePosition;
 import de.xatc.commons.networkpackets.pilot.RegisterPacket;
 import de.xatc.commons.networkpackets.pilot.ServerMessageToClient;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
 import de.xatc.controllerclient.config.XHSConfig;
@@ -169,14 +171,28 @@ public class DataClient extends ChannelInboundHandlerAdapter {
             DataStructureSilo.getLocalPilotStructure().get(plan.getSessionID()).getPilotServerStructure().setFmsPlan(plan);
             
         }
+        if (msg instanceof SubmittedFlightPlan) {
+            
+            
+            
+        }
         
  
+        Hier muss noch was mit den Actions gemacht werden.
         if (msg instanceof SubmittedFlightPlansActionPacket) {
 
             SubmittedFlightPlansActionPacket p = (SubmittedFlightPlansActionPacket) msg;
             SubmittedFlightPlanActionHandler.handleActionPacket(p);
             return;
 
+        }
+        
+        if (msg instanceof PlanePositoinSyncResponse) {
+            
+            PlanePositoinSyncResponse r = (PlanePositoinSyncResponse) msg;
+            DataStructureSilo.getLocalPilotStructure().get(r.getStructureSessionID()).getPilotServerStructure().getPlanePositionList().add(r.getP());
+            
+            
         }
 
         

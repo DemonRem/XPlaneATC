@@ -8,17 +8,17 @@ package de.xatc.server.networking.protocol.controller;
 import com.thoughtworks.xstream.XStream;
 import de.xatc.commons.datastructure.atc.ATCStructure;
 import de.xatc.commons.datastructure.pilot.PilotStructure;
+import de.xatc.commons.datastructure.structureaction.PlanePositoinSyncResponse;
+import de.xatc.commons.datastructure.structureaction.RequestPlanePositionSync;
 import de.xatc.commons.db.sharedentities.atcdata.Country;
 import de.xatc.commons.db.sharedentities.atcdata.Fir;
 import de.xatc.commons.db.sharedentities.atcdata.PlainAirport;
 import de.xatc.commons.networkpackets.atc.datasync.DataStructuresResponsePacket;
 import de.xatc.commons.networkpackets.atc.datasync.DataSyncPacket;
+import de.xatc.commons.networkpackets.pilot.PlanePosition;
 import de.xatc.server.db.DBSessionManager;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 
 import java.util.List;
 import java.util.Map.Entry;
@@ -146,17 +146,17 @@ public class ServerSyncHandler {
         System.out.println("Sending atc strcutures....");
         for (Entry<String, ATCStructure> entry : SessionManagement.getAtcDataStructures().entrySet()) {
             DataStructuresResponsePacket p = new DataStructuresResponsePacket();
-           
+
             p.setAtcStructure(entry.getValue());
             p.setStructureSsessionID(entry.getKey());
-  
+
             try {
                 n.writeAndFlush(p);
 
             } catch (Exception e) {
                 e.printStackTrace(System.err);
             }
-            
+
             System.out.println("Sending ATC Structure with sessionID: " + p.getStructureSsessionID());
 
         }
@@ -165,4 +165,58 @@ public class ServerSyncHandler {
 
     }
 
+    public static void handleSingleATCStructureRequest(Channel n, String sessionID) {
+
+        ATCStructure s = SessionManagement.getAtcDataStructures().get(sessionID);
+        
+        if (s != null) {
+            DataStructuresResponsePacket r = new DataStructuresResponsePacket();
+            r.setStructureSsessionID(s.getStructureSessionID());
+            r.setAtcStructure(s);
+            n.writeAndFlush(r);
+        }
+
+    }
+
+    public static void handleSinglePilotStructureRequest(Channel n, String sessionID) {
+        PilotStructure s = SessionManagement.getPilotDataStructures().get(sessionID);
+        if (s != null) {
+            DataStructuresResponsePacket r = new DataStructuresResponsePacket();
+            r.setStructureSsessionID(s.getStructureSessionID());
+            r.setPilotStructure(s);
+            n.writeAndFlush(r);
+        }
+
+    }
+
+    public static void syncPlanePositionsOfPilot(Channel n, String sessionID) {
+        
+        PilotStructure s = SessionManagement.getPilotDataStructures().get(sessionID);
+        if (s != null) {
+            
+            List<PlanePosition> list = s.getPlanePositionList();
+            if (list != null) {
+                if (!list.isEmpty()) {
+                    
+                    for (PlanePosition p : list) {
+                        
+                        PlanePositoinSyncResponse r = new PlanePositoinSyncResponse();
+                        r.setStructureSessionID(sessionID);
+                        r.setP(p);
+                        n.writeAndFlush(r);
+                        
+                    }
+                    
+                }
+                
+                
+                
+            }
+            
+            
+        }
+        
+        
+    }
+    
 }
