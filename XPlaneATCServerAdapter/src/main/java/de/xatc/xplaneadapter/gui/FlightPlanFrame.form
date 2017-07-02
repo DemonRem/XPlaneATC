@@ -407,6 +407,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="revoke Plan"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deactivateButtonActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

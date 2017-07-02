@@ -8,6 +8,7 @@ package de.xatc.xplaneadapter.config;
 import de.mytools.encoding.ObjectsMarshaller;
 import de.mytools.tools.swing.SwingTools;
 import de.xatc.commons.beans.sharedgui.ChatFrame;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.xplaneadapter.gui.ConfigFrame;
 import de.xatc.xplaneadapter.gui.ConnectFrame;
 import de.xatc.xplaneadapter.gui.FlightPlanFrame;
@@ -45,6 +46,7 @@ public class AdapterConfig {
     private static RegisterFrame registerFrame;
     private static String currentRadioFrequency;
     private static final String recordingDirectory = "recordings";
+    private static SubmittedFlightPlan currentSubmittedFlightPlan;
     
     private static String currentFlightNumber;
     
@@ -304,6 +306,15 @@ public class AdapterConfig {
     public static void setFlightPlanFrame(FlightPlanFrame flightPlanFrame) {
         AdapterConfig.flightPlanFrame = flightPlanFrame;
     }
+
+    public static SubmittedFlightPlan getCurrentSubmittedFlightPlan() {
+        return currentSubmittedFlightPlan;
+    }
+
+    public static void setCurrentSubmittedFlightPlan(SubmittedFlightPlan currentSubmittedFlightPlan) {
+        AdapterConfig.currentSubmittedFlightPlan = currentSubmittedFlightPlan;
+    }
+    
   
     
 

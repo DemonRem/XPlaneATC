@@ -10,8 +10,9 @@ import de.xatc.server.mq.MQBrokerManager;
 import de.xatc.server.mq.consumers.FMSPlanConsumer;
 import de.xatc.server.mq.consumers.LoginConsumer;
 import de.xatc.server.mq.consumers.PlanePositionConsumer;
-import de.xatc.server.mq.consumers.SubmittedFlighPlanActionsConsumer;
-import de.xatc.server.mq.consumers.SubmittedFlightPlansConsumer;
+import de.xatc.server.mq.consumers.SubmittedFlighPlanActionsConsumerATC;
+import de.xatc.server.mq.consumers.SubmittedFlighPlanActionsConsumerPilot;
+
 import de.xatc.server.mq.consumers.TextMessageBroadCastConsumer;
 import de.xatc.server.mq.producers.MQMessageSender;
 import de.xatc.server.nettybootstrap.pilot.DataServerBootstrap;
@@ -55,13 +56,15 @@ public class StartupHook {
         loginSender.startProducer();
         ServerConfig.getMessageSenders().put("login", loginSender);
         
-        MQMessageSender submittedFlightPlanSender = new MQMessageSender("submittedFlightPlans");
-        submittedFlightPlanSender.startProducer();
-        ServerConfig.getMessageSenders().put("submittedFlightPlans", submittedFlightPlanSender);
+ 
+        MQMessageSender submittedFlightPlanActionsSenderATC = new MQMessageSender("submittedFlightPlanActionsATC");
+        submittedFlightPlanActionsSenderATC.startProducer();
+        ServerConfig.getMessageSenders().put("submittedFlightPlanActionsATC", submittedFlightPlanActionsSenderATC);
         
-        MQMessageSender submittedFlightPlanActionsSender = new MQMessageSender("submittedFlightPlanActions");
-        submittedFlightPlanActionsSender.startProducer();
-        ServerConfig.getMessageSenders().put("submittedFlightPlanActions", submittedFlightPlanActionsSender);
+        MQMessageSender submittedFlightPlanActionsSenderPilot = new MQMessageSender("submittedFlightPlanActionsPilot");
+        submittedFlightPlanActionsSenderPilot.startProducer();
+        ServerConfig.getMessageSenders().put("submittedFlightPlanActionsPilot", submittedFlightPlanActionsSenderPilot);
+        
         
         //MQRECEIVERS
 
@@ -79,11 +82,13 @@ public class StartupHook {
         LoginConsumer loginConsumer = new LoginConsumer("login");
         ServerConfig.getMessageReceivers().put("login", loginConsumer);
         
-        SubmittedFlightPlansConsumer submittedFlightPlansConsumer = new SubmittedFlightPlansConsumer("submittedFlightPlans");
-        ServerConfig.getMessageReceivers().put("submittedFlightPlans", submittedFlightPlansConsumer);
+       
         
-        SubmittedFlighPlanActionsConsumer submittedFlightPlansActionsConsumer = new SubmittedFlighPlanActionsConsumer("submittedFlightPlanActions");
-        ServerConfig.getMessageReceivers().put("submittedFlightPlanActions", submittedFlightPlansActionsConsumer);
+        SubmittedFlighPlanActionsConsumerATC submittedFlightPlansActionsConsumerATC = new SubmittedFlighPlanActionsConsumerATC("submittedFlightPlanActionsATC");
+        ServerConfig.getMessageReceivers().put("submittedFlightPlanActionsATC", submittedFlightPlansActionsConsumerATC);
+        
+        SubmittedFlighPlanActionsConsumerPilot submittedFlightPlansActionsConsumerPilot = new SubmittedFlighPlanActionsConsumerPilot("submittedFlightPlanActionsPilot");
+        ServerConfig.getMessageReceivers().put("submittedFlightPlanActionsPilot", submittedFlightPlansActionsConsumerPilot);
         
         
         System.out.println("Messaging Consumers started");

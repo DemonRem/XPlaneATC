@@ -14,16 +14,13 @@ import de.xatc.commons.networkpackets.parent.NetworkPacket;
 public class SubmittedFlightPlansActionPacket extends NetworkPacket {
     
     
-    private int serversID;
+
+    /**
+     * action can be "new", "revoke","update","sync","syncAll","accept","release","handover"
+     */
     private String action;
+    private SubmittedFlightPlan SubmittedFlightPlan;
 
-    public int getServersID() {
-        return serversID;
-    }
-
-    public void setServersID(int serversID) {
-        this.serversID = serversID;
-    }
 
     public String getAction() {
         return action;
@@ -31,6 +28,14 @@ public class SubmittedFlightPlansActionPacket extends NetworkPacket {
 
     public void setAction(String action) {
         this.action = action;
+    }
+
+    public SubmittedFlightPlan getSubmittedFlightPlan() {
+        return SubmittedFlightPlan;
+    }
+
+    public void setSubmittedFlightPlan(SubmittedFlightPlan SubmittedFlightPlan) {
+        this.SubmittedFlightPlan = SubmittedFlightPlan;
     }
     
     

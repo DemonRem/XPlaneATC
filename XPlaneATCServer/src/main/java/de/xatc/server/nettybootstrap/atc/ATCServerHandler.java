@@ -22,7 +22,6 @@ import de.xatc.commons.networkpackets.atc.servercontrol.StopClientConnector;
 import de.xatc.commons.networkpackets.atc.servercontrol.StopMQBroker;
 import de.xatc.commons.networkpackets.atc.servercontrol.StopMessagingConsumers;
 import de.xatc.commons.networkpackets.atc.servercontrol.StopMessagingProducers;
-import de.xatc.commons.networkpackets.atc.stripsmgt.ATCRequestStripsPacket;
 import de.xatc.commons.networkpackets.atc.supportedstations.SupportedAirportStation;
 import de.xatc.commons.networkpackets.atc.supportedstations.SupportedFirStation;
 import de.xatc.commons.networkpackets.atc.usermgt.DeleteUser;
@@ -39,7 +38,8 @@ import de.xatc.server.networking.protocol.controller.RequestUserListHandler;
 import de.xatc.server.networking.protocol.controller.ServerControlHandler;
 import de.xatc.server.networking.protocol.controller.ServerSyncHandler;
 import de.xatc.server.networking.protocol.controller.SetupATCHandler;
-import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanHandler;
+import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanActionHandlerATC;
+
 import de.xatc.server.networking.protocol.controller.UserManagementHander;
 import de.xatc.server.sessionmanagment.NetworkBroadcaster;
 import de.xatc.server.sessionmanagment.SessionManagement;
@@ -171,15 +171,11 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
                 return;
 
             }
-            if (msg instanceof ATCRequestStripsPacket) {
-                ATCRequestStripsPacket p = (ATCRequestStripsPacket) msg;
-                SubmittedFlightPlanHandler.sendStripsToController(p, ctx.channel());
-                return;
-            }
+        
 
             if (msg instanceof SubmittedFlightPlansActionPacket) {
                 SubmittedFlightPlansActionPacket action = (SubmittedFlightPlansActionPacket) msg;
-                ServerConfig.getMessageSenders().get("submittedFlightPlanActions").sendObjectMessage(action);
+                ServerConfig.getMessageSenders().get("submittedFlightPlanActionsATC").sendObjectMessage(action);
                 return;
             }
             if (msg instanceof RequestDataStructuresPacket) {

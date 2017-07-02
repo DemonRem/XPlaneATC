@@ -20,66 +20,110 @@ import org.hibernate.Transaction;
  * @author Mirko
  */
 public class SubmittedFlightPlanActionHandler {
-    
-    
-    
-    public static void handleNewSubmittedFlightPlan(SubmittedFlightPlan p) {
+
+    public static void handleSubmittedFlightPlanActionPacket(SubmittedFlightPlansActionPacket action) {
+
+        if (action.getAction().equals("revoke")) {
+
+            revokeSubmittedFlightPlan(action);
+
+        } else if (action.getAction().equals("new")) {
+            System.out.println("Handling new FlightPlan");
+            handleNewSubmittedFlightPlan(action.getSubmittedFlightPlan());
+        }
+
+    }
+
+    public static void handleNewSubmittedFlightPlan(SubmittedFlightPlan flightPlan) {
+
+        if (flightPlan == null) {
+            
+            System.out.println("could not handle new flightplan. Flightplan is null");
+            return;
+        }
+        System.out.println("Servers DatabaseID : " + flightPlan.getId() + " - setting to 0");
+        flightPlan.setId(0);
+        LocalPilotDataStructure s = DataStructureSilo.getLocalPilotStructure().get(flightPlan.getPilotsSessionID());
         
-        LocalPilotDataStructure s = DataStructureSilo.getLocalPilotStructure().get(p.getSessionID());
         if (s == null) {
             System.out.println("No session found for submitted flight plan. returning");
             SwingTools.alertWindow("A Flightplan was Subbmitted of a user which could not be found in SessionManagement!", XHSConfig.getMainFrame());
             return;
         }
+        System.out.println("Saving new flightPlan and setting FlightPlan to database");
+        System.out.println("From/To " + flightPlan.getIcaoFrom() + "/" + flightPlan.getIcaoTo());
+        s.getPilotServerStructure().setSubmittedFlightPlan(flightPlan);
         Session session = DBSessionManager.getSession();
-        session.saveOrUpdate(s);
+        session.saveOrUpdate(flightPlan);
         DBSessionManager.closeSession(session);
-        
-        Also das mit den Subbmitted Flight Plans muss nochmal komplett überdacht werden, vor allem die Actions mit der ServierID::::
-        Whatever this is.
-                
-        
-        if (XHSConfig.getSubmittedFlightPlansPoolFrame().)
+
     }
-    
-    
-    public static void handleActionPacket(SubmittedFlightPlansActionPacket p) {
-        
-        if (p.getAction().equals("revoke")) {
-            
-            revokeSubmittedFlightPlan(p);
-            
+
+    public static void revokeSubmittedFlightPlan(SubmittedFlightPlansActionPacket action) {
+
+        LocalPilotDataStructure pilotStructure = DataStructureSilo.getLocalPilotStructure().get(action.getSubmittedFlightPlan().getPilotsSessionID());
+        if (pilotStructure == null) {
+
+            System.out.println("could not revoke flightPlan. PilotStrucutre not found");
+            return;
+
         }
-        
-    }
-    
-    public static void revokeSubmittedFlightPlan(SubmittedFlightPlansActionPacket p) {
-        
-        
+        SubmittedFlightPlan flightPlan = action.getSubmittedFlightPlan();
+        flightPlan.setActive(false);
+        flightPlan.setRevoked(true);
+        pilotStructure.getPilotServerStructure().setSubmittedFlightPlan(null);
+
         Session session = DBSessionManager.getSession();
-        Transaction a = session.beginTransaction();
-        Query q = session.createQuery("delete from SubmittedFlightPlan where serversID = " + p.getServersID());
-        q.executeUpdate();
-        a.commit();
+        session.saveOrUpdate(action.getSubmittedFlightPlan());
         DBSessionManager.closeSession(session);
+
+    }
+
+    public static void refreshFlightPlanFrames() {
+
         if (XHSConfig.getSubmittedFlightPlansPoolFrame() != null) {
-            
+
             JPanel centerPanel = XHSConfig.getSubmittedFlightPlansPoolFrame().getCenterPanel();
             for (Component c : centerPanel.getComponents()) {
-                
+
                 if (c instanceof FligtPlanStripsPanel) {
                     FligtPlanStripsPanel panel = (FligtPlanStripsPanel) c;
-                    if (panel.getServersID() == p.getServersID()) {
-                        centerPanel.remove(c);
-                    }
+//                    if (panel.getServersID() == p.getServersID()) {
+//                        centerPanel.remove(c);
+//                    }
                 }
-                
+
             }
-            
+
         }
         XHSConfig.getSubmittedFlightPlansPoolFrame().revalidate();
         XHSConfig.getSubmittedFlightPlansPoolFrame().repaint();
-        
+
     }
-    
+
+    public static void deleteLocalFlightPlans() {
+
+        Session s = DBSessionManager.getSession();
+
+        Transaction tx = s.beginTransaction();
+        Query q = s.createQuery("delete from SubmittedFlightPlan");
+        q.executeUpdate();
+        tx.commit();
+
+        DBSessionManager.closeSession(s);
+
+    }
+
+    public static void sendFlightPlansSyncRequest() {
+
+        if (XHSConfig.getDataClient() == null) {
+            System.out.println("could not send sync Request for SubmittedFlightPlans. Not Connected!");
+            return;
+        }
+        SubmittedFlightPlansActionPacket p = new SubmittedFlightPlansActionPacket();
+        p.setAction("syncAll");
+        XHSConfig.getDataClient().writeMessage(p);
+
+    }
+
 }

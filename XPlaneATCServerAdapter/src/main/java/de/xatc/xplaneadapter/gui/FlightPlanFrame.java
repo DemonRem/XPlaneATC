@@ -7,6 +7,7 @@ package de.xatc.xplaneadapter.gui;
 
 import de.mytools.tools.swing.SwingTools;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.xplaneadapter.config.AdapterConfig;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -29,6 +30,7 @@ public class FlightPlanFrame extends javax.swing.JFrame {
     public FlightPlanFrame() {
         this.setAlwaysOnTop(true);
         initComponents();
+        this.fillInCurrentFlightPlanValues();
     }
 
     /**
@@ -262,6 +264,11 @@ public class FlightPlanFrame extends javax.swing.JFrame {
         jLabel18.setText("e.g. BKD L619 BUMIL M748 RARUP");
 
         deactivateButton.setText("revoke Plan");
+        deactivateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deactivateButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -390,12 +397,48 @@ public class FlightPlanFrame extends javax.swing.JFrame {
         else {
             p.setIfrOrVfr("VFR");
         }
-        AdapterConfig.getDataClient().writeMessage(p);
+        SubmittedFlightPlansActionPacket fpAction = new SubmittedFlightPlansActionPacket();
+        fpAction.setSubmittedFlightPlan(p);
+        if (AdapterConfig.getCurrentSubmittedFlightPlan() != null) {
+            fpAction.setAction("update");
+        }
+        else {
+            fpAction.setAction("new");
+        }
+        AdapterConfig.getDataClient().writeMessage(fpAction);
+        AdapterConfig.setCurrentSubmittedFlightPlan(p);
         AdapterConfig.setFlightPlanFrame(null);
         this.dispose();
         
     }//GEN-LAST:event_sendButtonActionPerformed
 
+    private void fillInCurrentFlightPlanValues() {
+        
+        if (AdapterConfig.getCurrentSubmittedFlightPlan() == null) {
+            return;
+        }
+        this.aircraftTypeField.setText(AdapterConfig.getCurrentSubmittedFlightPlan().getAircraftType());
+        this.airlineField.setText(AdapterConfig.getCurrentSubmittedFlightPlan().getAirline());
+        this.arrivalTimeField.setText(AdapterConfig.getCurrentSubmittedFlightPlan().getArrivalTime());
+        this.flightLevelField.setText(AdapterConfig.getCurrentSubmittedFlightPlan().getFlightLevel());
+        this.flightNumberField.setText(AdapterConfig.getCurrentSubmittedFlightPlan().getFlightNumber());
+        this.icaoFromField.setText(AdapterConfig.getCurrentSubmittedFlightPlan().getIcaoFrom());
+        this.icaoToField.setText(AdapterConfig.getCurrentSubmittedFlightPlan().getIcaoTo());
+        this.remarkField.setText(AdapterConfig.getCurrentSubmittedFlightPlan().getRemark());
+        this.routeField.setText(AdapterConfig.getCurrentSubmittedFlightPlan().getRoute());
+        this.takeOffTimeField.setText(AdapterConfig.getCurrentSubmittedFlightPlan().getTakeOffTime());
+
+        if (AdapterConfig.getCurrentSubmittedFlightPlan().getIfrOrVfr().equals("IFR")) {
+            this.ifrRadio.setSelected(true);
+        }
+        else {
+            this.vfrRadio.setSelected(true);
+        }
+        
+        
+    }
+    
+    
     private void ifrRadioStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_ifrRadioStateChanged
         if (this.ifrRadio.isSelected()) {
             this.vfrRadio.setSelected(false);
@@ -413,6 +456,28 @@ public class FlightPlanFrame extends javax.swing.JFrame {
             this.ifrRadio.setSelected(true);
         }
     }//GEN-LAST:event_vfrRadioStateChanged
+
+    private void deactivateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deactivateButtonActionPerformed
+        
+        if (AdapterConfig.getCurrentSubmittedFlightPlan() == null) {
+            SwingTools.alertWindow("FlightPlan has not been sent yet!", AdapterConfig.getMainFrame());
+            return;
+        }
+        else {
+            
+            SubmittedFlightPlansActionPacket fpAction = new SubmittedFlightPlansActionPacket();
+            fpAction.setAction("revoke");
+            fpAction.setSubmittedFlightPlan(AdapterConfig.getCurrentSubmittedFlightPlan());
+            AdapterConfig.getDataClient().writeMessage(fpAction);
+            AdapterConfig.setCurrentSubmittedFlightPlan(null);
+            AdapterConfig.setFlightPlanFrame(null);
+            SwingTools.alertWindow("FlightPlan has been revoked. Please send a new one!", AdapterConfig.getMainFrame());
+            this.dispose();
+            
+        }
+        
+        
+    }//GEN-LAST:event_deactivateButtonActionPerformed
 
 
 

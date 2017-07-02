@@ -6,7 +6,8 @@
 package de.xatc.server.mq.consumers;
 
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
-import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanActionHandler;
+import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanActionHandlerATC;
+
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
@@ -15,9 +16,9 @@ import javax.jms.TextMessage;
  *
  * @author Mirko
  */
-public class SubmittedFlighPlanActionsConsumer extends MQAbstractConsumer {
+public class SubmittedFlighPlanActionsConsumerATC extends MQAbstractConsumer {
 
-    public SubmittedFlighPlanActionsConsumer(String queueName) {
+    public SubmittedFlighPlanActionsConsumerATC(String queueName) {
         super(queueName);
     }
 
@@ -27,8 +28,18 @@ public class SubmittedFlighPlanActionsConsumer extends MQAbstractConsumer {
         try {
             SubmittedFlightPlansActionPacket p = (SubmittedFlightPlansActionPacket) message.getObject();
             if (p.getAction().equals("revoke")) {
-                SubmittedFlightPlanActionHandler.revokeSubmittedFlightPlan(p);
+                SubmittedFlightPlanActionHandlerATC.revokeFlightPlan(p);
             }
+            else if (p.getAction().equals("accept")) {
+                
+                
+                
+            }
+            else if (p.getAction().equals("syncAll")) {
+                SubmittedFlightPlanActionHandlerATC.sendSubmittedFlightPlansToATC(p);
+            }
+            
+            
         } catch (JMSException ex) {
             ex.printStackTrace(System.err);
         }

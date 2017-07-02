@@ -5,13 +5,11 @@
  */
 package de.xatc.commons.networkpackets.pilot;
 
-import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -32,7 +30,7 @@ public class SubmittedFlightPlan extends NetworkPacket {
     @Column(nullable = false)
     @Id
     private int id;
-    private int serversID;
+
     private String icaoFrom;
     private String icaoTo;
     private String aircraftType;
@@ -44,15 +42,15 @@ public class SubmittedFlightPlan extends NetworkPacket {
     private String airline;
     private String route;
     private String remark;
+    private boolean revoked = false;
     private boolean active = false;
     private String controllerComments;
-    @Lob
-    @Column(length = 65535)
-    private RegisteredUser assignedController;
+    private boolean accepted = false;
     
-    @Lob
-    @Column(length = 65535)
-    private RegisteredUser flightPlanOwner;
+    private String pilotsSessionID;
+    
+    private String assingedControllerSessionID;
+    
 
     public String getIcaoFrom() {
         return icaoFrom;
@@ -166,29 +164,40 @@ public class SubmittedFlightPlan extends NetworkPacket {
         this.controllerComments = controllerComments;
     }
 
-    public RegisteredUser getAssignedController() {
-        return assignedController;
+    public boolean isRevoked() {
+        return revoked;
     }
 
-    public void setAssignedController(RegisteredUser assignedController) {
-        this.assignedController = assignedController;
+    public void setRevoked(boolean revoked) {
+        this.revoked = revoked;
     }
 
-    public RegisteredUser getFlightPlanOwner() {
-        return flightPlanOwner;
+    public boolean isAccepted() {
+        return accepted;
     }
 
-    public void setFlightPlanOwner(RegisteredUser flightPlanOwner) {
-        this.flightPlanOwner = flightPlanOwner;
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 
-    public int getServersID() {
-        return serversID;
+    public String getPilotsSessionID() {
+        return pilotsSessionID;
     }
 
-    public void setServersID(int serversID) {
-        this.serversID = serversID;
+    public void setPilotsSessionID(String pilotsSessionID) {
+        this.pilotsSessionID = pilotsSessionID;
     }
+
+    public String getAssingedControllerSessionID() {
+        return assingedControllerSessionID;
+    }
+
+    public void setAssingedControllerSessionID(String assingedControllerSessionID) {
+        this.assingedControllerSessionID = assingedControllerSessionID;
+    }
+    
+    
+    
     
     
     

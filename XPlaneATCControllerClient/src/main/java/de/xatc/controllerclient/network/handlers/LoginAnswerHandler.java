@@ -37,7 +37,7 @@ public class LoginAnswerHandler {
         XHSConfig.setCurrentChannelID(l.getChannelID());
         System.out.println("Login successful");
 
-        SubmittedFlightPlansHandler.deleteLocalFlightPlans();
+        SubmittedFlightPlanActionHandler.deleteLocalFlightPlans();
         
         System.out.println("Sending Data Structures Sync Request to Server.....");
         DataSyncHandler.sendSyncStructuresRequestPacket();

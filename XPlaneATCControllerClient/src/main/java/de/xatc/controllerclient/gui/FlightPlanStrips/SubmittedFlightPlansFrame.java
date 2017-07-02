@@ -6,18 +6,19 @@
 package de.xatc.controllerclient.gui.FlightPlanStrips;
 
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
-import de.xatc.controllerclient.db.DBSessionManager;
-import de.xatc.controllerclient.network.handlers.SubmittedFlightPlansHandler;
+import de.xatc.controllerclient.datastructures.DataStructureSilo;
+import de.xatc.controllerclient.datastructures.LocalPilotDataStructure;
+import de.xatc.controllerclient.network.handlers.SubmittedFlightPlanActionHandler;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+import java.util.Map.Entry;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import org.hibernate.Session;
 import org.jdesktop.swingx.VerticalLayout;
 
 /**
@@ -26,6 +27,7 @@ import org.jdesktop.swingx.VerticalLayout;
  */
 public class SubmittedFlightPlansFrame extends JFrame implements ActionListener {
 
+   
     private JPanel headPanel;
     private JPanel centerPanel;
     private JButton refreshButton;
@@ -73,19 +75,16 @@ public class SubmittedFlightPlansFrame extends JFrame implements ActionListener 
         this.revalidate();
         this.repaint();
 
-        Session session = DBSessionManager.getSession();
-        List<SubmittedFlightPlan> list = session.createCriteria(SubmittedFlightPlan.class).list();
+       
+        for (Entry<String,LocalPilotDataStructure> entry : DataStructureSilo.getLocalPilotStructure().entrySet()) {
 
-        System.out.println("FOUND STRIPS: " + list.size());
-
-        for (SubmittedFlightPlan p : list) {
-
-            centerPanel.add(mapSubmittedFlightPlanToStrip(p));
+        ok, hier müssen wir noch weitermachen. Assigned und unassigned strips.
+            centerPanel.add(mapSubmittedFlightPlanToStrip(entry.getValue().get));
 
         }
         this.revalidate();
         this.repaint();
-        DBSessionManager.closeSession(session);
+     
 
     }
 
@@ -97,16 +96,16 @@ public class SubmittedFlightPlansFrame extends JFrame implements ActionListener 
             this.centerPanel.removeAll();
             this.revalidate();
             this.repaint();
-            SubmittedFlightPlansHandler.deleteLocalFlightPlans();
-            SubmittedFlightPlansHandler.sendFlightPlansSyncRequest();
+            SubmittedFlightPlanActionHandler.deleteLocalFlightPlans();
+            SubmittedFlightPlanActionHandler.sendFlightPlansSyncRequest();
         }
     }
 
     public FligtPlanStripsPanel mapSubmittedFlightPlanToStrip(SubmittedFlightPlan p) {
         FligtPlanStripsPanel panel = new FligtPlanStripsPanel();
-        panel.setServersID(p.getServersID());
+       // panel.setServersID(p.getServersID());
         panel.setVisible(true);
-        panel.getUserNameLabel().setText(p.getFlightPlanOwner().getRegisteredUserName());
+       // panel.getUserNameLabel().setText(p.getFlightPlanOwner().getRegisteredUserName());
         panel.getFlightNumberLabel().setText(p.getFlightNumber());
         panel.getAircraftTypeLabel().setText(p.getAircraftType());
         panel.getAirlineLabel().setText(p.getAirline());

@@ -275,7 +275,7 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
 
     private void revokeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revokeButtonActionPerformed
         SubmittedFlightPlansActionPacket action = new SubmittedFlightPlansActionPacket();
-        action.setServersID(this.serversID);
+       // action.setServersID(this.serversID);
         action.setAction("revoke");
         if (XHSConfig.getDataClient() == null) {
             SwingTools.alertWindow("Not Connected!", XHSConfig.getSubmittedFlightPlansPoolFrame());

@@ -176,13 +176,12 @@ public class DataClient extends ChannelInboundHandlerAdapter {
             
             
         }
-        
- 
-        Hier muss noch was mit den Actions gemacht werden.
+      
+
         if (msg instanceof SubmittedFlightPlansActionPacket) {
 
             SubmittedFlightPlansActionPacket p = (SubmittedFlightPlansActionPacket) msg;
-            SubmittedFlightPlanActionHandler.handleActionPacket(p);
+            SubmittedFlightPlanActionHandler.handleSubmittedFlightPlanActionPacket(p);
             return;
 
         }

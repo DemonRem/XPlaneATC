@@ -13,6 +13,7 @@ import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.commons.networkpackets.pilot.PlanePosition;
 import de.xatc.commons.networkpackets.pilot.RegisterPacket;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
+import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
 import de.xatc.server.config.ServerConfig;
 import de.xatc.server.networking.protocol.controller.TextMessageHandler;
@@ -75,9 +76,9 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
                     ServerConfig.getMessageSenders().get("planePosition").sendObjectMessage((PlanePosition) msg);
                 }
                 
-            } else if (msg instanceof SubmittedFlightPlan) {
-                SubmittedFlightPlan f = (SubmittedFlightPlan) msg;
-                ServerConfig.getMessageSenders().get("submittedFlightPlans").sendObjectMessage(f);
+            } else if (msg instanceof SubmittedFlightPlansActionPacket) {
+                SubmittedFlightPlansActionPacket f = (SubmittedFlightPlansActionPacket) msg;
+                ServerConfig.getMessageSenders().get("submittedFlightPlanActionsPilot").sendObjectMessage(f);
                 return;
             } 
         
