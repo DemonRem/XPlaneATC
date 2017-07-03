@@ -35,7 +35,7 @@ public class SubmittedFlightPlanActionHandlerPilot {
         plan.setActive(true);
         plan.setRevoked(false);
         plan.setPilotsSessionID(action.getSessionID());
-        
+        plan.setId(0);
         Session session = DBSessionManager.getSession();
         session.saveOrUpdate(plan);
         DBSessionManager.closeSession(session);
@@ -56,12 +56,13 @@ public class SubmittedFlightPlanActionHandlerPilot {
             System.out.println("Could not revoke flightplan. PilotStrcuture not found");
             return;
         }
-        pilotStructure.setSubmittedFlightPlan(null);
+        
         
         SubmittedFlightPlan plan = p.getSubmittedFlightPlan();
         plan.setRevoked(true);
         plan.setActive(false);
-        
+        plan.setAssingedControllerSessionID(null);
+        plan.setId(0);
         Session session = DBSessionManager.getSession();
         session.saveOrUpdate(plan);
         DBSessionManager.closeSession(session);
@@ -69,6 +70,7 @@ public class SubmittedFlightPlanActionHandlerPilot {
             NetworkBroadcaster.broadcastATC(p);
             
         }
+        pilotStructure.setSubmittedFlightPlan(null);
 
     }
     

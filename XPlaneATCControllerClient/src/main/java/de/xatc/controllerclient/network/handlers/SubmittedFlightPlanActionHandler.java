@@ -53,6 +53,7 @@ public class SubmittedFlightPlanActionHandler {
         System.out.println("Saving new flightPlan and setting FlightPlan to database");
         System.out.println("From/To " + flightPlan.getIcaoFrom() + "/" + flightPlan.getIcaoTo());
         s.getPilotServerStructure().setSubmittedFlightPlan(flightPlan);
+        
         Session session = DBSessionManager.getSession();
         session.saveOrUpdate(flightPlan);
         DBSessionManager.closeSession(session);

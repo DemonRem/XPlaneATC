@@ -37,6 +37,7 @@ public class SubmittedFlightPlanActionHandlerATC {
         plan.setActive(true);
         plan.setRevoked(false);
         plan.setAssingedControllerSessionID(action.getSessionID());
+        plan.setId(0);
         Session s = DBSessionManager.getSession();
         s.saveOrUpdate(plan);
         DBSessionManager.closeSession(s);
@@ -68,6 +69,8 @@ public class SubmittedFlightPlanActionHandlerATC {
         plan.setRevoked(true);
         plan.setAccepted(false);
         plan.setActive(false);
+        plan.setAssingedControllerSessionID(null);
+        plan.setId(0);
         Session s = DBSessionManager.getSession();
         s.saveOrUpdate(plan);
         DBSessionManager.closeSession(s);

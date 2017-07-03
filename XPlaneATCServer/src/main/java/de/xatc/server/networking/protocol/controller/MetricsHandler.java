@@ -32,7 +32,7 @@ public class MetricsHandler {
         }
 
         String b = "";
-        b += "<HTML><BODY>\n";
+        b += "\n";
 
         b += "Client Sessions: " + SessionManagement.getPilotDataStructures().size() + "<br>";
         b += "ATC Sessions: " + SessionManagement.getAtcDataStructures().size() + "<br>";
@@ -59,7 +59,7 @@ public class MetricsHandler {
         }
         
         
-        b += "</BODY></HTML>";
+        
         System.out.println(b);
         ServerMetrics metrics = new ServerMetrics();
         metrics.setMessage(b);

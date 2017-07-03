@@ -59,6 +59,10 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
         arrivalTimeLabel = new javax.swing.JLabel();
         routeLabel = new javax.swing.JLabel();
         remarkLabel = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        statusLabel = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        assingedControllerLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         commentsTextArea = new javax.swing.JTextArea();
         revokeButton = new javax.swing.JButton();
@@ -182,10 +186,22 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
         remarkLabel.setText("remark");
         remarkLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+        jLabel3.setText("Status:");
+
+        statusLabel.setText("active");
+
+        jLabel4.setText("ATC:");
+
+        assingedControllerLabel.setText("none");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(routeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(remarkLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(fromIcaoLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -198,9 +214,13 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
                 .addComponent(arrivalTimeLabel)
                 .addGap(0, 44, Short.MAX_VALUE))
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(routeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addComponent(remarkLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(statusLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(assingedControllerLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,9 +232,15 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
                     .addComponent(departureTimeLabel)
                     .addComponent(arrivalTimeLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(routeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(routeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(remarkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(remarkLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(statusLabel)
+                    .addComponent(jLabel4)
+                    .addComponent(assingedControllerLabel)))
         );
 
         commentsTextArea.setColumns(20);
@@ -290,6 +316,7 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel airlineLabel;
     private javax.swing.JLabel arrivalTimeLabel;
     private javax.swing.JButton assignButton;
+    private javax.swing.JLabel assingedControllerLabel;
     private javax.swing.JTextArea commentsTextArea;
     private javax.swing.JButton contactMeButton;
     private javax.swing.JLabel currentAltLabel;
@@ -302,6 +329,8 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel ifrVfrLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -312,6 +341,7 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
     private javax.swing.JButton revokeButton;
     private javax.swing.JLabel routeLabel;
     private javax.swing.JButton sendMessageButton;
+    private javax.swing.JLabel statusLabel;
     private javax.swing.JLabel toIcaoLabel;
     private javax.swing.JLabel userNameLabel;
     // End of variables declaration//GEN-END:variables
@@ -547,5 +577,38 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
     public void setServersID(int serversID) {
         this.serversID = serversID;
     }
+
+    public JLabel getAssingedControllerLabel() {
+        return assingedControllerLabel;
+    }
+
+    public void setAssingedControllerLabel(JLabel assingedControllerLabel) {
+        this.assingedControllerLabel = assingedControllerLabel;
+    }
+
+    public JLabel getjLabel3() {
+        return jLabel3;
+    }
+
+    public void setjLabel3(JLabel jLabel3) {
+        this.jLabel3 = jLabel3;
+    }
+
+    public JLabel getjLabel4() {
+        return jLabel4;
+    }
+
+    public void setjLabel4(JLabel jLabel4) {
+        this.jLabel4 = jLabel4;
+    }
+
+    public JLabel getStatusLabel() {
+        return statusLabel;
+    }
+
+    public void setStatusLabel(JLabel statusLabel) {
+        this.statusLabel = statusLabel;
+    }
+    
 
 }

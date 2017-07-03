@@ -397,6 +397,8 @@ public class FlightPlanFrame extends javax.swing.JFrame {
         else {
             p.setIfrOrVfr("VFR");
         }
+        also das hier funzt alles noch nicht. Da muss ich nohcmal von vorne anfangen und den Weg
+                der Daten verfolgen.
         SubmittedFlightPlansActionPacket fpAction = new SubmittedFlightPlansActionPacket();
         fpAction.setSubmittedFlightPlan(p);
         if (AdapterConfig.getCurrentSubmittedFlightPlan() != null) {
