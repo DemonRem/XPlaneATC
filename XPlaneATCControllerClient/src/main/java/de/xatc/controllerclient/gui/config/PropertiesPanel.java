@@ -3,17 +3,18 @@ package de.xatc.controllerclient.gui.config;
 
 import de.mytools.tools.swing.SwingTools;
 import de.xatc.controllerclient.config.XHSConfig;
-import de.xatc.controllerclient.log.DebugMessageLevel;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.VerticalLayout;
 
 /**
@@ -23,6 +24,7 @@ import org.jdesktop.swingx.VerticalLayout;
  */
 public class PropertiesPanel extends JPanel implements ActionListener {
 
+    private static final Logger LOG = Logger.getLogger(PropertiesPanel.class.getName());
 
     private JLabel xplaneFolderTextField;
     private String xplaneFolderValue;
@@ -98,9 +100,9 @@ public class PropertiesPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
 
         
-        XHSConfig.debugMessage("Action peformed", DebugMessageLevel.DEBUG);
+        LOG.info("Action peformed");
         String desc = ae.getActionCommand();
-        XHSConfig.debugMessage("Action Command was: " + desc, DebugMessageLevel.DEBUG);
+        LOG.info("Action Command was: " + desc);
 
         String homeDir = null;
 

@@ -13,7 +13,7 @@ import de.xatc.commons.db.sharedentities.atcdata.PlainAirport;
 import de.xatc.commons.db.sharedentities.atcdata.PlainNavPoint;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
-import de.xatc.controllerclient.log.DebugMessageLevel;
+
 import de.xatc.controllerclient.navigation.NavPoint;
 import de.xatc.controllerclient.xdataparser.tools.AptFilesTools;
 import java.io.BufferedReader;
@@ -21,7 +21,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 /**
@@ -32,6 +34,8 @@ import org.hibernate.Session;
  * @author Mirko Bubel (mirko_bubel@hotmail.com)
  */
 public class AptParser {
+
+    private static final Logger LOG = Logger.getLogger(AptParser.class.getName());
 
     /**
      * currently parsed file
@@ -126,10 +130,10 @@ public class AptParser {
                 }
 
                 this.airportCounter++;
-                XHSConfig.debugMessage("Parsing Airport", DebugMessageLevel.WARN);
+                LOG.debug("Parsing Airport");
                 airport = AptFilesTools.parseAirport(line, this.currentFile.getAbsolutePath());
                 airport.setLineNumberStart(lineCounter);
-                XHSConfig.debugMessage("************************" + line, DebugMessageLevel.WARN);
+                LOG.debug("************************" + line);
 
                 //hier muss noch geregelt werden, dass die initiale Position auch nocht mit ausgelesen wird
                 try {
@@ -179,7 +183,5 @@ public class AptParser {
         br.close();
 
     }
-
-
 
 }

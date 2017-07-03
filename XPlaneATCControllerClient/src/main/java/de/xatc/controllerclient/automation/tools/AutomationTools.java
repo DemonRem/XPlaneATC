@@ -7,10 +7,11 @@ import de.xatc.controllerclient.config.ConfigBean;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
 import de.xatc.controllerclient.gui.datasync.ServerSyncFrame;
-import de.xatc.controllerclient.log.DebugMessageLevel;
 import de.xatc.controllerclient.xdataparser.AptFileIndexer;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import org.apache.log4j.Logger;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -22,6 +23,10 @@ import org.hibernate.Transaction;
 
 
 public class AutomationTools {
+
+    private static final Logger LOG = Logger.getLogger(AutomationTools.class.getName());
+    
+    
     
     public void startApp() {
         
@@ -143,7 +148,7 @@ public class AutomationTools {
             ex.printStackTrace(System.err);
         }
         AptFileIndexer indexer = new AptFileIndexer();
-        XHSConfig.debugMessage("STARTING INDEX", DebugMessageLevel.DEBUG);
+        LOG.info("STARTING INDEX");
         indexer.start();
        
        

@@ -2,11 +2,12 @@ package de.xatc.controllerclient.gui.servercontrol;
 
 import de.mytools.tools.swing.SwingTools;
 import de.xatc.controllerclient.config.XHSConfig;
-import de.xatc.controllerclient.log.DebugMessageLevel;
 import de.xatc.controllerclient.xdataparser.AptFileIndexer;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -14,6 +15,9 @@ import javax.swing.JProgressBar;
  */
 public class FileIndexerFrame extends javax.swing.JFrame {
 
+    private static final Logger LOG = Logger.getLogger(FileIndexerFrame.class.getName());
+
+    
     /**
      * Creates new form FileIndexerFrame
      */
@@ -131,7 +135,7 @@ public class FileIndexerFrame extends javax.swing.JFrame {
         }
 
         AptFileIndexer indexer = new AptFileIndexer();
-        XHSConfig.debugMessage("STARTING INDEX", DebugMessageLevel.DEBUG);
+        LOG.info("STARTING INDEX");
         indexer.start();
 
 

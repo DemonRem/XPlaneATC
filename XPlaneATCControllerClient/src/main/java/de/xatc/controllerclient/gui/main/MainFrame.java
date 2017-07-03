@@ -22,7 +22,6 @@ import de.xatc.controllerclient.gui.servercontrol.ServerControlFrame;
 import de.xatc.controllerclient.gui.setupatc.ATCSetupFrame;
 import de.xatc.controllerclient.gui.tools.ControllerClientGuiTools;
 import de.xatc.controllerclient.gui.usercontrol.UserControlFrame;
-import de.xatc.controllerclient.log.DebugMessageLevel;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +30,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -40,6 +40,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -47,6 +48,10 @@ import javax.swing.UnsupportedLookAndFeelException;
  */
 public class MainFrame extends JFrame implements WindowListener, ActionListener, KeyListener {
 
+    private static final Logger LOG = Logger.getLogger(MainFrame.class.getName());
+
+    
+    
     /**
      * the main panel
      */
@@ -360,7 +365,7 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
     @Override
     public void actionPerformed(ActionEvent ae) {
 
-        XHSConfig.debugMessage("Action Menu clicked", DebugMessageLevel.DEBUG);
+        LOG.info("Action Menu clicked");
         if (ae.getSource() == helpItem) {
 
         } else if (ae.getSource() == configurtationItem) {

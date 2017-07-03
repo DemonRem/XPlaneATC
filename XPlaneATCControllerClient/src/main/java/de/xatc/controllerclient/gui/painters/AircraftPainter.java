@@ -12,9 +12,7 @@ package de.xatc.controllerclient.gui.painters;
 import de.xatc.commons.networkpackets.pilot.FMSPlan;
 import de.xatc.commons.networkpackets.pilot.FMSWayPoint;
 import de.xatc.commons.networkpackets.pilot.PlanePosition;
-import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.datastructures.DataStructureSilo;
-import de.xatc.controllerclient.log.DebugMessageLevel;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -27,7 +25,9 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map.Entry;
+
 import javax.imageio.ImageIO;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.painter.Painter;
@@ -40,6 +40,11 @@ import org.jdesktop.swingx.painter.Painter;
  */
 public class AircraftPainter implements Painter<JXMapViewer> {
 
+    private static final Logger LOG = Logger.getLogger(AircraftPainter.class.getName());
+
+    
+    
+    
     private PlanePosition p;
     /**
      * do we want AntiAliasing, of course
@@ -65,7 +70,7 @@ public class AircraftPainter implements Painter<JXMapViewer> {
      */
     public AircraftPainter() {
 
-        XHSConfig.debugMessage("PATH: " + Paths.get(".").toAbsolutePath().normalize().toString(), DebugMessageLevel.DEBUG);
+        LOG.info("PATH: " + Paths.get(".").toAbsolutePath().normalize().toString());
 
         try {
             File imageFile = new File("Resources/plugins/PythonScripts/followMeCarScripts/plane.png");
@@ -76,7 +81,7 @@ public class AircraftPainter implements Painter<JXMapViewer> {
             this.originalImage = ImageIO.read(imageFile);
 
         } catch (IOException ex) {
-            XHSConfig.debugMessage("could not load Image: " + ex.getLocalizedMessage(), DebugMessageLevel.EXCEPTION);
+            LOG.info("could not load Image: " + ex.getLocalizedMessage());
         }
 
     }

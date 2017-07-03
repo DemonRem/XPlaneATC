@@ -19,11 +19,14 @@ import java.lang.management.ManagementFactory;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 
 public class Start extends JFrame  {
 
+    
+    private static final Logger LOG = Logger.getLogger(Start.class.getName());
     /**
      * the main method
      *
@@ -32,6 +35,7 @@ public class Start extends JFrame  {
      */
     public static void main(String[] arg) throws IOException {
 
+         
         System.out.println("Starting UP");
         System.out.println(XHSConfig.getAPPNAME());
         System.out.println(XHSConfig.getVERSION());
@@ -39,8 +43,8 @@ public class Start extends JFrame  {
 
         System.out.println("Setting LogLevel....");
 
-        java.util.logging.Logger.getLogger("org.hibernate").setLevel(XHSConfig.getHibernateLogLevel());
-        java.util.logging.Logger.getLogger("net.sf.ehcache").setLevel(XHSConfig.getEhCacheLogLevel());
+        java.util.logging.Logger.getLogger("org.hibernate").setLevel(java.util.logging.Level.WARNING);
+        java.util.logging.Logger.getLogger("net.sf.ehcache").setLevel(java.util.logging.Level.WARNING);
 
         String myProcessID = ManagementFactory.getRuntimeMXBean().getName();
 

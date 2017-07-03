@@ -23,15 +23,20 @@ import de.xatc.controllerclient.gui.servercontrol.FileIndexerFrame;
 import de.xatc.controllerclient.gui.servercontrol.ServerControlFrame;
 import de.xatc.controllerclient.gui.setupatc.ATCSetupFrame;
 import de.xatc.controllerclient.gui.usercontrol.UserControlFrame;
-import de.xatc.controllerclient.log.DebugMessageLevel;
+
 import de.xatc.controllerclient.navigation.NavPoint;
 import de.xatc.controllerclient.navigation.NavPointHelpers;
 import de.xatc.controllerclient.nettyclient.DataClient;
 import de.xatc.controllerclient.nettyclient.DataClientBootstrap;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
+
+
+
 import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+
+
 
 /**
  *
@@ -39,7 +44,8 @@ import org.apache.commons.io.FileUtils;
  */
 public class XHSConfig {
 
-    
+    private static final Logger LOG = Logger.getLogger(XHSConfig.class.getName());
+
     private static DataClient dataClient;
     private static DataClientBootstrap dataClientBootstrap;
     private static String currentSessionID;
@@ -104,19 +110,6 @@ public class XHSConfig {
      */
     private static final boolean doDebug = true;
 
-    /**
-     * debug message level
-     */
-    private static final DebugMessageLevel debugLevel = DebugMessageLevel.INFO;
-
-    /**
-     * hibernate loglevel. normally set to off, because of large log output
-     */
-    private final static Level hibernateLogLevel = Level.WARNING;
-    /**
-     * loglevel of ehcache
-     */
-    private final static Level ehCacheLogLevel = Level.WARNING;
 
     /**
      * This is me
@@ -159,17 +152,6 @@ public class XHSConfig {
         return doDebug;
     }
 
-    public static DebugMessageLevel getDebugLevel() {
-        return debugLevel;
-    }
-
-    public static Level getHibernateLogLevel() {
-        return hibernateLogLevel;
-    }
-
-    public static Level getEhCacheLogLevel() {
-        return ehCacheLogLevel;
-    }
 
     public static String getAuthorString() {
         return authorString;
@@ -201,7 +183,7 @@ public class XHSConfig {
             initialPos.setHeadingString(hdg);
             initialPos.setHeadingDouble(Double.parseDouble(hdg));
 
-            XHSConfig.debugMessage("Starting with position: " + lat + " " + lon + " " + hdg, DebugMessageLevel.INFO);
+            LOG.info("Starting with position: " + lat + " " + lon + " " + hdg);
             initialPos = NavPointHelpers.convertToXY(initialPos);
         }
         return initialPos;
@@ -215,24 +197,7 @@ public class XHSConfig {
         return lockFile;
     }
 
-    /**
-     * write an debug Message
-     *
-     * @param s
-     */
-    public static void debugMessage(String s, DebugMessageLevel level) {
 
-        if (!doDebug) {
-            return;
-        }
-
-        if (level.getLevel() <= XHSConfig.getDebugLevel().getLevel()) {
-
-            System.out.println(s);
-
-        }
-
-    }
 
     public static ConfigBean getConfigBean() {
         if (configBean == null) {
@@ -310,12 +275,12 @@ public class XHSConfig {
      * save a marshelled config bean
      */
     public static void savePropsFile() {
-        XHSConfig.debugMessage("Saving Props File", DebugMessageLevel.DEBUG);
+        LOG.info("Saving Props File");
 
-        XHSConfig.debugMessage("SAVING PROPERTIES", DebugMessageLevel.DEBUG);
+       LOG.info("SAVING PROPERTIES");
 
         String configBeanContent = ObjectsMarshaller.objectToXml(configBean);
-        XHSConfig.debugMessage(configBeanContent, DebugMessageLevel.DEBUG);
+        LOG.info(configBeanContent);
         try {
             FileUtils.writeStringToFile(new File(XHSConfig.getPropertiesFileName()), configBeanContent);
         } catch (IOException ex) {
@@ -330,7 +295,7 @@ public class XHSConfig {
      */
     public static void loadPropsFile() {
         
-        XHSConfig.debugMessage("loading ConfigBean", DebugMessageLevel.DEBUG);
+        LOG.info("loading ConfigBean");
         
         if (!doesConfigFileExist()) {
             setConfigBean(new ConfigBean());

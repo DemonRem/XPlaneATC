@@ -11,7 +11,6 @@ package de.xatc.controllerclient.navigation;
 import de.mytools.tools.swing.SwingTools;
 import de.xatc.commons.db.sharedentities.aptmodel.AptAirport;
 import de.xatc.controllerclient.config.XHSConfig;
-import de.xatc.controllerclient.log.DebugMessageLevel;
 import de.xatc.controllerclient.xdataparser.aptmodel.AptAirportModel;
 import de.xatc.controllerclient.xdataparser.aptmodel.TaxiNetworkNode;
 import de.xatc.controllerclient.xdataparser.aptmodel.Taxiway;
@@ -19,10 +18,13 @@ import de.xatc.controllerclient.xdataparser.aptmodel.TaxiwaySegment;
 import de.xatc.controllerclient.xdataparser.tools.AptFilesTools;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 
 
@@ -36,6 +38,11 @@ import org.jdesktop.swingx.mapviewer.GeoPosition;
  */
 public class NavPointHelpers {
 
+    private static final Logger LOG = Logger.getLogger(NavPointHelpers.class.getName());
+
+    
+    
+    
     /**
      * convert latitude and longitude to pixel x/y coordinates
      *
@@ -54,22 +61,22 @@ public class NavPointHelpers {
 
         }
 
-        XHSConfig.debugMessage("converting NAVPOINT To XY", DebugMessageLevel.DEBUG);
+        LOG.info("converting NAVPOINT To XY");
         //first convert to decimal
-        XHSConfig.debugMessage("covnerting to decimal", DebugMessageLevel.DEBUG);
-        XHSConfig.debugMessage("PARSING COORDS: " + t.getLatitudeSTring() + "/" + t.getLongitudeSTring(), DebugMessageLevel.DEBUG);
+        LOG.debug( "covnerting to decimal");
+        LOG.debug("PARSING COORDS: "+ t.getLatitudeSTring()+"/"+ t.getLongitudeSTring());
         String[] splitX = t.getLongitudeSTring().split("\\.");
         String[] splitY = t.getLatitudeSTring().split("\\.");
         if (splitX.length > 2) {
-            XHSConfig.debugMessage("PARSING HOURS/MIN/SECS", DebugMessageLevel.DEBUG);
+            LOG.debug("PARSING HOURS/MIN/SECS");
             String xDeg = splitX[0];
-            XHSConfig.debugMessage("xDEG: " + xDeg, DebugMessageLevel.DEBUG);
+            LOG.debug( "xDEG: "+ xDeg);
             String xMin = splitX[1];
-            XHSConfig.debugMessage("XMin: " + xMin, DebugMessageLevel.DEBUG);
+            LOG.debug("XMin: "+ xMin);
             String xSec = splitX[2];
-            XHSConfig.debugMessage("xSec: " + xSec, DebugMessageLevel.DEBUG);
+            LOG.debug("xSec: "+ xSec);
             String xSecDec = splitX[3];
-            XHSConfig.debugMessage("xSECDEC: " + xSecDec, DebugMessageLevel.DEBUG);
+            LOG.debug(String.format("xSECDEC: %s", xSecDec));
 
             String yDeg = splitY[0];
             String yMin = splitY[1];
@@ -79,13 +86,13 @@ public class NavPointHelpers {
             t.setLatitudedouble(Float.parseFloat(xDeg) + Float.parseFloat(xMin) / 60 + Float.parseFloat(xSec + "." + xSecDec) / 3600);
             t.setLongitudeDouble(Float.parseFloat(yDeg) + Float.parseFloat(yMin) / 60 + Float.parseFloat(ySec + "." + ySecDec) / 3600);
 
-            XHSConfig.debugMessage("DECIMAL: " + t.getLongitudeDouble() + "/" + t.getLatitudedouble(), DebugMessageLevel.DEBUG);
+           LOG.debug(MessageFormat.format("DECIMAL: {0}/{1}", t.getLongitudeDouble(), t.getLatitudedouble()));
 
             t.setX((float) t.getLatitudedouble() / t.getMapWidth());
             t.setY((float) (t.getLongitudeDouble() / t.getMapHeight()));
 
         } else {
-            XHSConfig.debugMessage("SETTING MANUALLY", DebugMessageLevel.DEBUG);
+            LOG.debug("SETTING MANUALLY");
 
             t.setLatitudedouble(Float.parseFloat(t.getLatitudeSTring()));
             t.setLongitudeDouble(Float.parseFloat(t.getLongitudeSTring()));
@@ -95,7 +102,7 @@ public class NavPointHelpers {
 
         }
 
-        XHSConfig.debugMessage("XY: " + t.getX() + " " + t.getY(), DebugMessageLevel.DEBUG);
+        LOG.debug( "XY: " + t.getX()+ " " + t.getY());
         return t;
     }
 
@@ -108,8 +115,8 @@ public class NavPointHelpers {
      */
     public static NavPoint mouseToGeoPos(Point p, NavPoint t) {
 
-        XHSConfig.debugMessage("Generating mouse to GeoPos", DebugMessageLevel.DEBUG);
-        XHSConfig.debugMessage("Got Mouse PosX " + p.getX(), DebugMessageLevel.DEBUG);
+        LOG.debug("Generating mouse to GeoPos");
+        LOG.debug("Got Mouse PosX "+ p.getX());
 
         Rectangle rect = XHSConfig.getMainFrame().getMainPanel().getMapPanel().getJkit().getMainMap().getViewportBounds();
 
@@ -142,12 +149,12 @@ public class NavPointHelpers {
      * @return ne processed Navpoint
      */
     public static NavPoint point2DToGeoPos(NavPoint t) {
-        XHSConfig.debugMessage("Converting Point 2D to GEOPOS", DebugMessageLevel.DEBUG);
-        XHSConfig.debugMessage("POINT2d in Navpoint is: " + t.getPoint2D(), DebugMessageLevel.DEBUG);
+        LOG.debug("Converting Point 2D to GEOPOS");
+        LOG.debug( "POINT2d in Navpoint is: "+ t.getPoint2D());
 
         t.setGeoPos(XHSConfig.getMainFrame().getMainPanel().getMapPanel().getJkit().getMainMap().getTileFactory().pixelToGeo(t.getPoint2D(), XHSConfig.getMainFrame().getMainPanel().getMapPanel().getJkit().getMainMap().getZoom()));
 
-        XHSConfig.debugMessage("GEOPOS LONG= " + t.getGeoPos().getLongitude(), DebugMessageLevel.DEBUG);
+        LOG.debug("GEOPOS LONG= "+ t.getGeoPos().getLongitude());
         return t;
     }
 
@@ -406,7 +413,7 @@ public class NavPointHelpers {
             NavPoint p = AptFilesTools.getAirportInitialPosition(AptFilesTools.extractAirportFromFile(a.getFullFileName(), a.getLineNumberStart()));
             goToAirport(p);
         } catch (Exception ex) {
-            XHSConfig.debugMessage("Could not goToAirport " + ex.getLocalizedMessage(), DebugMessageLevel.EXCEPTION);
+            LOG.debug(MessageFormat.format("Could not goToAirport {0}", ex.getLocalizedMessage()));
             SwingTools.alertWindow("Could not load aiportdata. Needed data items not found. Part of custom scenery?", XHSConfig.getMainFrame());
         }
 
