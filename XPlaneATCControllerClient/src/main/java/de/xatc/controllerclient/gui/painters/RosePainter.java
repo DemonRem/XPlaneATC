@@ -22,6 +22,7 @@ import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.painter.Painter;
@@ -33,6 +34,7 @@ import org.jdesktop.swingx.painter.Painter;
  */
 public class RosePainter implements Painter<JXMapViewer> {
 
+    private static final Logger LOG = Logger.getLogger(RosePainter.class.getName());
     /**
      * what color do we draw with
      */
@@ -124,7 +126,7 @@ public class RosePainter implements Painter<JXMapViewer> {
                 
                 
                 Shape rotatedLine =  at.createTransformedShape(line);
-            //    System.out.println(rotatedLine.getBounds());
+                LOG.debug(rotatedLine.getBounds());
                 g.draw(rotatedLine);
               
                 g.drawString(angle + "", (int) at.getScaleX(), (int) at.getScaleY());

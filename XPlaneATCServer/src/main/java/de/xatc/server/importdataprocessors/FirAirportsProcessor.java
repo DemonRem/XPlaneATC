@@ -11,6 +11,7 @@ import de.xatc.commons.navigationtools.FirNavigationalTools;
 import de.xatc.server.db.DBSessionManager;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 /**
@@ -19,6 +20,7 @@ import org.hibernate.Session;
  */
 public class FirAirportsProcessor extends Thread {
 
+    private static final Logger LOG = Logger.getLogger(FirAirportsProcessor.class.getName());
     @Override
     public void run() {
 
@@ -29,11 +31,11 @@ public class FirAirportsProcessor extends Thread {
 
         for (Fir fir : firList) {
 
-            System.out.println(fir.getFirName() + " " + fir.getFirNameIcao() + " " + fir.getPoligonList().size());
+            LOG.trace(fir.getFirName() + " " + fir.getFirNameIcao() + " " + fir.getPoligonList().size());
 
             ArrayList<PlainAirport> airportListInFir = FirNavigationalTools.findAirportsInFir(airportList,fir.getPoligonList());
 
-            System.out.println("Airports in FIR: " + airportListInFir.size());
+            LOG.trace("Airports in FIR: " + airportListInFir.size());
             fir.setIncludedAirports(airportListInFir);
             s.saveOrUpdate(fir);
             s.flush();

@@ -22,6 +22,7 @@ import de.xatc.server.mq.producers.MQMessageSender;
 import de.xatc.server.nettybootstrap.pilot.DataServerBootstrap;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import java.util.Map;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -29,36 +30,38 @@ import java.util.Map;
  */
 public class ServerControlHandler {
 
+    private static final Logger LOG = Logger.getLogger(ServerControlHandler.class.getName());
+    
     public static void handleStartClientConnections(Object msg) {
 
-        System.out.println("Starting Client Connections");
+        LOG.trace("Starting Client Connections");
         StartClientConnector s = (StartClientConnector) msg;
         if (!SessionManagement.isAdmin(s.getSessionID())) {
-            System.out.println("Not admin.... returning");
+            LOG.warn("Not admin.... returning");
             return;
         }
 
         if (ServerConfig.getDataServerBootStrap() != null) {
-            System.out.println("Client Connector is already running. returning!");
+            LOG.warn("Client Connector is already running. returning!");
             return;
 
         }
         DataServerBootstrap d = new DataServerBootstrap();
         ServerConfig.setDataServerBootStrap(d);
-        System.out.println("Client Connections started");
+        LOG.debug("Client Connections started");
 
     }
 
     public static void handleStopClientConnections(Object msg) {
 
-        System.out.println("Stopping Client Connections");
+        LOG.info("Stopping Client Connections");
         StopClientConnector s = (StopClientConnector) msg;
         if (!SessionManagement.isAdmin(s.getSessionID())) {
-            System.out.println("Not admin.... returning");
+            LOG.warn("Not admin.... returning");
             return;
         }
         if (ServerConfig.getDataServerBootStrap() == null) {
-            System.out.println("No Client connector found");
+            LOG.warn("No Client connector found");
             return;
         }
 
@@ -66,16 +69,16 @@ public class ServerControlHandler {
         ServerConfig.setDataServerBootStrap(null);
         SessionManagement.getPilotDataStructures().clear();
         SessionManagement.getAtcDataStructures().clear();
-        System.out.println("Client Connections stopped");
+        LOG.debug("Client Connections stopped");
 
     }
 
     public static void handleShutdownServer(Object msg) {
 
-        System.out.println("shutting down Server");
+        LOG.info("shutting down Server");
         ShutdownServer s = (ShutdownServer) msg;
         if (!SessionManagement.isAdmin(s.getSessionID())) {
-            System.out.println("Not admin.... returning");
+            LOG.warn("Not admin.... returning");
             return;
         }
 
@@ -85,15 +88,15 @@ public class ServerControlHandler {
 
     public static void handleStartMessagingProducers(Object msg) {
 
-        System.out.println("Starting Messaging Producers");
+        LOG.debug("Starting Messaging Producers");
         StartMessagingProducers s = (StartMessagingProducers) msg;
         if (!SessionManagement.isAdmin(s.getSessionID())) {
-            System.out.println("Not admin.... returning");
+            LOG.warn("Not admin.... returning");
             return;
         }
 
         if (ServerConfig.getMessageSenders().size() > 0) {
-            System.out.println("Producers already running.");
+            LOG.warn("Producers already running.");
             return;
         }
 
@@ -102,42 +105,42 @@ public class ServerControlHandler {
         writeToAll.startProducer();
         ServerConfig.getMessageSenders().put("broadcastTextMessages", writeToAll);
 
-        System.out.println("Messaging producers started");
+        LOG.debug("Messaging producers started");
     }
 
     public static void handleStopMessagingProducers(Object msg) {
 
-        System.out.println("Stopping Messaging producers");
+        LOG.debug("Stopping Messaging producers");
         StopMessagingProducers s = (StopMessagingProducers) msg;
         if (!SessionManagement.isAdmin(s.getSessionID())) {
-            System.out.println("Not admin.... returning");
+            LOG.warn("Not admin.... returning");
             return;
         }
 
         //shutdown all mq producers
-        System.out.println("Shutting Down all Message Producers for MQ");
+        LOG.info("Shutting Down all Message Producers for MQ");
         for (Map.Entry<String, MQMessageSender> entry : ServerConfig.getMessageSenders().entrySet()) {
 
-            System.out.println("Shutting down messageSende: " + entry.getValue().getQueueName());
+            LOG.info("Shutting down messageSende: " + entry.getValue().getQueueName());
             entry.getValue().shutdownProducer();
 
         }
 
         ServerConfig.getMessageSenders().clear();
-        System.out.println("Messaging Producers stopped");
+        LOG.info("Messaging Producers stopped");
     }
 
     public static void handleStartMessagingConsumers(Object msg) {
 
-        System.out.println("Starting Messaging Consumers");
+        LOG.debug("Starting Messaging Consumers");
         StartMessagingConsumers s = (StartMessagingConsumers) msg;
         if (!SessionManagement.isAdmin(s.getSessionID())) {
-            System.out.println("Not admin.... returning");
+            LOG.debug("Not admin.... returning");
             return;
         }
 
         if (ServerConfig.getMessageReceivers().size() > 0) {
-            System.out.println("Message receivers already running");
+            LOG.debug("Message receivers already running");
             return;
         }
 
@@ -147,41 +150,41 @@ public class ServerControlHandler {
         TextMessageBroadCastConsumer b = new TextMessageBroadCastConsumer("broadcastTextMessages");
         ServerConfig.getMessageReceivers().put("broadcastTextMessages", b);
 
-        System.out.println("Messaging Consumers started");
+        LOG.info("Messaging Consumers started");
     }
 
     public static void handleStopMessagingConsumers(Object msg) {
 
-        System.out.println("Stopping Messaging Consumers");
+        LOG.debug("Stopping Messaging Consumers");
         StopMessagingConsumers s = (StopMessagingConsumers) msg;
         if (!SessionManagement.isAdmin(s.getSessionID())) {
-            System.out.println("Not admin.... returning");
+            LOG.warn("Not admin.... returning");
             return;
         }
 
         //shutdown all Consumers
         for (Map.Entry<String, MQAbstractConsumer> entry : ServerConfig.getMessageReceivers().entrySet()) {
 
-            System.out.println("Shutting down messageReceiver: " + entry.getValue().getQueueName());
+            LOG.debug("Shutting down messageReceiver: " + entry.getValue().getQueueName());
             entry.getValue().shutdownConsumer();
 
         }
 
         ServerConfig.getMessageReceivers().clear();
-        System.out.println("MessagingConsumers stopped");
+        LOG.info("MessagingConsumers stopped");
     }
 
     public static void handleStartMQBroker(Object msg) {
 
-        System.out.println("Starting MQ Broker");
+        LOG.debug("Starting MQ Broker");
         StartMQBroker s = (StartMQBroker) msg;
         if (!SessionManagement.isAdmin(s.getSessionID())) {
-            System.out.println("Not admin.... returning");
+            LOG.warn("Not admin.... returning");
             return;
         }
 
         if (ServerConfig.getMqBrokerManager() != null) {
-            System.out.println("Borker already running.....");
+            LOG.warn("Borker already running.....");
             return;
         }
         
@@ -193,15 +196,15 @@ public class ServerControlHandler {
         }
 
         ServerConfig.setMqBrokerManager(manager);
-        System.out.println("MQ Broker started");
+        LOG.info("MQ Broker started");
     }
 
     public static void handleStopMQBroker(Object msg) {
         
-        System.out.println("Stopping MQ Broker");
+        LOG.debug("Stopping MQ Broker");
         StopMQBroker s = (StopMQBroker) msg;
         if (!SessionManagement.isAdmin(s.getSessionID())) {
-            System.out.println("Not admin.... returning");
+            LOG.warn("Not admin.... returning");
             return;
         }
 
@@ -211,10 +214,11 @@ public class ServerControlHandler {
                 ServerConfig.getMqBrokerManager().shutdownBroker();
                 ServerConfig.setMqBrokerManager(null);
             } catch (Exception ex) {
+                LOG.error(ex.getLocalizedMessage());
                 ex.printStackTrace(System.err);
             }
         }
-        System.out.println("MQ BRoker stopped");
+        LOG.info("MQ BRoker stopped");
     }
 
 }

@@ -15,6 +15,7 @@ import de.xatc.server.sessionmanagment.SessionManagement;
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 /**
@@ -23,28 +24,26 @@ import org.hibernate.Session;
  */
 public class TextMessageBroadCastConsumer extends MQAbstractConsumer {
 
+    private static final Logger LOG = Logger.getLogger(TextMessageBroadCastConsumer.class.getName());
     public TextMessageBroadCastConsumer(String queueName) {
         super(queueName);
     }
 
     
-    
-    
-    
     @Override
     public void onObjectMessage(ObjectMessage message) {
        
-        System.out.println("Message Consumer receiving ObjectMessage.");
+        LOG.info("Message Consumer receiving ObjectMessage.");
         try {
             TextMessagePacket p = (TextMessagePacket) message.getObject();
             
             if (SessionManagement.getAtcDataStructures().size() > 0) {
-                System.out.println("Writing to ATCGroup!");
+                LOG.info("Writing to ATCGroup!");
                 NetworkBroadcaster.broadcastATC(p);
                 
             }
             if (SessionManagement.getPilotDataStructures().size() > 0) {
-                System.out.println("Writing to UserGroup");
+                LOG.info("Writing to UserGroup");
                 NetworkBroadcaster.broadcastPilots(p);
                 
             }
@@ -65,6 +64,7 @@ public class TextMessageBroadCastConsumer extends MQAbstractConsumer {
             
             
         } catch (JMSException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
         

@@ -9,7 +9,6 @@ import de.xatc.commons.datastructure.AbstractDataStructure;
 import de.xatc.commons.db.sharedentities.user.RegisteredUser;
 import de.xatc.commons.db.sharedentities.user.XATCUserSession;
 import de.xatc.commons.networkpackets.parent.NetworkPacket;
-import io.netty.channel.Channel;
 
 /**
  *

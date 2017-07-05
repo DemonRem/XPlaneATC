@@ -11,6 +11,7 @@ import de.xatc.commons.networkpackets.atc.servercontrol.ServerMetrics;
 import de.xatc.server.config.ServerConfig;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -18,16 +19,18 @@ import io.netty.channel.Channel;
  */
 public class MetricsHandler {
 
+    private static final Logger LOG = Logger.getLogger(MetricsHandler.class.getName());
+    
     public static void handleMetrics(Channel n, Object msg) {
 
-        System.out.println("Handle Metrics");
+        LOG.trace("Handle Metrics");
         RequestServerMetrics m = (RequestServerMetrics) msg;
         UserRole u = SessionManagement.getATCUserRoleBySessionID(m.getSessionID());
 
-        System.out.println("UserRole is: " + u);
+        LOG.trace("UserRole is: " + u);
 
         if (u != UserRole.ADMINISTRATOR) {
-            System.out.println("Server Metrics requested of non Admin. Nothing to do. returning");
+            LOG.trace("Server Metrics requested of non Admin. Nothing to do. returning");
             return;
         }
 
@@ -60,7 +63,7 @@ public class MetricsHandler {
         
         
         
-        System.out.println(b);
+        LOG.trace(b);
         ServerMetrics metrics = new ServerMetrics();
         metrics.setMessage(b);
         n.writeAndFlush(metrics);

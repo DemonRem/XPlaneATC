@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 /**
@@ -24,6 +25,7 @@ import org.hibernate.Session;
  */
 public class FirPoligonProcessor extends Thread {
     
+    private static final Logger LOG = Logger.getLogger(FirPoligonProcessor.class.getName());
     private final File firDetail = new File(ServerConfig.getFirDetailFile());
     
     
@@ -32,7 +34,7 @@ public class FirPoligonProcessor extends Thread {
     
         
          if (!firDetail.exists()) {
-            System.out.println("FirDetailList not found.... returning");
+            LOG.error("FirDetailList not found.... returning");
             return;
         }
         
@@ -46,10 +48,10 @@ public class FirPoligonProcessor extends Thread {
            
             ArrayList<PlainNavPoint> poligonPoints = this.getFirPoligon(fir.getId());
             
-            System.out.println("FOUND POLIGONPOINTS: " + poligonPoints.size());
+            LOG.trace("FOUND POLIGONPOINTS: " + poligonPoints.size());
             fir.setPoligonList(poligonPoints);
             
-            System.out.println(fir.toString());
+            LOG.trace(fir.toString());
             s.saveOrUpdate(fir);
             s.flush();
             s.clear();
@@ -69,7 +71,7 @@ public class FirPoligonProcessor extends Thread {
         
         for (Fir fir : firList) {
             
-             System.out.println(fir.getFirName() + " " + fir.getFirNameIcao() + " " + fir.getPoligonList().size());
+             LOG.trace(fir.getFirName() + " " + fir.getFirNameIcao() + " " + fir.getPoligonList().size());
             
         }
         DBSessionManager.closeSession(s);
@@ -79,7 +81,7 @@ public class FirPoligonProcessor extends Thread {
     
      private ArrayList<PlainNavPoint> getFirPoligon(int id) {
 
-        System.out.println("Getting FIR Poligon: " + id);
+        LOG.trace("Getting FIR Poligon: " + id);
         ArrayList<PlainNavPoint> returnList = new ArrayList<>();
 
         boolean sectorStarted = false;
@@ -91,14 +93,14 @@ public class FirPoligonProcessor extends Thread {
             while ((line = br.readLine()) != null) {
 
                 if (StringUtils.isEmpty(line)) {
-                    System.out.println("Line Empty! Continueing...");
+                    LOG.debug("Line Empty! Continueing...");
                     continue;
                 }
               
                 if (line.equals("DISPLAY_LIST_" + id)) {
-                    System.out.println("ID Found");
+                    LOG.trace("ID Found");
                     if (!sectorStarted) {
-                        System.out.println("Sector started!");
+                        LOG.trace("Sector started!");
                         sectorStarted = true;
                         continue;
                     }
@@ -117,16 +119,17 @@ public class FirPoligonProcessor extends Thread {
                     PlainNavPoint p = new PlainNavPoint();
                     p.setLat(Double.parseDouble(splitted[0]));
                     p.setLon(Double.parseDouble(splitted[1]));
-                    System.out.println("Adding FIR Poligon navpoint");
+                    LOG.trace("Adding FIR Poligon navpoint");
 
                     returnList.add(p);
 
                 }
 
             }
-            System.out.println("Closing FileReader");
+            LOG.trace("Closing FileReader");
             br.close();
         } catch (IOException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
 

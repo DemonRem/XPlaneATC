@@ -20,6 +20,7 @@ import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import java.awt.Color;
 import java.net.ConnectException;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -27,6 +28,7 @@ import java.net.ConnectException;
  */
 public class DataClientBootstrap {
 
+    private static final Logger LOG = Logger.getLogger(DataClientBootstrap.class.getName());
     private EventLoopGroup workerGroup;
     private ChannelFuture channelFuture;
 
@@ -66,11 +68,11 @@ public class DataClientBootstrap {
 
                 }
             });
-            System.out.println("Connecting......");
+            LOG.info("Connecting......");
 
             channelFuture = bootstrap.connect(XHSConfig.getConfigBean().getAtcServerIP(), Integer.parseInt(XHSConfig.getConfigBean().getAtcServerPort())).sync();
 
-            System.out.println("Connected!");
+            LOG.info("Connected!");
             if (channelFuture.isSuccess()) {
 
 //                AdapterConfig.getMainFrame().getConnectMenuItem().setEnabled(false);
@@ -81,13 +83,14 @@ public class DataClientBootstrap {
 //                AdapterConfig.getMainFrame().getMainPanel().getConnectionStatusPanel().repaint();
                 //TODO
             } else {
-                System.out.println("NO CONNECTION SUCCESSFULL");
+                LOG.warn("NO CONNECTION SUCCESSFULL");
             }
 
         } catch (InterruptedException ex) {
-            System.out.println("EXCEPTOIN");
+            LOG.error("EXCEPTOIN " + ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         } catch (Exception ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
             if (ex instanceof ConnectException) {
                 SwingTools.alertWindow("Could not connect to ATC-Server.", XHSConfig.getMainFrame());
@@ -98,11 +101,11 @@ public class DataClientBootstrap {
 
     public void shutdownClient() {
 
-        System.out.println("DataClientBootstrap . Shutting down client!");
+        LOG.info("DataClientBootstrap . Shutting down client!");
         Thread t = new Thread(new Runnable() {
             public void run() {
                 
-                System.out.println("ShutdownThread started");
+                LOG.info("ShutdownThread started");
                 
                 XHSConfig.getDataClient().getCtx().close();
                 
@@ -110,15 +113,15 @@ public class DataClientBootstrap {
                 XHSConfig.getMainFrame().getConnectItem().setEnabled(true);
 
                 try {
-                    System.out.println("Channel Fututre closing");
+                    LOG.info("Channel Fututre closing");
                     channelFuture.channel().closeFuture().sync();
 
                 } catch (InterruptedException ex) {
-                    System.out.println("EXCEPTION FIRED");
+                    LOG.error("EXCEPTION FIRED " + ex.getLocalizedMessage());
                     ex.printStackTrace(System.err);
                 }
 
-                System.out.println("Shutdown workergroup gracefully");
+                LOG.info("Shutdown workergroup gracefully");
                 workerGroup.shutdownGracefully();
 
                 XHSConfig.getMainFrame().getMainPanel().getStatusPanel().getConnectedToATCDataServer().setColor(Color.RED);
@@ -127,8 +130,8 @@ public class DataClientBootstrap {
 
                 XHSConfig.setDataClientBootstrap(null);
                 XHSConfig.setDataClient(null);
-                System.out.println("Shutdown complete");
-                System.out.println("Disconnected");
+                LOG.info("Shutdown complete");
+                LOG.info("Disconnected");
             }
         });
         t.start();

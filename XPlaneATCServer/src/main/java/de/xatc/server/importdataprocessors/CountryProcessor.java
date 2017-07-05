@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -23,14 +24,14 @@ import org.hibernate.Transaction;
 public class CountryProcessor extends Thread {
 
    
-    
+    private static final Logger LOG = Logger.getLogger(CountryProcessor.class.getName());
 
     @Override
     public void run() {
 
         File countryCodes = new File(ServerConfig.getCountryCodesFile());
         if (!countryCodes.exists()) {
-            System.out.println("CountryCodes File does not exist!");
+            LOG.error("CountryCodes File does not exist!");
             return;
         }
 
@@ -52,7 +53,7 @@ public class CountryProcessor extends Thread {
                 String[] splitted = line.split(":");
                 if (splitted.length == 2) {
                     
-                    System.out.println(line + "... imported");
+                    LOG.trace(line + "... imported");
                     c.setCountryCode(splitted[0]);
                     c.setCountryName(splitted[1]);
                     s.saveOrUpdate(c);
@@ -65,10 +66,11 @@ public class CountryProcessor extends Thread {
             }
             DBSessionManager.closeSession(s);
             br.close();
-            System.out.println("Returning....");
+            LOG.trace("Returning....");
            
         }
         catch(IOException e) {
+            LOG.error(e.getLocalizedMessage());
             e.printStackTrace(System.err);
         }
 

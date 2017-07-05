@@ -38,14 +38,13 @@ import de.xatc.server.networking.protocol.controller.RequestUserListHandler;
 import de.xatc.server.networking.protocol.controller.ServerControlHandler;
 import de.xatc.server.networking.protocol.controller.ServerSyncHandler;
 import de.xatc.server.networking.protocol.controller.SetupATCHandler;
-import de.xatc.server.networking.protocol.controller.SubmittedFlightPlanActionHandlerATC;
-
 import de.xatc.server.networking.protocol.controller.UserManagementHander;
 import de.xatc.server.sessionmanagment.NetworkBroadcaster;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import org.apache.log4j.Logger;
 import org.springframework.util.StringUtils;
 
 /**
@@ -54,39 +53,41 @@ import org.springframework.util.StringUtils;
  */
 public class ATCServerHandler extends ChannelInboundHandlerAdapter {
 
+    private static final Logger LOG = Logger.getLogger(ATCServerHandler.class.getName());
+    
     private Channel channel;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-        System.out.println("CHANNEL READ. Incoming Packet!");
-        System.out.println("Object is: " + msg);
+        LOG.debug("CHANNEL READ. Incoming Packet!");
+        LOG.info("Object is: " + msg);
 
         if (msg instanceof NetworkPacket == false) {
-            System.out.println("No NetworkPacket received! Returning");
+            LOG.warn("No NetworkPacket received! Returning");
             return;
         } else {
 
             NetworkPacket networkPacket = (NetworkPacket) msg;
 
-            System.out.println("Recieved Packet is a NetworkPacket");
+            LOG.debug("Recieved Packet is a NetworkPacket");
 
             if (StringUtils.isEmpty(networkPacket.getSessionID())) {
 
-                System.out.println("Session ID is empty. Looking for a LoginPacket...");
+                LOG.warn("Session ID is empty. Looking for a LoginPacket...");
                 if (msg instanceof LoginPacket) {
 
-                    System.out.println("Login Packet received!");
+                    LOG.debug("Login Packet received!");
                     ATCLoginHandler.handleLogin(channel, msg);
 
                 }
-                System.out.println("SessionID empty and no LoginPacket.... returning.");
+                LOG.warn("SessionID empty and no LoginPacket.... returning.");
                 return;
             }
 
             if (msg instanceof RequestServerMetrics) {
 
-                System.out.println("Server received ServerMetrics Request");
+                LOG.debug("Server received ServerMetrics Request");
                 MetricsHandler.handleMetrics(channel, msg);
                 return;
 
@@ -158,14 +159,14 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
             }
 
             if (msg instanceof SupportedAirportStation) {
-                System.out.println("Incoming SupportedAirportStation");
+                LOG.debug("Incoming SupportedAirportStation");
                 SupportedAirportStation airport = (SupportedAirportStation) msg;
                 SetupATCHandler.handleAirportSetup(airport, ctx.channel());
                 return;
             }
 
             if (msg instanceof SupportedFirStation) {
-                System.out.println("Incoming SupportedAirportStation");
+                LOG.debug("Incoming SupportedAirportStation");
                 SupportedFirStation fir = (SupportedFirStation) msg;
                 SetupATCHandler.handleFirSetup(fir, ctx.channel());
                 return;
@@ -180,8 +181,8 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
             }
             if (msg instanceof RequestDataStructuresPacket) {
 
-                System.out.println("data structures sync request incoming......");
-                System.out.println("Assembling data structure response packet...");
+                LOG.debug("data structures sync request incoming......");
+                LOG.debug("Assembling data structure response packet...");
                 ServerSyncHandler.handleStructuresSyncRequest(ctx.channel());
                 return;
             }
@@ -212,21 +213,21 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
         ATCStructure s = SessionManagement.findATCStructureByChannelID(ctx.channel().id().asLongText());
 
         if (s != null) {
-            System.out.println("boradcasting lost atcstructure to all stations");
+            LOG.debug("boradcasting lost atcstructure to all stations");
             RemoveATCStructure removePacket = new RemoveATCStructure();
             removePacket.setStrucutureSessionID(s.getStructureSessionID());
             SessionManagement.getAtcDataStructures().remove(s.getStructureSessionID());
             NetworkBroadcaster.broadcastAll(removePacket);
             
         }
-        System.out.println("client disconnected");
+        LOG.info("client disconnected");
 
         channel.close();
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("Client connected");
+        LOG.info("Client connected");
         this.channel = ctx.channel();
 
         //Die Session wird allerdinsg vom Login handler zugefuegt
@@ -235,8 +236,9 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 
-        System.out.println("SERVER EXCEPTION CAUGHT!!!!!!!!!!!!!!!!!");
+        LOG.error("SERVER EXCEPTION CAUGHT!!!!!!!!!!!!!!!!!");
         cause.printStackTrace(System.err);
+        LOG.error(cause.getLocalizedMessage());
 
         SessionManagement.removeATCSessionByChannel(ctx.channel());
 

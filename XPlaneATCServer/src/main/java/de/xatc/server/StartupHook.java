@@ -12,10 +12,10 @@ import de.xatc.server.mq.consumers.LoginConsumer;
 import de.xatc.server.mq.consumers.PlanePositionConsumer;
 import de.xatc.server.mq.consumers.SubmittedFlighPlanActionsConsumerATC;
 import de.xatc.server.mq.consumers.SubmittedFlighPlanActionsConsumerPilot;
-
 import de.xatc.server.mq.consumers.TextMessageBroadCastConsumer;
 import de.xatc.server.mq.producers.MQMessageSender;
 import de.xatc.server.nettybootstrap.pilot.DataServerBootstrap;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -23,11 +23,12 @@ import de.xatc.server.nettybootstrap.pilot.DataServerBootstrap;
  */
 public class StartupHook {
 
+    private static final Logger LOG = Logger.getLogger(StartupHook.class.getName());
     public static void startupHook() {
 
         DataServerBootstrap d = new DataServerBootstrap();
         ServerConfig.setDataServerBootStrap(d);
-        System.out.println("Client Connections started");
+        LOG.info("Client Connections started");
 
         MQBrokerManager manager = new MQBrokerManager();
         try {
@@ -37,7 +38,7 @@ public class StartupHook {
         }
 
         ServerConfig.setMqBrokerManager(manager);
-        System.out.println("MQ Broker started");
+        LOG.info("MQ Broker started");
 
         /////////////////////MQ SENDERS
         MQMessageSender writeToAll = new MQMessageSender("broadcastTextMessages");
@@ -68,7 +69,7 @@ public class StartupHook {
         
         //MQRECEIVERS
 
-        System.out.println("Messaging producers started");
+        LOG.info("Messaging producers started");
 
         TextMessageBroadCastConsumer b = new TextMessageBroadCastConsumer("broadcastTextMessages");
         ServerConfig.getMessageReceivers().put("broadcastTextMessages", b);
@@ -91,7 +92,7 @@ public class StartupHook {
         ServerConfig.getMessageReceivers().put("submittedFlightPlanActionsPilot", submittedFlightPlansActionsConsumerPilot);
         
         
-        System.out.println("Messaging Consumers started");
+        LOG.info("Messaging Consumers started");
 
     }
 

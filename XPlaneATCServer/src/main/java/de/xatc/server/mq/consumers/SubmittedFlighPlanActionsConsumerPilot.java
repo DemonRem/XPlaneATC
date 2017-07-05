@@ -7,10 +7,10 @@ package de.xatc.server.mq.consumers;
 
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.server.networking.protocol.pilot.SubmittedFlightPlanActionHandlerPilot;
-
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -18,6 +18,8 @@ import javax.jms.TextMessage;
  */
 public class SubmittedFlighPlanActionsConsumerPilot extends MQAbstractConsumer {
 
+    private static final Logger LOG = Logger.getLogger(SubmittedFlighPlanActionsConsumerPilot.class.getName());
+    
     public SubmittedFlighPlanActionsConsumerPilot(String queueName) {
         super(queueName);
     }
@@ -38,6 +40,7 @@ public class SubmittedFlighPlanActionsConsumerPilot extends MQAbstractConsumer {
             
             
         } catch (JMSException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
     }

@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -24,7 +25,7 @@ import org.hibernate.Transaction;
  */
 public class AirportProcessor extends Thread {
 
-    
+    private static final Logger LOG = Logger.getLogger(AirportProcessor.class.getName());
     
     private File airportFile = new File(ServerConfig.getAirportFile());
 
@@ -32,7 +33,7 @@ public class AirportProcessor extends Thread {
     public void run() {
 
         if (!airportFile.exists()) {
-            System.out.println("FirDetailList not found.... returning");
+            LOG.error("FirDetailList not found.... returning");
             return;
         }
 
@@ -64,7 +65,7 @@ public class AirportProcessor extends Thread {
                 }
                 for (String st : splitted) {
                     if (StringUtils.isEmpty(st)) {
-                        System.out.println(line + " Values in Line are empty.... continue");
+                        LOG.trace(line + " Values in Line are empty.... continue");
                         continueDueToErrors = true;
                         break;
                     }
@@ -86,12 +87,13 @@ public class AirportProcessor extends Thread {
                 s.saveOrUpdate(airport);
                 s.flush();
                 s.clear();
-                System.out.println(line + "... imported");
+                LOG.trace(line + "... imported");
 
             }
             DBSessionManager.closeSession(s);
             br.close();
         } catch (IOException e) {
+            LOG.error(e.getLocalizedMessage());
             e.printStackTrace(System.err);
         }
        

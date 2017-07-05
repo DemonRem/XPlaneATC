@@ -13,6 +13,7 @@ import de.xatc.server.mq.consumers.MQAbstractConsumer;
 import de.xatc.server.mq.producers.MQMessageSender;
 import java.util.List;
 import java.util.Map;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
@@ -24,13 +25,14 @@ import org.hibernate.criterion.Property;
  */
 public class ShutdownHook {
 
+    private static final Logger LOG = Logger.getLogger(ShutdownHook.class.getName());
     public static void attachShutDownHook() {
 
-        System.out.println("Attaching ShutDownHook");
+        LOG.info("Attaching ShutDownHook");
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                System.out.println("ShutDownHook Running");
+                LOG.info("ShutDownHook Running");
                 Session session = DBSessionManager.getSession();
 
                 DetachedCriteria maxId = DetachedCriteria.forClass(LastRun.class)
@@ -40,16 +42,16 @@ public class ShutdownHook {
                         .list();
 
                 LastRun lr = lastRunList.get(0);
-                System.out.println("SHUTDOWN HOOK: LastRun StartDate: " + lr.getStartDate());
+                LOG.info("SHUTDOWN HOOK: LastRun StartDate: " + lr.getStartDate());
                 lr.setEndDate(SQLDateTimeTools.getTimeStampOfNow());
                 session.saveOrUpdate(lr);
                 DBSessionManager.closeSession(session);
 
                 //shutdown all mq producers
-                System.out.println("Shutting Down all Message Producers for MQ");
+                LOG.info("Shutting Down all Message Producers for MQ");
                 for (Map.Entry<String, MQMessageSender> entry : ServerConfig.getMessageSenders().entrySet()) {
 
-                    System.out.println("Shutting down messageSende: " + entry.getValue().getQueueName());
+                    LOG.info("Shutting down messageSende: " + entry.getValue().getQueueName());
                     entry.getValue().shutdownProducer();
 
                 }
@@ -57,7 +59,7 @@ public class ShutdownHook {
                 //shutdown all Consumers
                 for (Map.Entry<String, MQAbstractConsumer> entry : ServerConfig.getMessageReceivers().entrySet()) {
 
-                    System.out.println("Shutting down messageReceiver: " + entry.getValue().getQueueName());
+                    LOG.info("Shutting down messageReceiver: " + entry.getValue().getQueueName());
                     entry.getValue().shutdownConsumer();
 
                 }
@@ -69,6 +71,7 @@ public class ShutdownHook {
                     try {
                         ServerConfig.getMqBrokerManager().shutdownBroker();
                     } catch (Exception ex) {
+                        LOG.error(ex.getLocalizedMessage());
                         ex.printStackTrace(System.err);
                     }
                 }
@@ -77,7 +80,7 @@ public class ShutdownHook {
 
             }
         });
-        System.out.println("Shut Down Hook Attached.");
+        LOG.info("Shut Down Hook Attached.");
 
     }
 

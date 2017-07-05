@@ -9,7 +9,6 @@ import com.thoughtworks.xstream.XStream;
 import de.xatc.commons.datastructure.atc.ATCStructure;
 import de.xatc.commons.datastructure.pilot.PilotStructure;
 import de.xatc.commons.datastructure.structureaction.PlanePositoinSyncResponse;
-import de.xatc.commons.datastructure.structureaction.RequestPlanePositionSync;
 import de.xatc.commons.db.sharedentities.atcdata.Country;
 import de.xatc.commons.db.sharedentities.atcdata.Fir;
 import de.xatc.commons.db.sharedentities.atcdata.PlainAirport;
@@ -19,9 +18,9 @@ import de.xatc.commons.networkpackets.pilot.PlanePosition;
 import de.xatc.server.db.DBSessionManager;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
-
 import java.util.List;
 import java.util.Map.Entry;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 /**
@@ -30,6 +29,8 @@ import org.hibernate.Session;
  */
 public class ServerSyncHandler {
 
+    private static final Logger LOG = Logger.getLogger(ServerSyncHandler.class.getName());
+    
     private static boolean firRunning = false;
     private static boolean airportRunning = false;
     private static boolean countryRunning = false;
@@ -55,7 +56,7 @@ public class ServerSyncHandler {
                 p.setMaxDataSets(firList.size());
                 p.setTransferObject(fir);
                 p.setDataSetToSync(what);
-                System.out.println("Sending DataSyncPacket FIR: " + fir.getFirNameIcao());
+                LOG.debug("Sending DataSyncPacket FIR: " + fir.getFirNameIcao());
                 n.writeAndFlush(p);
 
             }
@@ -83,7 +84,7 @@ public class ServerSyncHandler {
                 p.setMaxDataSets(airportList.size());
                 p.setTransferObject(airport);
                 p.setDataSetToSync(what);
-                System.out.println("Sending DataSyncPacket Airport: " + airport.getAirportIcao());
+                LOG.debug("Sending DataSyncPacket Airport: " + airport.getAirportIcao());
                 n.writeAndFlush(p);
 
             }
@@ -112,7 +113,7 @@ public class ServerSyncHandler {
                 p.setMaxDataSets(countryList.size());
                 p.setTransferObject(country);
                 p.setDataSetToSync(what);
-                System.out.println("Sending DataSyncPacket Country: " + country.getCountryCode());
+                LOG.debug("Sending DataSyncPacket Country: " + country.getCountryCode());
                 n.writeAndFlush(p);
 
             }
@@ -128,10 +129,10 @@ public class ServerSyncHandler {
 
     public static void handleStructuresSyncRequest(Channel n) {
 
-        System.out.println("\n\n\n");
-        System.out.println("handle Structure Sync Request.... assembling...");
+        LOG.trace("\n\n\n");
+        LOG.trace("handle Structure Sync Request.... assembling...");
 
-        System.out.println("Sending pilot structures...");
+        LOG.debug("Sending pilot structures...");
 
         XStream x = new XStream();
         for (Entry<String, PilotStructure> entry : SessionManagement.getPilotDataStructures().entrySet()) {
@@ -140,10 +141,10 @@ public class ServerSyncHandler {
             p.setPilotStructure(entry.getValue());
             p.setStructureSsessionID(entry.getKey());
             n.writeAndFlush(p);
-            System.out.println("Sending pilot structure with SessionID: " + p.getStructureSsessionID());
+            LOG.trace("Sending pilot structure with SessionID: " + p.getStructureSsessionID());
         }
 
-        System.out.println("Sending atc strcutures....");
+        LOG.debug("Sending atc strcutures....");
         for (Entry<String, ATCStructure> entry : SessionManagement.getAtcDataStructures().entrySet()) {
             DataStructuresResponsePacket p = new DataStructuresResponsePacket();
 
@@ -154,14 +155,15 @@ public class ServerSyncHandler {
                 n.writeAndFlush(p);
 
             } catch (Exception e) {
+                LOG.error(e.getLocalizedMessage());
                 e.printStackTrace(System.err);
             }
 
-            System.out.println("Sending ATC Structure with sessionID: " + p.getStructureSsessionID());
+            LOG.debug("Sending ATC Structure with sessionID: " + p.getStructureSsessionID());
 
         }
 
-        System.out.println("data structzure response packet sent!!!!!!!!!!!!!!!!\n\n\n");
+        LOG.debug("data structzure response packet sent!!!!!!!!!!!!!!!!\n\n\n");
 
     }
 

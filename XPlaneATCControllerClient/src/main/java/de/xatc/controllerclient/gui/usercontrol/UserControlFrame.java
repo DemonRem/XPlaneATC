@@ -11,9 +11,11 @@ import de.xatc.controllerclient.config.XHSConfig;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 public class UserControlFrame extends javax.swing.JFrame {
 
+    private static final Logger LOG = Logger.getLogger(UserControlFrame.class.getName());
     /**
      * Creates new form UserControlFrame
      */
@@ -213,8 +215,8 @@ public class UserControlFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_refresButtonActionPerformed
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
-        System.out.println(this.jTable2.getSelectedRow());
-        System.out.println(jTable2.getValueAt(jTable2.getSelectedRow(), 1));
+        LOG.debug(this.jTable2.getSelectedRow());
+        LOG.debug(jTable2.getValueAt(jTable2.getSelectedRow(), 1));
         this.usernameField.setText((String) jTable2.getValueAt(jTable2.getSelectedRow(), 0));
 
         this.roleComboBox.setSelectedItem(jTable2.getValueAt(jTable2.getSelectedRow(), 1));

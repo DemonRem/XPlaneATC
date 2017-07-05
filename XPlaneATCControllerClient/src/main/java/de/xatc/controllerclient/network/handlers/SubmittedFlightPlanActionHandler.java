@@ -1,7 +1,6 @@
 package de.xatc.controllerclient.network.handlers;
 
 import de.mytools.tools.swing.SwingTools;
-import de.xatc.commons.datastructure.pilot.PilotStructure;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.controllerclient.config.XHSConfig;
@@ -11,6 +10,7 @@ import de.xatc.controllerclient.db.DBSessionManager;
 import de.xatc.controllerclient.gui.FlightPlanStrips.FligtPlanStripsPanel;
 import java.awt.Component;
 import javax.swing.JPanel;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -21,6 +21,8 @@ import org.hibernate.Transaction;
  */
 public class SubmittedFlightPlanActionHandler {
 
+    private static final Logger LOG = Logger.getLogger(SubmittedFlightPlanActionHandler.class.getName());
+    
     public static void handleSubmittedFlightPlanActionPacket(SubmittedFlightPlansActionPacket action) {
 
         if (action.getAction().equals("revoke")) {
@@ -28,7 +30,7 @@ public class SubmittedFlightPlanActionHandler {
             revokeSubmittedFlightPlan(action);
 
         } else if (action.getAction().equals("new")) {
-            System.out.println("Handling new FlightPlan");
+            LOG.info("Handling new FlightPlan");
             handleNewSubmittedFlightPlan(action.getSubmittedFlightPlan());
         }
 
@@ -38,20 +40,20 @@ public class SubmittedFlightPlanActionHandler {
 
         if (flightPlan == null) {
             
-            System.out.println("could not handle new flightplan. Flightplan is null");
+            LOG.warn("could not handle new flightplan. Flightplan is null");
             return;
         }
-        System.out.println("Servers DatabaseID : " + flightPlan.getId() + " - setting to 0");
+        LOG.info("Servers DatabaseID : " + flightPlan.getId() + " - setting to 0");
         flightPlan.setId(0);
         LocalPilotDataStructure s = DataStructureSilo.getLocalPilotStructure().get(flightPlan.getPilotsSessionID());
         
         if (s == null) {
-            System.out.println("No session found for submitted flight plan. returning");
+            LOG.warn("No session found for submitted flight plan. returning");
             SwingTools.alertWindow("A Flightplan was Subbmitted of a user which could not be found in SessionManagement!", XHSConfig.getMainFrame());
             return;
         }
-        System.out.println("Saving new flightPlan and setting FlightPlan to database");
-        System.out.println("From/To " + flightPlan.getIcaoFrom() + "/" + flightPlan.getIcaoTo());
+        LOG.info("Saving new flightPlan and setting FlightPlan to database");
+        LOG.info("From/To " + flightPlan.getIcaoFrom() + "/" + flightPlan.getIcaoTo());
         s.getPilotServerStructure().setSubmittedFlightPlan(flightPlan);
         
         Session session = DBSessionManager.getSession();
@@ -65,7 +67,7 @@ public class SubmittedFlightPlanActionHandler {
         LocalPilotDataStructure pilotStructure = DataStructureSilo.getLocalPilotStructure().get(action.getSubmittedFlightPlan().getPilotsSessionID());
         if (pilotStructure == null) {
 
-            System.out.println("could not revoke flightPlan. PilotStrucutre not found");
+            LOG.warn("could not revoke flightPlan. PilotStrucutre not found");
             return;
 
         }
@@ -118,7 +120,7 @@ public class SubmittedFlightPlanActionHandler {
     public static void sendFlightPlansSyncRequest() {
 
         if (XHSConfig.getDataClient() == null) {
-            System.out.println("could not send sync Request for SubmittedFlightPlans. Not Connected!");
+            LOG.warn("could not send sync Request for SubmittedFlightPlans. Not Connected!");
             return;
         }
         SubmittedFlightPlansActionPacket p = new SubmittedFlightPlansActionPacket();

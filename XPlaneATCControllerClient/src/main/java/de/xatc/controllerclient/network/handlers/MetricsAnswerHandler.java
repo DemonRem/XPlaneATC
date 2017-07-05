@@ -4,6 +4,7 @@ package de.xatc.controllerclient.network.handlers;
 import de.xatc.commons.networkpackets.atc.servercontrol.ServerMetrics;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.datastructures.DataStructureSilo;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -13,10 +14,12 @@ import de.xatc.controllerclient.datastructures.DataStructureSilo;
 
 public class MetricsAnswerHandler {
     
+    private static final Logger LOG = Logger.getLogger(MetricsAnswerHandler.class.getName());
+    
     public static void handleMetricsAnswer(Object msg) {
         
         ServerMetrics m = (ServerMetrics) msg;
-        System.out.println("MetricsAnswerHandler: " + m.getMessage());
+        LOG.debug("MetricsAnswerHandler: " + m.getMessage());
         
         StringBuilder b = new StringBuilder();
         b.append("<HTML><BODY>\n");

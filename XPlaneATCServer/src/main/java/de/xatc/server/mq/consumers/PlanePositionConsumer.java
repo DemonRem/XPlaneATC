@@ -14,6 +14,7 @@ import de.xatc.server.sessionmanagment.SessionManagement;
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 /**
@@ -22,6 +23,8 @@ import org.hibernate.Session;
  */
 public class PlanePositionConsumer extends MQAbstractConsumer {
 
+    private static final Logger LOG = Logger.getLogger(PlanePositionConsumer.class.getName());
+    
     public PlanePositionConsumer(String queueName) {
         super(queueName);
     }
@@ -29,17 +32,17 @@ public class PlanePositionConsumer extends MQAbstractConsumer {
    @Override
     public void onObjectMessage(ObjectMessage message) {
         
-        System.out.println("Message Consumer PlanePosistion ObjectMessage");
+        LOG.debug("Message Consumer PlanePosistion ObjectMessage");
         
         PlanePosition p = null;
         try {
             p = (PlanePosition) message.getObject();
         } catch (JMSException ex) {
-            
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
             return;
         }
-        System.out.println(p.getSessionID());
+        LOG.debug(p.getSessionID());
         
         PilotStructure pilotStructure = SessionManagement.getPilotDataStructures().get(p.getSessionID());
         
@@ -50,7 +53,7 @@ public class PlanePositionConsumer extends MQAbstractConsumer {
         }
         p.setUserName(userSession.getRegisteredUser().getRegisteredUserName());
         
-        System.out.println("PlanePositionComsumer.... recived ObejctMessage");
+        LOG.trace("PlanePositionComsumer.... recived ObejctMessage");
         if (SessionManagement.getAtcDataStructures().size() > 0) {
             NetworkBroadcaster.broadcastATC(p);
             
@@ -65,7 +68,7 @@ public class PlanePositionConsumer extends MQAbstractConsumer {
 
     @Override
     public void onTextMessage(TextMessage message) {
-        System.out.println("PlanePositionConsumer.... recived TextMessage");
+        LOG.warn("PlanePositionConsumer.... recived TextMessage");
     }
     
 }

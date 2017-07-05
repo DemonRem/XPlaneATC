@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -23,6 +24,8 @@ import org.hibernate.criterion.Restrictions;
  */
 public class AptStationParser {
 
+    
+    private static final Logger LOG = Logger.getLogger(AptStationParser.class.getName());
     public void parseStations() throws FileNotFoundException, IOException {
 
         if (XHSConfig.getFileIndexerFrame() != null) {
@@ -86,10 +89,10 @@ public class AptStationParser {
 
                 if (line.startsWith("1 ") || line.startsWith("17 ") || line.startsWith("16 ")) {
                     airportCounter++;
-                    System.out.println(line);
-                    System.out.println("Getting Airport");
+                    LOG.trace(line);
+                    LOG.trace("Getting Airport");
                     airport = AptFilesTools.parseAirport(line, aptFile.getAbsolutePath());
-                    System.out.println("AIrPORT FOUND " + airport);
+                    LOG.trace("AIrPORT FOUND " + airport);
                 }
                 
                 
@@ -101,7 +104,7 @@ public class AptStationParser {
                 }
 
                 if (airport == null) {
-                    System.out.println("Airport = null");
+                    LOG.trace("Airport = null");
                     continue;
                 }
                 if (line.startsWith("50 ")
@@ -111,14 +114,14 @@ public class AptStationParser {
                         || line.startsWith("54 ")
                         || line.startsWith("55 ")
                         || line.startsWith("56 ")) {
-                    System.out.println("line starts with station-");
-                    System.out.println(line);
+                    LOG.trace("line starts with station-");
+                    LOG.trace(line);
                     
                     AirportStation station = new AirportStation();
                     String[] splitted = line.split(" ");
                     if (splitted.length == 3) {
 
-                        System.out.println("splitted line" + line + " linenumber: " + linecounter + " " + file.getFileName());
+                        LOG.trace("splitted line" + line + " linenumber: " + linecounter + " " + file.getFileName());
                         
                         station.setFrequency(NavPointHelpers.formatFrequency(splitted[1]));
                         station.setStationName(splitted[2]);
@@ -126,12 +129,12 @@ public class AptStationParser {
                         
                         List<PlainAirport> plainAirportList = s.createCriteria(PlainAirport.class).add(Restrictions.eq("airportIcao", airport.getIcao())).list();
                         if (plainAirportList.isEmpty()) {
-                            System.out.println("AIRPORT NOT FOUND!");
+                            LOG.trace("AIRPORT NOT FOUND!");
                             System.exit(0);
                             continue;
                         } 
                         PlainAirport p = plainAirportList.get(0);
-                        System.out.println(airport.getIcao());
+                        LOG.trace(airport.getIcao());
                         station.setAirportIcao(airport.getIcao());
                         station.setAirportName(airport.getAiportName());
                         p.getAirportStations().add(station);
@@ -147,7 +150,7 @@ public class AptStationParser {
                         stationSaved++;
                     }
                     else {
-                        System.out.println("NOT SAVED:::::::: " + line);
+                        LOG.trace("NOT SAVED:::::::: " + line);
                         
                     }
 
@@ -164,8 +167,8 @@ public class AptStationParser {
 
         }
         DBSessionManager.closeSession(s);
-        System.out.println("AIRPORTSFOUND: " + airportCounter);
-        System.out.println("AIRPORTSSAVED: " + stationSaved);
+        LOG.trace("AIRPORTSFOUND: " + airportCounter);
+        LOG.trace("AIRPORTSSAVED: " + stationSaved);
 
     }
 

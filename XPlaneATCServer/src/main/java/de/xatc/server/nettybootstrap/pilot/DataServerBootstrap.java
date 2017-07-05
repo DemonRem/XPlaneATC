@@ -5,7 +5,6 @@
  */
 package de.xatc.server.nettybootstrap.pilot;
 
-import de.xatc.commons.datastructure.pilot.PilotStructure;
 import de.xatc.server.config.ServerConfig;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.bootstrap.ServerBootstrap;
@@ -21,6 +20,7 @@ import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
 import java.util.Map.Entry;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -28,6 +28,7 @@ import java.util.Map.Entry;
  */
 public class DataServerBootstrap {
 
+    private static final Logger LOG = Logger.getLogger(DataServerBootstrap.class.getName());
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
     private ChannelFuture channelFuture;
@@ -58,10 +59,11 @@ public class DataServerBootstrap {
                     .option(ChannelOption.SO_BACKLOG, ServerConfig.getMaxConnectionsAllowed()) // (5)
                     .childOption(ChannelOption.SO_KEEPALIVE, ServerConfig.isKeepConnectionsAlive()); // (6)
 
-            System.out.println("Listening for Data on " + ServerConfig.getDataIP() + ":" + ServerConfig.getDataPort());
+            LOG.info("Listening for Data on " + ServerConfig.getDataIP() + ":" + ServerConfig.getDataPort());
             channelFuture = b.bind(ServerConfig.getDataIP(), ServerConfig.getDataPort()).sync(); // (7)
 
         } catch (InterruptedException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
 
@@ -69,11 +71,11 @@ public class DataServerBootstrap {
 
     public void shutdownServer() {
 
-       System.out.println("ATC Server Bootstrap shutdown initiated!");
+       LOG.info("ATC Server Bootstrap shutdown initiated!");
         Thread t = new Thread(new Runnable() {
             public void run() {
 
-                System.out.println("ShutdownThread started");
+                LOG.info("ShutdownThread started");
                 
 
                 try {
@@ -87,10 +89,11 @@ public class DataServerBootstrap {
                     channelFuture.channel().closeFuture().sync();
                     
                 } catch (InterruptedException ex) {
+                    LOG.error(ex.getLocalizedMessage());
                     ex.printStackTrace(System.err);
                 }
                 
-                System.out.println("Shutdown workergroup gracefully");
+                LOG.info("Shutdown workergroup gracefully");
                 workerGroup.shutdownGracefully();
                 bossGroup.shutdownGracefully();
 
@@ -98,7 +101,7 @@ public class DataServerBootstrap {
 
                 ServerConfig.setDataServerBootStrap(null);
 
-                System.out.println("Disconnected");
+                LOG.info("Disconnected");
             }
         });
         t.start();

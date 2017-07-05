@@ -35,13 +35,14 @@ public class Start extends JFrame  {
      */
     public static void main(String[] arg) throws IOException {
 
+        
          
         System.out.println("Starting UP");
         System.out.println(XHSConfig.getAPPNAME());
         System.out.println(XHSConfig.getVERSION());
         System.out.println(XHSConfig.getLastUpdated());
 
-        System.out.println("Setting LogLevel....");
+        LOG.info("Setting LogLevel....");
 
         java.util.logging.Logger.getLogger("org.hibernate").setLevel(java.util.logging.Level.WARNING);
         java.util.logging.Logger.getLogger("net.sf.ehcache").setLevel(java.util.logging.Level.WARNING);
@@ -65,7 +66,7 @@ public class Start extends JFrame  {
             s += "</HTML>";
 
             int returnValue = SwingTools.showYesNoDialogBox("LockFile Exists", s, existsFrame);
-            System.out.println(returnValue);
+            LOG.trace(returnValue);
             if (returnValue == 0) {
                 XHSConfig.getLockFile().delete();
 
@@ -109,8 +110,8 @@ public class Start extends JFrame  {
                 }
             }
         });
-        System.out.println("Shut Down Hook Attached.");
-        System.out.println("Connecting to database");
+        LOG.info("Shut Down Hook Attached.");
+        LOG.info("Connecting to database");
     }
 
 }

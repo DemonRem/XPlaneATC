@@ -6,10 +6,14 @@ import de.xatc.commons.networkpackets.atc.usermgt.UserListResponse;
 import de.xatc.controllerclient.config.XHSConfig;
 import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
+import org.apache.log4j.Logger;
 
 
 
 public class UserListResponseHandler {
+    
+    
+    private static final Logger LOG = Logger.getLogger(UserListResponseHandler.class.getName());
     
     public static void handleUserListResonse(UserListResponse u) {
         
@@ -32,7 +36,7 @@ public class UserListResponseHandler {
             
             v.add(user.getRegisteredUserName());
             v.add(user.getUserRole().toString());
-            System.out.println("filling table with vector IP" + user.getSourceIP());
+            LOG.debug("filling table with vector IP" + user.getSourceIP());
             v.add(user.getSourceIP());
             v.add(user.isLocked());
           

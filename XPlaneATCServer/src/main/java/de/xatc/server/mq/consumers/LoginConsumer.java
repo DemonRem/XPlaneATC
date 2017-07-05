@@ -11,6 +11,7 @@ import de.xatc.server.sessionmanagment.NetworkBroadcaster;
 import javax.jms.JMSException;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 /**
@@ -19,21 +20,22 @@ import org.hibernate.Session;
  */
 public class LoginConsumer extends MQAbstractConsumer {
 
+    private static final Logger LOG = Logger.getLogger(LoginConsumer.class.getName());
     public LoginConsumer(String queueName) {
         super(queueName);
     }
 
     @Override
     public void onObjectMessage(ObjectMessage message) {
-        System.out.println("LoginComsumer received Message");
+        LOG.info("LoginComsumer received Message");
         try {
             if (message.getObject() == null) {
-                System.out.println("Object is null");
+                LOG.warn("Object is null");
                 return;
             }
             
             if (message.getObject() instanceof RegisteredUser == false) {
-                System.out.println("Object is not registeredUser");
+                LOG.warn("Object is not registeredUser");
                 return;
             }         
             RegisteredUser u = (RegisteredUser) message.getObject();
@@ -47,6 +49,7 @@ public class LoginConsumer extends MQAbstractConsumer {
             
             
         } catch (JMSException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
         

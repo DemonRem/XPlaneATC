@@ -33,6 +33,7 @@ import de.xatc.controllerclient.network.handlers.UserListResponseHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -40,6 +41,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class DataClient extends ChannelInboundHandlerAdapter {
 
+    private static final Logger LOG = Logger.getLogger(DataClient.class.getName());
     private ChannelHandlerContext ctx;
 
     public void writeMessage(Object msg) {
@@ -51,11 +53,11 @@ public class DataClient extends ChannelInboundHandlerAdapter {
         } else {
 
             if (StringUtils.isEmpty(XHSConfig.getCurrentSessionID())) {
-                System.out.println("No SessionID, could not send packet");
+                LOG.warn("No SessionID, could not send packet");
                 return;
             }
             if (StringUtils.isEmpty(XHSConfig.getCurrentChannelID())) {
-                System.out.println("No ChannelID, could not send packet");
+                LOG.warn("No ChannelID, could not send packet");
                 return;
             }
 
@@ -73,7 +75,7 @@ public class DataClient extends ChannelInboundHandlerAdapter {
         if (this.ctx.channel().isActive()) {
             this.ctx.channel().writeAndFlush(msg);
         } else {
-            System.out.println("Channel is not active!");
+            LOG.warn("Channel is not active!");
         }
 
     }
@@ -81,19 +83,19 @@ public class DataClient extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-        System.out.println("Channel Read of DataClient, incoming Packet");
-        System.out.println("Packet is: " + msg);
+        LOG.info("Channel Read of DataClient, incoming Packet");
+        LOG.info("Packet is: " + msg);
         if (msg instanceof LoginPacket) {
-            System.out.println("INCOMING LoginPacket");
+            LOG.info("INCOMING LoginPacket");
             LoginAnswerHandler.handleLoginAnswer(msg);
 
         } else if (msg instanceof ServerMetrics) {
-            System.out.println("Handling ServerMetrics Packet");
+            LOG.info("Handling ServerMetrics Packet");
             MetricsAnswerHandler.handleMetricsAnswer(msg);
             return;
         } else if (msg instanceof DataSyncPacket) {
 
-            System.out.println("incoming data sync packet");
+            LOG.debug("incoming data sync packet");
             DataSyncPacket p = (DataSyncPacket) msg;
 
             DataSyncHandler.handleIncomingDataSyncPacket(p);
@@ -103,18 +105,18 @@ public class DataClient extends ChannelInboundHandlerAdapter {
         if (msg instanceof PlanePosition) {
 
             PlanePosition p = (PlanePosition) msg;
-            System.out.println("PlanePosition received");
+            LOG.debug("PlanePosition received");
             DataStructureSilo.getLocalPilotStructure().get(p.getSessionID()).getAircraftPainter().setP(p);
             //XHSConfig.getMainFrame().getMainPanel().getMapPanel().getAircraftPainter().setP(p);
             DataStructureSilo.getLocalPilotStructure().get(p.getSessionID()).getPilotServerStructure().setLastKnownPlanePosition(p);
             DataStructureSilo.getLocalPilotStructure().get(p.getSessionID()).getPilotServerStructure().getPlanePositionList().add(p);
-            System.out.println("SIZE OF positoinLIST: " + DataStructureSilo.getLocalPilotStructure().get(p.getSessionID()).getPilotServerStructure().getPlanePositionList().size());
+            LOG.debug("SIZE OF positoinLIST: " + DataStructureSilo.getLocalPilotStructure().get(p.getSessionID()).getPilotServerStructure().getPlanePositionList().size());
             XHSConfig.getMainFrame().getMainPanel().getMapPanel().repaint();
             return;
         }
         if (msg instanceof UserListResponse) {
 
-            System.out.println("User List Response received");
+            LOG.debug("User List Response received");
             UserListResponse u = (UserListResponse) msg;
             UserListResponseHandler.handleUserListResonse(u);
             return;
@@ -123,14 +125,14 @@ public class DataClient extends ChannelInboundHandlerAdapter {
 
         if (msg instanceof ServerMessageToClient) {
 
-            System.out.println("Server Message To Client received");
+            LOG.debug("Server Message To Client received");
             ServerMessageToClient message = (ServerMessageToClient) msg;
             SwingTools.alertWindow(message.getMessage(), XHSConfig.getMainFrame());
             return;
 
         }
         if (msg instanceof TextMessagePacket) {
-            System.out.print("Textmessage Packet received");
+            LOG.debug("Textmessage Packet received");
 
             ControllerClientGuiTools.showChatFrame();
             TextMessagePacket messagePacket = (TextMessagePacket) msg;
@@ -143,7 +145,7 @@ public class DataClient extends ChannelInboundHandlerAdapter {
         if (msg instanceof DataStructuresResponsePacket) {
 
             
-            System.out.println("DataStructuresREspoinsePacket received");
+            LOG.debug("DataStructuresREspoinsePacket received");
             DataStructuresResponsePacket r = (DataStructuresResponsePacket) msg;
 
             if (r.getAtcStructure() != null) {
@@ -154,7 +156,7 @@ public class DataClient extends ChannelInboundHandlerAdapter {
             else if (r.getPilotStructure() != null) {
                 DataStructureResponseHandler.handleNewPilotStructure(r.getPilotStructure());
             }
-            System.out.println(r.getStructureSsessionID() + "**************************************");
+            LOG.debug(r.getStructureSsessionID() + "**************************************");
             
             return;
 
@@ -173,7 +175,7 @@ public class DataClient extends ChannelInboundHandlerAdapter {
         }
         if (msg instanceof SubmittedFlightPlan) {
             
-            
+            //TODO
             
         }
       
@@ -201,21 +203,22 @@ public class DataClient extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
 
-        System.out.println("client Channel is now inactive");
+        LOG.info("client Channel is now inactive");
 
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
 
-        System.out.println("Client Channel is now Active!");
+        LOG.info("Client Channel is now Active!");
         this.ctx = ctx;
 
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        System.out.println("EXCEPTION CAUGHT ON DATA-CLIENT.....");
+        LOG.error("EXCEPTION CAUGHT ON DATA-CLIENT.....");
+        LOG.error(cause.getLocalizedMessage());
         cause.printStackTrace(System.err);
         ctx.close();
 

@@ -6,8 +6,6 @@
 package de.xatc.server.mq.producers;
 
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
@@ -18,6 +16,7 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -25,6 +24,7 @@ import org.apache.activemq.ActiveMQConnectionFactory;
  */
 public class MQMessageSender {
 
+    private static final Logger LOG = Logger.getLogger(MQMessageSender.class.getName());
     private ConnectionFactory factory = null;
 
     private Connection connection = null;
@@ -38,14 +38,14 @@ public class MQMessageSender {
 
     public MQMessageSender(String queueName) {
 
-        System.out.println("Setting up Message Sender: " + queueName);
+        LOG.debug("Setting up Message Sender: " + queueName);
         this.queueName = queueName;
 
     }
 
     public void startProducer() {
 
-        System.out.println("Starting Message Sender: " + this.queueName);
+        LOG.debug("Starting Message Sender: " + this.queueName);
         try {
             factory = new ActiveMQConnectionFactory(
                     ActiveMQConnection.DEFAULT_BROKER_URL);
@@ -75,7 +75,7 @@ public class MQMessageSender {
 
             producer.send(textMessage);
         } catch (JMSException ex) {
-            Logger.getLogger(MQMessageSender.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error(ex.getLocalizedMessage());
         }
     }
     
@@ -87,7 +87,7 @@ public class MQMessageSender {
             
             producer.send(o);
         } catch (JMSException ex) {
-            Logger.getLogger(MQMessageSender.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.error(ex.getLocalizedMessage());
         }
         
     }
@@ -99,6 +99,7 @@ public class MQMessageSender {
             this.session.close();
             this.connection.close();
         } catch (JMSException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
 

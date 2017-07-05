@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 /**
  * This class contains a bunch of utilities for processing apt files an models
@@ -26,6 +27,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public class AptFilesTools {
 
+    private static final Logger LOG = Logger.getLogger(AptFilesTools.class.getName());
+    
     /**
      * extract an airport passage from an apt.dat file
      *
@@ -51,11 +54,11 @@ public class AptFilesTools {
     public static String extractAirportFromFile(File file, int lineNumber) throws FileNotFoundException, IOException {
 
         if (!file.exists()) {
-            //System.out.println("FILE NOT FOUND! REturning null");
+            LOG.warn("FILE NOT FOUND! REturning null");
             return null;
         }
-        //System.out.println("FILE: " + file.getAbsolutePath());
-        //System.out.println("LINENUMBER: " + lineNumber);
+        LOG.trace("FILE: " + file.getAbsolutePath());
+        LOG.trace("LINENUMBER: " + lineNumber);
 
         BufferedReader br = new BufferedReader(new FileReader(file));
         String line;
@@ -69,22 +72,22 @@ public class AptFilesTools {
                 continue;
             } else if (lineCounter == lineNumber) {
                 airportString += line;
-//                System.out.println("LineCounter == lineNumber");
-//                System.out.println("airportString is now: " + airportString);
+                LOG.trace("LineCounter == lineNumber");
+LOG.trace("airportString is now: " + airportString);
                 continue;
             } else {
                 isAirport = true;
-//                System.out.println("linecounter larger -> isAirport true");
+LOG.trace("linecounter larger -> isAirport true");
             }
             if (isAirport && !(line.startsWith("1 ") || line.startsWith("17 ") || line.startsWith("16 "))) {
-//                System.out.println("Airport true - appending line");
+LOG.trace("Airport true - appending line");
                 airportString += "\n" + line;
-//                System.out.println("AirportString is now: " + airportString);
+LOG.trace("AirportString is now: " + airportString);
             }
             if (line.startsWith("1 ") || line.startsWith("17 ") || line.startsWith("16 ")) {
-//                System.out.println("Next airport marker found");
-//                System.out.println(line);
-//                System.out.println("returning airportstring");
+LOG.trace("Next airport marker found");
+LOG.trace(line);
+LOG.trace("returning airportstring");
                 isAirport = false;
                 return airportString;
             }
@@ -113,21 +116,21 @@ public class AptFilesTools {
             String line;
           
             while ((line = bufReader.readLine()) != null) {
-               // System.out.println(line);
+               LOG.trace(line);
                
 
               
                 if (line.startsWith("100"))  {
 
                     String[] splitString = StringUtils.split(line);
-                    //System.out.println(line);
-                   // System.out.println("INITPOS " + line);
+                    LOG.trace(line);
+                    LOG.trace("INITPOS " + line);
                     String lati = splitString[9];
                     String longi = splitString[10];
                     nav.setLatitudeSTring(lati);
                     nav.setLongitudeSTring(longi);
-                   // System.out.println("LONGITUDE " + longi);
-                   // System.out.println("LATITUDE " + lati);
+                   LOG.trace("LONGITUDE " + longi);
+                   LOG.trace("LATITUDE " + lati);
 
                     return nav;
                 }
@@ -135,8 +138,8 @@ public class AptFilesTools {
                 if (line.startsWith("101")) {
                     
                     String[] splitString = StringUtils.split(line);
-                    System.out.println(line);
-                   // System.out.println("INITPOS " + line);
+                    LOG.trace(line);
+                   LOG.trace("INITPOS " + line);
                     String lati = splitString[4];
                     String longi = splitString[5];
                     nav.setLatitudeSTring(lati);
@@ -149,13 +152,13 @@ public class AptFilesTools {
                 if (line.startsWith("102")) {
                     
                     String[] splitString = StringUtils.split(line);
-                   // System.out.println("INITPOS " + line);
+                   LOG.trace("INITPOS " + line);
                     String lati = splitString[2];
                     String longi = splitString[3];
                     nav.setLatitudeSTring(lati);
                     nav.setLongitudeSTring(longi);
-                   // System.out.println("LONGITUDE " + longi);
-                   // System.out.println("LATITUDE " + lati);
+                   LOG.trace("LONGITUDE " + longi);
+                   LOG.trace("LATITUDE " + lati);
 
                     return nav;
                     
@@ -166,9 +169,11 @@ public class AptFilesTools {
             }
 
         } catch (IOException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
         catch (RuntimeException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
         return null;

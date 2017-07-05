@@ -16,6 +16,7 @@ import javax.jms.ObjectMessage;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.log4j.Logger;
 
 
 
@@ -25,6 +26,8 @@ import org.apache.activemq.ActiveMQConnectionFactory;
  */
 public abstract class MQAbstractConsumer implements MessageListener {
     
+    private static final Logger LOG = Logger.getLogger(MQAbstractConsumer.class.getName());
+    
     private Session session;
     private String queueName;
     private Connection connection;
@@ -33,7 +36,7 @@ public abstract class MQAbstractConsumer implements MessageListener {
     
     public MQAbstractConsumer(String queueName) {
         
-        System.out.println("Starting MQConsumer: " + queueName);
+        LOG.info("Starting MQConsumer: " + queueName);
         this.queueName = queueName;
         this.setupMessageQueueConsumer();
         
@@ -52,6 +55,7 @@ public abstract class MQAbstractConsumer implements MessageListener {
             MessageConsumer consumer = this.session.createConsumer(destination);
             consumer.setMessageListener(this);
         } catch (JMSException e) {
+            LOG.error(e.getLocalizedMessage());
             e.printStackTrace(System.err);
         }
     }
@@ -62,6 +66,7 @@ public abstract class MQAbstractConsumer implements MessageListener {
             session.close();
             connection.close();
         } catch (JMSException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
         
@@ -78,12 +83,12 @@ public abstract class MQAbstractConsumer implements MessageListener {
     public void onMessage(Message message){
         
         if (message instanceof TextMessage) {
-            System.out.println("AbstractMQ Consumer, TEXT Message received");
+            LOG.trace("AbstractMQ Consumer, TEXT Message received");
             onTextMessage((TextMessage) message);
             
         }
         else if (message instanceof ObjectMessage) {
-            System.out.println("AbstractMQ Consumer, OBJECT Message received");
+            LOG.trace("AbstractMQ Consumer, OBJECT Message received");
             onObjectMessage((ObjectMessage) message);
         }
         

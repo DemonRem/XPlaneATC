@@ -11,6 +11,7 @@ import de.xatc.server.config.ServerConfig;
 import de.xatc.server.mq.producers.MQMessageSender;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -18,16 +19,17 @@ import io.netty.channel.Channel;
  */
 public class TextMessageHandler {
     
+    private static final Logger LOG = Logger.getLogger(TextMessageHandler.class.getName());
     
     public static void handleUserTextMessage(Channel n,Object msg) {
         
         TextMessagePacket p = (TextMessagePacket) msg;
-        System.out.println("Incoming TextMessage in Handler");
+        LOG.info("Incoming TextMessage in Handler");
         XATCUserSession s = SessionManagement.findOverallUserSessionByChannelID(n.id().asLongText());
        
         
         if (s == null) {
-            System.out.println("No session found, returning");
+            LOG.warn("No session found, returning");
             return;
         }
         
@@ -36,12 +38,12 @@ public class TextMessageHandler {
         MQMessageSender m = ServerConfig.getMessageSenders().get("broadcastTextMessages");
         
         if (m != null) {
-            System.out.println("Sending Message..... "  + p.getMessage());
+            LOG.info("Sending Message..... "  + p.getMessage());
             m.sendObjectMessage(p);
             
         }
         else {
-            System.out.println("Could not find MQ Message Producer to send textmessage to");
+            LOG.warn("Could not find MQ Message Producer to send textmessage to");
         }
         
     }

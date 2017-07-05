@@ -9,6 +9,7 @@ import de.mytools.tools.swing.SwingTools;
 import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.controllerclient.config.XHSConfig;
 import java.awt.Color;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -16,6 +17,8 @@ import java.awt.Color;
  */
 public class LoginAnswerHandler {
 
+    private static final Logger LOG = Logger.getLogger(LoginAnswerHandler.class.getName());
+    
     public static void handleLoginAnswer(Object packet) {
 
         LoginPacket l = (LoginPacket) packet;
@@ -35,11 +38,11 @@ public class LoginAnswerHandler {
 
         XHSConfig.setCurrentSessionID(l.getSessionID());
         XHSConfig.setCurrentChannelID(l.getChannelID());
-        System.out.println("Login successful");
+        LOG.info("Login successful");
 
         SubmittedFlightPlanActionHandler.deleteLocalFlightPlans();
         
-        System.out.println("Sending Data Structures Sync Request to Server.....");
+        LOG.info("Sending Data Structures Sync Request to Server.....");
         DataSyncHandler.sendSyncStructuresRequestPacket();
 
     }

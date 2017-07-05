@@ -12,6 +12,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -21,6 +22,7 @@ import javax.swing.ListCellRenderer;
 
 public class SelectedStationListCellRenderer implements ListCellRenderer<Object> {
 
+    private static final Logger LOG = Logger.getLogger(SelectedStationListCellRenderer.class.getName());
     @Override
     public Component getListCellRendererComponent(JList<? extends Object> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         
@@ -29,12 +31,12 @@ public class SelectedStationListCellRenderer implements ListCellRenderer<Object>
         
         if (value instanceof SupportedFirStation) {
             SupportedFirStation fir = (SupportedFirStation) value;
-            System.out.println("FIRSTATION");
+            LOG.debug("FIRSTATION");
             return this.createFirRenderPanel(fir, isSelected, cellHasFocus);
         }
         else if (value instanceof SupportedAirportStation) {
             SupportedAirportStation airport = (SupportedAirportStation)value;
-            System.out.println("Airportstation");
+            LOG.debug("Airportstation");
             return this.createAirportRenderPanel(airport, isSelected, cellHasFocus);
         }
         return null;

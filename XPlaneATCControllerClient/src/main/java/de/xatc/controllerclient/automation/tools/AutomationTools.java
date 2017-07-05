@@ -11,7 +11,6 @@ import de.xatc.controllerclient.xdataparser.AptFileIndexer;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import org.apache.log4j.Logger;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -33,12 +32,15 @@ public class AutomationTools {
         try {
             Start.main(new String[]{});
         } catch (IOException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
+            
         }
 
          try {
             Thread.sleep(5000);
         } catch (InterruptedException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
     }
@@ -57,6 +59,7 @@ public class AutomationTools {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
 
@@ -79,7 +82,7 @@ public class AutomationTools {
    
    public void setupWithExistingProperties() {
        
-       System.out.println("Deleting old data");
+       LOG.info("Deleting old data");
         Session s = DBSessionManager.getSession();
 
         Transaction tx = s.beginTransaction();
@@ -104,6 +107,7 @@ public class AutomationTools {
         try {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
         
@@ -114,6 +118,7 @@ public class AutomationTools {
         try {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
 
@@ -123,6 +128,7 @@ public class AutomationTools {
         try {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
 
@@ -132,6 +138,7 @@ public class AutomationTools {
         try {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
 
@@ -145,6 +152,7 @@ public class AutomationTools {
         try {
             Thread.sleep(3000);
         } catch (InterruptedException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
         AptFileIndexer indexer = new AptFileIndexer();

@@ -5,14 +5,12 @@
  */
 package de.xatc.controllerclient.gui.FlightPlanStrips;
 
-import de.xatc.commons.datastructure.atc.ATCStructure;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.datastructures.DataStructureSilo;
 import de.xatc.controllerclient.datastructures.LocalAtcDataStructure;
 import de.xatc.controllerclient.datastructures.LocalPilotDataStructure;
 import de.xatc.controllerclient.network.handlers.SubmittedFlightPlanActionHandler;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -22,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.VerticalLayout;
 
 /**
@@ -30,7 +29,9 @@ import org.jdesktop.swingx.VerticalLayout;
  */
 public class SubmittedFlightPlansFrame extends JFrame implements ActionListener {
 
+    private static final Logger LOG = Logger.getLogger(SubmittedFlightPlansFrame.class.getName());
    
+    
     private JPanel headPanel;
     private JPanel centerPanel;
     private JButton refreshButton;
@@ -71,7 +72,7 @@ public class SubmittedFlightPlansFrame extends JFrame implements ActionListener 
 
     private void loadStrips() {
 
-        System.out.println("READING Flightstrips");
+        LOG.info("READING Flightstrips");
 
         this.centerPanel.removeAll();
 
@@ -80,10 +81,10 @@ public class SubmittedFlightPlansFrame extends JFrame implements ActionListener 
 
         if (this.loadControllersStrips) {
             
-            System.out.println("Listing my flightPlans!");
+            LOG.info("Listing my flightPlans!");
             for (Entry<String,LocalPilotDataStructure> entry : DataStructureSilo.getLocalPilotStructure().entrySet()) {
               
-                System.out.println(entry.getValue().getPilotServerStructure().getStructureSessionID());
+                LOG.info(entry.getValue().getPilotServerStructure().getStructureSessionID());
                 SubmittedFlightPlan plan = entry.getValue().getPilotServerStructure().getSubmittedFlightPlan();
                 if (plan == null) {
                     continue;
@@ -100,9 +101,9 @@ public class SubmittedFlightPlansFrame extends JFrame implements ActionListener 
             
         }
         else {
-            System.out.println("Listing all flightplans.");
+            LOG.info("Listing all flightplans.");
             for (Entry<String,LocalPilotDataStructure> entry : DataStructureSilo.getLocalPilotStructure().entrySet()) {
-                System.out.println(entry.getValue().getPilotServerStructure().getStructureSessionID());
+                LOG.info(entry.getValue().getPilotServerStructure().getStructureSessionID());
                 SubmittedFlightPlan plan = entry.getValue().getPilotServerStructure().getSubmittedFlightPlan();
                 if (plan == null) {
                     continue;

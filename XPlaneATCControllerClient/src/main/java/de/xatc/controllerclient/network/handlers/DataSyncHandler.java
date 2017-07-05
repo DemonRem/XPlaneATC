@@ -8,6 +8,7 @@ import de.xatc.commons.networkpackets.atc.datasync.DataSyncPacket;
 import de.xatc.commons.networkpackets.atc.datasync.RequestDataStructuresPacket;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 /**
@@ -18,6 +19,7 @@ import org.hibernate.Session;
 
 public class DataSyncHandler {
     
+    private static final Logger LOG = Logger.getLogger(DataSyncHandler.class.getName());
     public static void handleIncomingDataSyncPacket(DataSyncPacket p) {
         
         if (p.getDataSetToSync().equals("fir")) {
@@ -35,7 +37,7 @@ public class DataSyncHandler {
             
             Fir fir = (Fir) p.getTransferObject();
             Session s = DBSessionManager.getSession();
-            System.out.println("Saving new FIR: " + fir.getFirNameIcao());
+            LOG.debug("Saving new FIR: " + fir.getFirNameIcao());
             s.saveOrUpdate(fir);
             DBSessionManager.closeSession(s);
             if (XHSConfig.getServerSyncFrame() != null) {
@@ -64,7 +66,7 @@ public class DataSyncHandler {
             PlainAirport airport = (PlainAirport) p.getTransferObject();
 
             Session s = DBSessionManager.getSession();
-            System.out.println("Saving new Airport: " + airport.getAirportIcao());
+            LOG.debug("Saving new Airport: " + airport.getAirportIcao());
             s.saveOrUpdate(airport);
             DBSessionManager.closeSession(s);
             if (XHSConfig.getServerSyncFrame() != null) {
@@ -91,7 +93,7 @@ public class DataSyncHandler {
             
             Country country = (Country) p.getTransferObject();
             Session s = DBSessionManager.getSession();
-            System.out.println("Saving new Country: " + country.getCountryCode());
+            LOG.debug("Saving new Country: " + country.getCountryCode());
             s.saveOrUpdate(country);
             DBSessionManager.closeSession(s);
             if (XHSConfig.getServerSyncFrame() != null) {
@@ -109,19 +111,19 @@ public class DataSyncHandler {
 
     public static void sendSyncStructuresRequestPacket() {
 
-        System.out.println("sending data strcuture sync request to server!");
+        LOG.debug("sending data strcuture sync request to server!");
         if (XHSConfig.getDataClient() == null) {
-            System.out.println("Not Connected");
+            LOG.warn("Not Connected");
             return;
         }
-        System.out.println("We are connected!");
+        LOG.debug("We are connected!");
         
         
         
         RequestDataStructuresPacket p = new RequestDataStructuresPacket();
         XHSConfig.getDataClient().writeMessage(p);
         
-        System.out.println("Data Structure Sync packet sent!!!!!!!");
+        LOG.debug("Data Structure Sync packet sent!!!!!!!");
         
     }
     

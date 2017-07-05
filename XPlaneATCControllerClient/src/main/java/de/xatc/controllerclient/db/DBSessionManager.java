@@ -10,6 +10,7 @@ package de.xatc.controllerclient.db;
 
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
@@ -22,6 +23,7 @@ import org.hibernate.cfg.AnnotationConfiguration;
  */
 public class DBSessionManager {
 
+    private static final Logger LOG = Logger.getLogger(DBSessionManager.class.getName());
   
     /**
      * session factory
@@ -69,7 +71,7 @@ public class DBSessionManager {
 
         } catch (SQLException ex) {
 
-            System.out.println("Database Exit Status " + ex.getErrorCode());
+            LOG.info("Database Exit Status " + ex.getErrorCode());
         }
 
     }
@@ -88,7 +90,7 @@ public class DBSessionManager {
                         .configure()
                         .buildSessionFactory();
             } catch (Exception ex) {
-                System.out.println("DATABASE ERROR. Could not open Database. " + ex.getLocalizedMessage());
+                LOG.error("DATABASE ERROR. Could not open Database. " + ex.getLocalizedMessage());
 
             }
         } else {

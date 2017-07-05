@@ -13,7 +13,6 @@ import de.xatc.commons.db.sharedentities.atcdata.PlainAirport;
 import de.xatc.commons.db.sharedentities.atcdata.PlainNavPoint;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.db.DBSessionManager;
-
 import de.xatc.controllerclient.navigation.NavPoint;
 import de.xatc.controllerclient.xdataparser.tools.AptFilesTools;
 import java.io.BufferedReader;
@@ -21,7 +20,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -67,6 +65,7 @@ public class AptParser {
 
             this.readAndParseFile(currentFile);
         } catch (IOException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
 
         }
@@ -82,6 +81,7 @@ public class AptParser {
      */
     public void readAndParseFile(File file) throws FileNotFoundException, IOException {
 
+       
         int lineCounter = 0;
         boolean networkDetected = false;
 
@@ -103,7 +103,7 @@ public class AptParser {
 
                 if (!StringUtils.isEmpty(airportAptString) && airport != null) {
 
-                    // System.out.println(airportAptString);
+                    LOG.debug(airportAptString);
                     NavPoint initialPos = AptFilesTools.getAirportInitialPosition(airportAptString);
 
                     if (initialPos != null) {
@@ -143,7 +143,8 @@ public class AptParser {
                     DBSessionManager.closeSession(session);
                 } catch (Exception ex) {
                     ex.printStackTrace(System.err);
-                    //System.out.println("ERR");
+                    LOG.warn("ERR");
+                    LOG.error(ex.getLocalizedMessage());
                 }
 
             } else {
@@ -158,7 +159,7 @@ public class AptParser {
                     session.saveOrUpdate(airport);
                     session.flush();
                     DBSessionManager.closeSession(session);
-                    //System.out.println("NETWORK PRESENT: " + airport.getIcao());
+                    LOG.trace("NETWORK PRESENT: " + airport.getIcao());
 
                 }
             }

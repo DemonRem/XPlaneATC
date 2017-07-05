@@ -28,6 +28,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JSlider;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -40,6 +41,8 @@ import org.hibernate.criterion.Restrictions;
  */
 public class ATCSetupFrame extends javax.swing.JFrame {
 
+    private static final Logger LOG = Logger.getLogger(ATCSetupFrame.class.getName());
+    
     private Map<String, Integer> firSearchStrings = new HashMap<>();
     private DefaultListModel<Fir> originalFirModel = new DefaultListModel<>();
     private DefaultListModel<PlainAirport> originalAirportModel = new DefaultListModel<>();
@@ -539,7 +542,7 @@ public class ATCSetupFrame extends javax.swing.JFrame {
 
     private void searchFirFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchFirFieldKeyTyped
 
-        System.out.println(evt.getKeyChar());
+        LOG.info(evt.getKeyChar());
         if (StringUtils.isEmpty(this.searchFirField.getText())) {
             this.firJList.setModel(originalFirModel);
             return;
@@ -560,7 +563,7 @@ public class ATCSetupFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_searchFirFieldKeyTyped
 
     private void airportSearchStringKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_airportSearchStringKeyTyped
-        System.out.println(evt.getKeyChar());
+        LOG.info(evt.getKeyChar());
         if (StringUtils.isEmpty(this.airportSearchString.getText())) {
             this.airportJList.setModel(originalAirportModel);
             return;
@@ -598,7 +601,7 @@ public class ATCSetupFrame extends javax.swing.JFrame {
             DefaultListModel<AirportStation> model = new DefaultListModel();
             for (AirportStation station : airportStationList) {
 
-                System.out.println(station.getStationName());
+                LOG.info(station.getStationName());
                 if (station.getStationName().matches("(?i:.*ATIS.*)")) {
                     this.airportATISFrequencyField.setText(station.getFrequency());
                     continue;
@@ -689,24 +692,24 @@ public class ATCSetupFrame extends javax.swing.JFrame {
 
         if (this.firJList.getSelectedIndices().length == 0) {
             SwingTools.alertWindow("No Fir selected!", this);
-            System.out.println("No Fir selected");
+            LOG.info("No Fir selected");
             return;
         }
         int selectedIndex = this.firJList.getSelectedIndex();
         if (evt.getStateChange() == ItemEvent.SELECTED) {
 
             
-            System.out.println("SELECTED ITEM IS: " + this.firJList.getSelectedIndex());
-            System.out.println("Checkbox Value selected!");
+            LOG.debug("SELECTED ITEM IS: " + this.firJList.getSelectedIndex());
+            LOG.debug("Checkbox Value selected!");
 
             this.revalidate();
-            System.out.println("FIR SELECTED: " + this.firJList.getModel().getElementAt(selectedIndex));
+            LOG.debug("FIR SELECTED: " + this.firJList.getModel().getElementAt(selectedIndex));
             this.atcSetupMapPanel.getFirPainter().setIncludedAirportsInFir(this.firJList.getModel().getElementAt(selectedIndex).getIncludedAirports());
-            System.out.println("Selected Airports: " + this.firJList.getModel().getElementAt(selectedIndex).getIncludedAirports().size());
+            LOG.debug("Selected Airports: " + this.firJList.getModel().getElementAt(selectedIndex).getIncludedAirports().size());
             this.revalidate();
             this.repaint();
         } else {
-            System.out.println("Checkbox Value unselected");
+            LOG.debug("Checkbox Value unselected");
             this.atcSetupMapPanel.getFirPainter().getIncludedAirportsInFir().clear();
             this.firJList.setModel(this.loadFirs());
             this.firJList.setSelectedIndex(selectedIndex);
@@ -775,7 +778,7 @@ public class ATCSetupFrame extends javax.swing.JFrame {
 
         //calc nm from slider to meters
         double sliderNM = s.getValue() * XHSConfig.getMetersPerNauticalMile();
-        System.out.println("SLIDER METERS: " + sliderNM);
+        LOG.debug("SLIDER METERS: " + sliderNM);
         this.atcSetupMapPanel.getFirPainter().setSelectedAirportRange(sliderNM);
         this.revalidate();
         this.repaint();
@@ -906,11 +909,11 @@ public class ATCSetupFrame extends javax.swing.JFrame {
     private void airportFreqJListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_airportFreqJListValueChanged
 
         if (evt.getValueIsAdjusting()) {
-            System.out.println("FREQLIST CHANGED");
+            LOG.debug("FREQLIST CHANGED");
             AirportStation station = this.airportFreqJList.getSelectedValue();
             this.customStationName.setText(station.getStationName());
             this.customStationFreqField.setText(station.getFrequency());
-            System.out.println(station.getStationName());
+            LOG.debug(station.getStationName());
         }
 
 
@@ -1009,7 +1012,7 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         else if(o instanceof SupportedAirportStation) {
             SupportedAirportStation airport = (SupportedAirportStation) o;
             this.atcSetupMapPanel.getFirPainter().setSetupAirport(airport);
-            System.out.println("AIRPORT RANGE: " + airport.getVisibility());
+            LOG.debug("AIRPORT RANGE: " + airport.getVisibility());
             this.airportRangeSlider.setValue(airport.getVisibility());
         }
         this.revalidate();
@@ -1023,7 +1026,7 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         int result = SwingTools.showYesNoDialogBox("Are you sure", "This will delete all your saved setups and statistics. Are you sure? Really delete all?", this);
        
         if (result != 0) {
-            System.out.println("Answer was " + result);
+            LOG.debug("Answer was " + result);
             return;
         }
         Session session = DBSessionManager.getSession();
@@ -1036,9 +1039,9 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         deleteList.forEach((table) -> {
             Transaction t1 = session.beginTransaction();
             Query deleteStatement = session.createQuery("delete from " + table);
-            System.out.println("execute Delete Query " + table);
+            LOG.debug("execute Delete Query " + table);
             deleteStatement.executeUpdate();
-            System.out.println("commit delete " + table);
+            LOG.debug("commit delete " + table);
             t1.commit();
         });
         DBSessionManager.closeSession(session);
@@ -1167,7 +1170,7 @@ public class ATCSetupFrame extends javax.swing.JFrame {
         DefaultListModel model = new DefaultListModel();
         Session s = DBSessionManager.getSession();
         List<PlainAirport> airportList = s.createCriteria(PlainAirport.class).addOrder(Order.asc("airportIcao")).list();
-        System.out.println("Found airports to select: " + airportList.size());
+        LOG.debug("Found airports to select: " + airportList.size());
         int counter = 0;
         for (PlainAirport airport : airportList) {
 

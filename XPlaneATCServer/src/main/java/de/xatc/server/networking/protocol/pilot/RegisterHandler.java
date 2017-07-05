@@ -11,6 +11,7 @@ import de.xatc.commons.networkpackets.pilot.RegisterPacket;
 import de.xatc.server.db.DBSessionManager;
 import io.netty.channel.Channel;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -20,10 +21,12 @@ import org.hibernate.criterion.Restrictions;
  */
 public class RegisterHandler {
     
+    private static final Logger LOG = Logger.getLogger(RegisterHandler.class.getName());
+    
     public static synchronized void doRegistering(Channel n, Object msg) {
         
         
-        System.out.println("do Registering Handler");
+        LOG.info("do Registering Handler");
         Session session = DBSessionManager.getSession();
         RegisterPacket p = (RegisterPacket) msg;
         RegisterPacket returnPacket = new RegisterPacket();
@@ -45,7 +48,7 @@ public class RegisterHandler {
             session.save(newUser);
             DBSessionManager.closeSession(session);
             returnPacket.setSuccess(true);
-            System.out.println("Registering was successfully performed!");
+            LOG.info("Registering was successfully performed!");
             n.writeAndFlush(returnPacket);
             
             

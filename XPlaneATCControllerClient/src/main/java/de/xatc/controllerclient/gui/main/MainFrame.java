@@ -30,7 +30,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -168,7 +167,7 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
 
         this.setSize(800, 800);
 
-        System.out.println("NEW MAIN PANEL");
+        LOG.info("NEW MAIN PANEL");
         this.mainPanel = new MainPanel();
 
         this.createMenu();
@@ -378,10 +377,10 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
 
         } else if (ae.getSource() == disconnectItem) {
 
-            System.out.println("Disconnecting");
+            LOG.info("Disconnecting");
             XHSConfig.getDataClientBootstrap().shutdownClient();
 
-            System.out.println("disconnected!");
+            LOG.info("disconnected!");
 
         } else if (ae.getSource() == metricsItem) {
 
@@ -411,7 +410,7 @@ public class MainFrame extends JFrame implements WindowListener, ActionListener,
 
         } else if (ae.getSource() == textMessageItem) {
 
-            System.out.println("CHATFRAME: " + XHSConfig.getChatFrame());
+            LOG.info("CHATFRAME: " + XHSConfig.getChatFrame());
 
             ControllerClientGuiTools.showChatFrame();
 

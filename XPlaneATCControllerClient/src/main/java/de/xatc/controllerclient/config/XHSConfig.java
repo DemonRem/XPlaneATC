@@ -23,16 +23,12 @@ import de.xatc.controllerclient.gui.servercontrol.FileIndexerFrame;
 import de.xatc.controllerclient.gui.servercontrol.ServerControlFrame;
 import de.xatc.controllerclient.gui.setupatc.ATCSetupFrame;
 import de.xatc.controllerclient.gui.usercontrol.UserControlFrame;
-
 import de.xatc.controllerclient.navigation.NavPoint;
 import de.xatc.controllerclient.navigation.NavPointHelpers;
 import de.xatc.controllerclient.nettyclient.DataClient;
 import de.xatc.controllerclient.nettyclient.DataClientBootstrap;
 import java.io.File;
 import java.io.IOException;
-
-
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
@@ -177,7 +173,7 @@ public class XHSConfig {
             String lon = XHSConfig.intitalLongitude;
             String hdg = "0";
             
-            System.out.println("SETTING NEW INITIAL NAVPOINT");
+            LOG.info("SETTING NEW INITIAL NAVPOINT");
             initialPos.setLatitudeSTring(lat);
             initialPos.setLongitudeSTring(lon);
             initialPos.setHeadingString(hdg);
@@ -284,6 +280,7 @@ public class XHSConfig {
         try {
             FileUtils.writeStringToFile(new File(XHSConfig.getPropertiesFileName()), configBeanContent);
         } catch (IOException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
             SwingTools.alertWindow("Could not save Properties File!", mainFrame);
         }

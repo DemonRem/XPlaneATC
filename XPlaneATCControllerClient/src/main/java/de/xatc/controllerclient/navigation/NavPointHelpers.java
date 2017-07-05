@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 
@@ -212,11 +211,11 @@ public class NavPointHelpers {
 
             }
 
-            //System.out.println(NavPointHelpers.calcDistanceOfTwoNavPoints(navpoint, toPoint));
+            LOG.debug(NavPointHelpers.calcDistanceOfTwoNavPoints(navpoint, toPoint));
         }
-       // System.out.println("Closest Distance: " + distance);
+       LOG.debug("Closest Distance: " + distance);
         if (closestNode != null) {
-            //System.out.println(closestNode.getNavPoint());
+            LOG.debug(closestNode.getNavPoint());
         }
         return closestNode;
     }
@@ -254,12 +253,12 @@ public class NavPointHelpers {
 
                 }
             }
-            //System.out.println(NavPointHelpers.calcDistanceOfTwoNavPoints(navpoint, toPoint));
+            
 
         }
-       // System.out.println("Closest Distance: " + distance);
+       
         if (closestNode != null) {
-           // System.out.println(closestNode.getNavPoint());
+           LOG.debug(closestNode.getNavPoint());
         }
         return closestNode;
 

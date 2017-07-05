@@ -16,6 +16,7 @@ import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.painter.Painter;
@@ -26,6 +27,8 @@ import org.jdesktop.swingx.painter.Painter;
  */
 public class AtcSetupMapFirPainter implements Painter<JXMapViewer> {
 
+    private static final Logger LOG = Logger.getLogger(AtcSetupMapFirPainter.class.getName());
+    
     private boolean antiAlias = false;
     private SupportedFirStation setupFir;
     private SupportedAirportStation setupAirport;
@@ -146,14 +149,14 @@ public class AtcSetupMapFirPainter implements Painter<JXMapViewer> {
 
     private void drawSupportedAirport(SupportedAirportStation airport, Graphics2D g, JXMapViewer map, Color color) {
 
-        System.out.println("Drawing supported Airport");
-        System.out.println("VISIBILITY IN PAINTER: " + airport.getVisibility());
+        LOG.debug("Drawing supported Airport");
+        LOG.debug("VISIBILITY IN PAINTER: " + airport.getVisibility());
         g.setColor(color);
         g.setStroke(new BasicStroke(8));
 
         double metersPerPixelOnMap = XHSConfig.getEarthCircumference() * Math.abs(Math.cos(airport.getAirport().getPosition().getLat() * 180 / Math.PI)) / Math.pow(2, map.getZoom());
 
-        System.out.println("METERS PER PIXEL: " + metersPerPixelOnMap);
+        LOG.debug("METERS PER PIXEL: " + metersPerPixelOnMap);
 
         g.setStroke(new BasicStroke(8));
         Point2D airportPos = map.getTileFactory().geoToPixel(new GeoPosition(airport.getAirport().getPosition().getLat(), airport.getAirport().getPosition().getLon()), map.getZoom());
@@ -161,11 +164,11 @@ public class AtcSetupMapFirPainter implements Painter<JXMapViewer> {
         g.drawString(airport.getAirport().getAirportIcao(), (int) airportPos.getX() + 5, (int) airportPos.getY() + 5);
 
         float circledouble = (float) (airport.getVisibility() / this.getMeterPerPixel(new Point((int) airportPos.getX() + 1, (int) airportPos.getY()), map));
-        System.out.println("CIRCLE DOUBLE: " + circledouble);
+        LOG.debug("CIRCLE DOUBLE: " + circledouble);
         int circle = Math.round(circledouble / 2);
-        System.out.println("CIRCLE! rounded " + circle);
+        LOG.debug("CIRCLE! rounded " + circle);
 
-        System.out.println("METHOD GET METERS PER PIXEL::::::::: " + this.getMeterPerPixel(new Point((int) airportPos.getX() + 1, (int) airportPos.getY()), map));
+        LOG.debug("METHOD GET METERS PER PIXEL::::::::: " + this.getMeterPerPixel(new Point((int) airportPos.getX() + 1, (int) airportPos.getY()), map));
 
         g.drawOval((int) airportPos.getX() - (circle / 2), (int) airportPos.getY() - (circle / 2), circle, circle);
 
@@ -173,13 +176,13 @@ public class AtcSetupMapFirPainter implements Painter<JXMapViewer> {
     
     private void drawSelectedAirport(PlainAirport airport, Graphics2D g, JXMapViewer map, Color color) {
 
-        System.out.println("Drawing airports");
+        LOG.debug("Drawing airports");
         g.setColor(color);
         g.setStroke(new BasicStroke(8));
 
         double metersPerPixelOnMap = XHSConfig.getEarthCircumference() * Math.abs(Math.cos(airport.getPosition().getLat() * 180 / Math.PI)) / Math.pow(2, map.getZoom());
 
-        System.out.println("METERS PER PIXEL: " + metersPerPixelOnMap);
+        LOG.debug("METERS PER PIXEL: " + metersPerPixelOnMap);
 
         g.setStroke(new BasicStroke(8));
         Point2D airportPos = map.getTileFactory().geoToPixel(new GeoPosition(airport.getPosition().getLat(), airport.getPosition().getLon()), map.getZoom());
@@ -187,11 +190,11 @@ public class AtcSetupMapFirPainter implements Painter<JXMapViewer> {
         g.drawString(airport.getAirportIcao(), (int) airportPos.getX() + 5, (int) airportPos.getY() + 5);
 
         float circledouble = (float) (this.selectedAirportRange / this.getMeterPerPixel(new Point((int) airportPos.getX() + 1, (int) airportPos.getY()), map));
-        System.out.println("CIRCLE DOUBLE: " + circledouble);
+        LOG.debug("CIRCLE DOUBLE: " + circledouble);
         int circle = Math.round(circledouble / 2);
-        System.out.println("CIRCLE! rounded " + circle);
+        LOG.debug("CIRCLE! rounded " + circle);
 
-        System.out.println("METHOD GET METERS PER PIXEL::::::::: " + this.getMeterPerPixel(new Point((int) airportPos.getX() + 1, (int) airportPos.getY()), map));
+        LOG.debug("METHOD GET METERS PER PIXEL::::::::: " + this.getMeterPerPixel(new Point((int) airportPos.getX() + 1, (int) airportPos.getY()), map));
 
         g.drawOval((int) airportPos.getX() - (circle / 2), (int) airportPos.getY() - (circle / 2), circle, circle);
 
@@ -199,13 +202,13 @@ public class AtcSetupMapFirPainter implements Painter<JXMapViewer> {
     
      private void drawIncludedAirport(PlainAirport airport, Graphics2D g, JXMapViewer map, Color color) {
 
-        System.out.println("Drawing airports");
+        LOG.debug("Drawing airports");
         g.setColor(color);
         g.setStroke(new BasicStroke(8));
 
         double metersPerPixelOnMap = XHSConfig.getEarthCircumference() * Math.abs(Math.cos(airport.getPosition().getLat() * 180 / Math.PI)) / Math.pow(2, map.getZoom());
 
-        System.out.println("METERS PER PIXEL: " + metersPerPixelOnMap);
+        LOG.debug("METERS PER PIXEL: " + metersPerPixelOnMap);
 
         g.setStroke(new BasicStroke(8));
         Point2D airportPos = map.getTileFactory().geoToPixel(new GeoPosition(airport.getPosition().getLat(), airport.getPosition().getLon()), map.getZoom());

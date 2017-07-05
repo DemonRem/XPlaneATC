@@ -11,6 +11,7 @@ package de.xatc.controllerclient.gui.main;
 
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
+import org.apache.log4j.Logger;
 
 /**
  * this is the main panel, containing all subpanels
@@ -19,6 +20,7 @@ import javax.swing.JPanel;
  */
 public class MainPanel extends JPanel {
 
+    private static final Logger LOG = Logger.getLogger(MainPanel.class.getName());
     /**
      * headerpanel
      */
@@ -42,7 +44,7 @@ public class MainPanel extends JPanel {
     public MainPanel() {
 
         super();
-        System.out.println("MainPanel Constructor");
+        LOG.info("MainPanel Constructor");
         initComponents();
     }
 
@@ -51,7 +53,7 @@ public class MainPanel extends JPanel {
      */
     private void initComponents() {
 
-        System.out.println("MainPanel init components");
+        LOG.info("MainPanel init components");
         this.setLayout(new BorderLayout());
 
         this.mapPanel = new ATCMapPanel();

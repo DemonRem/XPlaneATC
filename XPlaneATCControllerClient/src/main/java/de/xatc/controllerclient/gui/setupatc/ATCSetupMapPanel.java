@@ -17,6 +17,7 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
@@ -30,6 +31,7 @@ import org.jdesktop.swingx.painter.Painter;
  */
 public class ATCSetupMapPanel extends JPanel {
 
+    private static final Logger LOG = Logger.getLogger(ATCSetupMapPanel.class.getName());
     /**
      * the openstreetmap jmap kit
      */
@@ -72,9 +74,9 @@ public class ATCSetupMapPanel extends JPanel {
         jkit.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         GeoPosition startPos = new GeoPosition(XHSConfig.getInitialPos().getLatitudedouble(), XHSConfig.getInitialPos().getLongitudeDouble());
 
-        System.out.println(XHSConfig.getInitialPos());
+        LOG.info(XHSConfig.getInitialPos());
         jkit.setAddressLocationShown(true);
-        System.out.println("AIRPORT MAP Panel INIT COMPONENTS");
+        LOG.info("AIRPORT MAP Panel INIT COMPONENTS");
 
         this.setLayout(new BorderLayout());
 

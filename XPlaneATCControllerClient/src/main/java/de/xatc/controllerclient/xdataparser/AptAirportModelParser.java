@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
@@ -42,6 +43,8 @@ import org.hibernate.criterion.Restrictions;
  */
 public class AptAirportModelParser {
 
+    private static final Logger LOG = Logger.getLogger(AptAirportModelParser.class.getName());
+    
     /**
      * are we inside the pavement declaration
      */
@@ -96,7 +99,7 @@ public class AptAirportModelParser {
      */
     public void parseAirport() {
 
-        //System.out.println("parsing Airport");
+        LOG.debug("parsing Airport");
         File airportFile = new File(currentAirport.getFullFileName());
         if (!airportFile.exists()) {
             return;
@@ -107,6 +110,7 @@ public class AptAirportModelParser {
         try {
             airportString = AptFilesTools.extractAirportFromFile(currentAirport.getFullFileName(), currentAirport.getLineNumberStart());
         } catch (IOException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
             return;
         }
@@ -120,15 +124,15 @@ public class AptAirportModelParser {
                 String[] splittedString = StringUtils.split(line);
                 
                 //remove empty arrayfields
-//                System.out.println("LINESPLIT SIZE: " + splittedString.length);
+                LOG.debug("LINESPLIT SIZE: " + splittedString.length);
                 ArrayList<String> splittedAsList = new ArrayList<>(Arrays.asList(splittedString));
                 splittedAsList.removeAll(Arrays.asList("",null));
                 splittedString = splittedAsList.toArray(splittedString);
-//                System.out.println("NEW LINESPLIT SIZE: " + splittedString.length);
+                LOG.debug("NEW LINESPLIT SIZE: " + splittedString.length);
                 
                 int lineCode = 0;
                 if (splittedString.length == 0) {
-                    // System.out.println("splitted Line = 0");
+                    LOG.warn("splitted Line = 0");
                     continue;
                 }
                 lineCode = Integer.parseInt(splittedString[0]);
@@ -137,7 +141,7 @@ public class AptAirportModelParser {
                 if (lineCode == 1 || lineCode == 17 || lineCode == 16) {
 
                     if (splittedString.length < 4) {
-                        // System.out.println("Could not parse Airport");
+                        LOG.debug("Could not parse Airport");
                         return;
                     }
 
@@ -153,7 +157,7 @@ public class AptAirportModelParser {
                 //pavement
                 if ((lineCode < 111 || lineCode > 114) && lineCode != 10) {
                     if (this.pavementStarted) {
-                        //System.out.println("Pavement finished");
+                        LOG.debug("Pavement finished");
                         this.airportModel.getPavement().add(pavementModel);
                         this.pavementStarted = false;
                     }
@@ -161,7 +165,7 @@ public class AptAirportModelParser {
                 switch (lineCode) {
 
                     case 100:
-                        //System.out.println("creating runway land");
+                        LOG.debug("creating runway land");
                         //Runway land
                         float width = Float.parseFloat(splittedString[1]);
                         String name1 = splittedString[8];
@@ -186,7 +190,7 @@ public class AptAirportModelParser {
                         this.airportModel.getRunwayList().add(runway);
                         break;
                     case 102:
-                        //  System.out.println("creating helipad");
+                        LOG.debug("creating helipad");
                         //helipad
                         String name = splittedString[1];
                         NavPoint padcenter = new NavPoint();
@@ -203,7 +207,7 @@ public class AptAirportModelParser {
                         break;
                     case 101:
                         //runway water
-                        // System.out.println("creating runway sea");
+                        LOG.debug("creating runway sea");
                         float waterWidth = Float.parseFloat(splittedString[1]);
                         String waterName1 = splittedString[3];
                         String waterName2 = splittedString[6];
@@ -228,7 +232,7 @@ public class AptAirportModelParser {
                         break;
 
                     case 110:
-                        //System.out.println("Case 110 - pavement started");
+                        LOG.debug("Case 110 - pavement started");
                         this.pavementStarted = true;
 
                         this.pavementModel.setName(AptFilesTools.joinArray(splittedString, 4, splittedString.length - 1));
@@ -238,7 +242,7 @@ public class AptAirportModelParser {
 
                         break;
                     case 130:
-                        //System.out.println("Case 130 - Airport Boundary");
+                        LOG.debug("Case 130 - Airport Boundary");
                         this.pavementStarted = true;
 
                         this.pavementModel.setName("Airport Boundary");
@@ -248,22 +252,22 @@ public class AptAirportModelParser {
 
                         break;
                     case 111:
-                    //System.out.println("Case 111 - nothing to do");
+                        LOG.debug("Case 111 - nothing to do");
                     case 112:
-                        //System.out.println("case 112");
+                        LOG.debug("case 112");
                         if (pavementStarted && !chunkStarted) {
-                            // System.out.println("new Chunk Model");
+                            LOG.debug("new Chunk Model");
                             this.chunkModel = new AptChunkModel();
                             chunkStarted = true;
                         }
                     case 113:
-                    //System.out.println("case 113 nothing to do");
+                        LOG.debug("case 113 nothing to do");
                     case 114:
                         if (!chunkStarted) {
                             continue;
 
                         }
-                        //System.out.println("LineCode: " + lineCode + " case 114");
+                        LOG.debug("LineCode: " + lineCode + " case 114");
                         NavPoint p = new NavPoint();
                         p.setLatitudeSTring(splittedString[1]);
                         p.setLongitudeSTring(splittedString[2]);
@@ -272,17 +276,17 @@ public class AptAirportModelParser {
                         this.chunkModel.getNavPointList().add(p);
 
                         if (lineCode == 113 || lineCode == 114) {
-                            //System.out.println("LineCode 113 / 114 chunk ended");
+                            LOG.debug("LineCode 113 / 114 chunk ended");
                             if (this.chunkModel.getNavPointList().size() > 0) {
-                                //System.out.println("adding Chunk to pavement");
+                                LOG.debug("adding Chunk to pavement");
                                 this.pavementModel.getChunkList().add(chunkModel);
                             }
                             this.chunkStarted = false;
                         }
                         break;
                     case 1201:
-                       // System.out.println("*******************1201***************");
-                       // System.out.println(Arrays.asList(splittedString));
+                       LOG.debug("*******************1201***************");
+                       LOG.debug(Arrays.asList(splittedString));
                         
                         TaxiNetworkNode node = new TaxiNetworkNode();
                         NavPoint networkPoint = new NavPoint();
@@ -299,7 +303,7 @@ public class AptAirportModelParser {
                         node.setNavPoint(networkPoint);
                         node.setId(Integer.parseInt(splittedString[4]));
                         node.setUsage(splittedString[3]);
-                       // System.out.println("Adding taxinode to model");
+                        LOG.debug("Adding taxinode to model");
                         this.airportModel.getTaxiNetworkNodes().put(Integer.parseInt(splittedString[4]), node);
 
                         break;
@@ -351,26 +355,26 @@ public class AptAirportModelParser {
                         taxiway = this.airportModel.getTaxiways().get(this.currentTaxiwayName);
                         if (taxiway == null) {
 
-                            //System.out.println("no Taxiway found for: " + this.currentTaxiwayName);
+                            LOG.debug("no Taxiway found for: " + this.currentTaxiwayName);
                             taxiway = new Taxiway();
                             taxiway.getSegments().add(segment);
                             taxiway.setName(this.currentTaxiwayName);
                             this.airportModel.getTaxiways().put(this.currentTaxiwayName, taxiway);
-                            //System.out.println("Putting NEW Taxiway '" + this.currentTaxiwayName + "'");
+                            LOG.debug("Putting NEW Taxiway '" + this.currentTaxiwayName + "'");
 
                         } else {
-                           // System.out.println("TAXIWAY FOUND FOR: " + this.currentTaxiwayName);
+                            LOG.trace("TAXIWAY FOUND FOR: " + this.currentTaxiwayName);
                             if (!taxiway.getSegments().contains(segment)) {
                                 taxiway.getSegments().add(segment);
                             }
-                          //  System.out.println("SEGMENTS IN TAXIWAY: " + taxiway.getSegments().size());
+                            LOG.trace("SEGMENTS IN TAXIWAY: " + taxiway.getSegments().size());
                             taxiway.setName(this.currentTaxiwayName);
                             this.airportModel.getTaxiways().put(this.currentTaxiwayName, taxiway);
 
-                           // System.out.println("Putting Taxiway '" + this.currentTaxiwayName + "'");
+                            LOG.trace("Putting Taxiway '" + this.currentTaxiwayName + "'");
                         }
 
-                       // System.out.println("TAXIWAYS IN MODEL: " + this.airportModel.getTaxiways().size());
+                       LOG.trace("TAXIWAYS IN MODEL: " + this.airportModel.getTaxiways().size());
 
                         break;
                     case 1300:
@@ -405,7 +409,7 @@ public class AptAirportModelParser {
                         if (splittedString.length != 3) {
                             break;
                         }
-                       // System.out.println(Arrays.asList(splittedString));
+                        LOG.trace(Arrays.asList(splittedString));
                         this.airportModel.getAttributeMap().put(splittedString[1], splittedString[2]);
                         break;
                 }
@@ -417,11 +421,12 @@ public class AptAirportModelParser {
             DBSessionManager.closeSession(session);
             airportModel.setNavData(navDataList);
 
-           // System.out.println("adding airport to painter. airport finished");
+            LOG.trace("adding airport to painter. airport finished");
             this.airportModel.setMostNorthernPoint(this.northernNavPoint);
             this.findConnPoints();
 
         } catch (IOException e) {
+            LOG.error(e.getLocalizedMessage());
             e.printStackTrace(System.err);
         }
 
@@ -452,9 +457,9 @@ public class AptAirportModelParser {
      */
     private void findConnPoints() {
 
-        //System.out.println("******************************************");
-        //System.out.println("******************************************");
-        //System.out.println("******************************************");
+        LOG.trace("******************************************");
+        LOG.trace("******************************************");
+        LOG.trace("******************************************");
 
         for (Entry<Integer, TaxiNetworkNode> entry : this.airportModel.getTaxiNetworkNodes().entrySet()) {
 
@@ -491,7 +496,7 @@ public class AptAirportModelParser {
             if (connPointsCounter > 2) {
                 this.airportModel.getConnPoints().add(n);
             }
-            // System.out.println("CONN POINTS COUNTER: " + ID + " - " + connPointsCounter);
+             LOG.trace("CONN POINTS COUNTER: " + ID + " - " + connPointsCounter);
 
         }
 

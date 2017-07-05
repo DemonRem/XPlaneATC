@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
@@ -29,6 +30,7 @@ import org.hibernate.persister.entity.AbstractEntityPersister;
  */
 public class DBSessionManager {
 
+    private static final Logger LOG = Logger.getLogger(DBSessionManager.class.getName());
     
     private static SessionFactory fct = getSessionFactory();
 
@@ -80,7 +82,7 @@ public class DBSessionManager {
 
         } catch (SQLException ex) {
 
-            System.out.println("Database Exit Status " + ex.getErrorCode());
+            LOG.error("Database Exit Status " + ex.getErrorCode());
         }
 
     }
@@ -99,7 +101,7 @@ public class DBSessionManager {
                         .configure()
                         .buildSessionFactory();
             } catch (Exception ex) {
-                System.out.println("DATABASE ERROR. Could not open Database. " + ex.getLocalizedMessage());
+                LOG.error("DATABASE ERROR. Could not open Database. " + ex.getLocalizedMessage());
 
             }
         } else {

@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map.Entry;
-
 import javax.imageio.ImageIO;
 import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXMapViewer;

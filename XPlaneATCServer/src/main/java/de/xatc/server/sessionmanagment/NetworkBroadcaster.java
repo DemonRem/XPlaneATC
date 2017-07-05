@@ -5,7 +5,6 @@
  */
 package de.xatc.server.sessionmanagment;
 
-import de.xatc.commons.datastructure.atc.ATCStructure;
 import io.netty.channel.Channel;
 import java.util.Map.Entry;
 

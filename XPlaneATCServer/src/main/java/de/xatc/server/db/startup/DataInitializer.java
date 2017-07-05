@@ -13,6 +13,7 @@ import de.xatc.server.importdataprocessors.CountryProcessor;
 import de.xatc.server.importdataprocessors.FirAirportsProcessor;
 import de.xatc.server.importdataprocessors.FirPoligonProcessor;
 import de.xatc.server.importdataprocessors.FirProcessor;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 
@@ -22,25 +23,26 @@ import org.hibernate.Session;
  */
 public class DataInitializer {
     
+    private static final Logger LOG = Logger.getLogger(DataInitializer.class.getName());
     
     public void initDataInDataBase() {
         
-        System.out.println("Running Database Initializer.....");
+        LOG.debug("Running Database Initializer.....");
         
         
-        System.out.println("Open Session");
+        LOG.debug("Open Session");
         Session session = DBSessionManager.getSession();
         
-        System.out.println("new reg User");
+        LOG.debug("new reg User");
         RegisteredUser user = new RegisteredUser();
         user.setUserRole(UserRole.ADMINISTRATOR);
         user.setRegisteredUserName("micko");
         user.setPassword("doof");
         
-        System.out.println("Save User");
+        LOG.debug("Save User");
         session.save(user);
         
-        System.out.println("Close Session");
+        LOG.debug("Close Session");
         DBSessionManager.closeSession(session);
         
         
@@ -59,14 +61,6 @@ public class DataInitializer {
         FirAirportsProcessor firAirportsProcessor = new FirAirportsProcessor();
         firAirportsProcessor.run();
                 
-        
-        
-        
-        
-        
-        
-        
-        
     }
     
     

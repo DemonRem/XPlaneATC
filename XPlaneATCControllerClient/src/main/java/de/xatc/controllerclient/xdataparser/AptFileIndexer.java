@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -41,6 +42,7 @@ import org.hibernate.Transaction;
  */
 public class AptFileIndexer extends Thread {
 
+    private static final Logger LOG = Logger.getLogger(AptFileIndexer.class.getName());
     /**
      * total file counter
      */
@@ -99,7 +101,7 @@ public class AptFileIndexer extends Thread {
         plainQ.executeUpdate();
         t4.commit();
         session.flush();
-        
+
         Transaction t5 = session.beginTransaction();
         Query stationQ = session.createQuery("delete from AirportStation");
         stationQ.executeUpdate();
@@ -137,6 +139,7 @@ public class AptFileIndexer extends Thread {
                     session.flush();
 
                 } catch (Exception ex) {
+                    LOG.error(ex.getLocalizedMessage());
                     ex.printStackTrace(System.err);
                 }
 
@@ -147,9 +150,8 @@ public class AptFileIndexer extends Thread {
 
         this.splitAptFiles();
 
-        // System.out.println("*******************************************");
-        // System.out.println("Airports: " + airportCounter);
-        // System.out.println("files: " + filesCounter);
+        LOG.trace("*******************************************");
+
         if (XHSConfig.getFileIndexerFrame() != null) {
             XHSConfig.getFileIndexerFrame().getIndexProgress().setValue(0);
             XHSConfig.getFileIndexerFrame().getStatusLabel().setText("Parsing earth_nav.dat");
@@ -158,7 +160,7 @@ public class AptFileIndexer extends Thread {
         try {
             this.parseFreqs();
         } catch (IOException ex) {
-            System.out.println("Could not parse earth_nav.dat data." + ex.getLocalizedMessage());
+            LOG.trace("Could not parse earth_nav.dat data." + ex.getLocalizedMessage());
         }
 
         IndexUpdatedEntity updated = new IndexUpdatedEntity();
@@ -176,14 +178,13 @@ public class AptFileIndexer extends Thread {
         session = DBSessionManager.getSession();
         List<IndexUpdatedEntity> list = session.createCriteria(IndexUpdatedEntity.class).list();
         for (IndexUpdatedEntity i : list) {
-            System.out.println("TIME UPDATED: " + i.getUpdateDate().toString());
+            LOG.debug("TIME UPDATED: " + i.getUpdateDate().toString());
 
         }
         DBSessionManager.closeSession(session);
 
-        
         this.putAirportsToFirs();
-        
+
         if (XHSConfig.getFileIndexerFrame() != null) {
 
             XHSConfig.getFileIndexerFrame().getIndexProgress().setValue(0);
@@ -196,10 +197,10 @@ public class AptFileIndexer extends Thread {
         try {
             stationParser.parseStations();
         } catch (IOException ex) {
+            LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
-        
-        
+
         XHSConfig.setAptIndexingRunning(false);
 
         SwingTools.alertWindow("Indexing successful!", XHSConfig.getMainFrame());
@@ -225,7 +226,7 @@ public class AptFileIndexer extends Thread {
             DBSessionManager.closeSession(s);
             return;
         }
-        
+
         if (XHSConfig.getFileIndexerFrame() != null) {
 
             XHSConfig.getFileIndexerFrame().getIndexProgress().setValue(0);
@@ -235,25 +236,24 @@ public class AptFileIndexer extends Thread {
             XHSConfig.getFileIndexerFrame().getCounterLabel().setText(" ");
 
         }
-        
+
         int counter = 0;
         for (Fir fir : firList) {
 
-            counter ++;
+            counter++;
             if (XHSConfig.getFileIndexerFrame() != null) {
 
                 XHSConfig.getFileIndexerFrame().getIndexProgress().setValue(counter);
                 XHSConfig.getFileIndexerFrame().getStatusLabel().setText("Finding Airports inside FIRs");
                 XHSConfig.getFileIndexerFrame().getCounterLabel().setText("Airports for FIR: " + fir.getFirNameIcao() + " - " + fir.getFirName());
-                
 
             }
 
-            System.out.println(fir.getFirName() + " " + fir.getFirNameIcao() + " " + fir.getPoligonList().size());
+            LOG.debug(fir.getFirName() + " " + fir.getFirNameIcao() + " " + fir.getPoligonList().size());
 
             ArrayList<PlainAirport> airportListInFir = FirNavigationalTools.findAirportsInFir(airportList, fir.getPoligonList());
 
-            System.out.println("Airports in FIR: " + airportListInFir.size());
+            LOG.debug("Airports in FIR: " + airportListInFir.size());
             fir.setIncludedAirports(airportListInFir);
             s.saveOrUpdate(fir);
             s.flush();
@@ -319,7 +319,7 @@ public class AptFileIndexer extends Thread {
 
         File datFile = new File(earthNavDataFileName);
         if (!datFile.exists()) {
-            System.out.println("Earth Nav Dat File does not exist. Not parsing");
+            LOG.warn("Earth Nav Dat File does not exist. Not parsing");
             return;
         }
 
@@ -356,11 +356,11 @@ public class AptFileIndexer extends Thread {
                     navData.setType(type);
                     navData.setRunway(runway);
 
-                    // System.out.println(navData.getFreq());
+                    LOG.trace(navData.getFreq());
                     session.saveOrUpdate(navData);
                     session.flush();
                 } catch (StringIndexOutOfBoundsException ex) {
-                    //System.out.println("Skipping line");
+                    LOG.trace("Skipping line");
                 }
 
             }

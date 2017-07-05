@@ -3,7 +3,6 @@ package de.xatc.controllerclient.gui.servercontrol;
 import de.mytools.tools.swing.SwingTools;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.xdataparser.AptFileIndexer;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;

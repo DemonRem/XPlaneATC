@@ -9,12 +9,12 @@ import de.xatc.commons.datastructure.pilot.PilotStructure;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
-
 import de.xatc.server.db.DBSessionManager;
 import de.xatc.server.sessionmanagment.NetworkBroadcaster;
 import de.xatc.server.sessionmanagment.SessionManagement;
 import io.netty.channel.Channel;
 import java.util.Map.Entry;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 /**
@@ -23,11 +23,13 @@ import org.hibernate.Session;
  */
 public class SubmittedFlightPlanActionHandlerATC {
 
+    private static final Logger LOG = Logger.getLogger(SubmittedFlightPlanActionHandlerATC.class.getName());
+    
     public static void acceptSubmittedFlightPlan(SubmittedFlightPlansActionPacket action) {
         
         PilotStructure pilotStructure = SessionManagement.getPilotDataStructures().get(action.getSubmittedFlightPlan().getPilotsSessionID());
         if (pilotStructure == null) {
-            System.out.println("Could not revoke flightplan by atc. PilotStructure not found");
+            LOG.warn("Could not revoke flightplan by atc. PilotStructure not found");
             return;
         }
     
@@ -61,7 +63,7 @@ public class SubmittedFlightPlanActionHandlerATC {
         
         PilotStructure pilotStructure = SessionManagement.getPilotDataStructures().get(action.getSubmittedFlightPlan().getPilotsSessionID());
         if (pilotStructure == null) {
-            System.out.println("Could not revoke flightplan by atc. PilotStructure not found");
+            LOG.warn("Could not revoke flightplan by atc. PilotStructure not found");
             return;
         }
         
@@ -96,7 +98,7 @@ public class SubmittedFlightPlanActionHandlerATC {
         Channel channel = SessionManagement.getAtcChannels().get(action.getSessionID());
         if (channel == null) {
             
-            System.out.println("Could not send all FlightPlans to Contrller. SessionID not found");
+            LOG.warn("Could not send all FlightPlans to Contrller. SessionID not found");
             return;
         }
         
@@ -104,7 +106,7 @@ public class SubmittedFlightPlanActionHandlerATC {
         
             if (entry.getValue().getSubmittedFlightPlan() != null) {
                 
-                System.out.println("syncing flightplan to controller: " + entry.getValue().getUserName());
+                LOG.info("syncing flightplan to controller: " + entry.getValue().getUserName());
                 SubmittedFlightPlansActionPacket p = new SubmittedFlightPlansActionPacket();
                 p.setAction("sync");
                 p.setSubmittedFlightPlan(entry.getValue().getSubmittedFlightPlan());

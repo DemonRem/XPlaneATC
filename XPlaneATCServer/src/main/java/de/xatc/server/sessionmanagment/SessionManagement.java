@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -25,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionManagement {
 
 
+    private static final Logger LOG = Logger.getLogger(SessionManagement.class.getName());
     
     private static Map<String,DefaultChannelGroup> frequencyList = new HashMap<>();
     
@@ -85,10 +87,10 @@ public class SessionManagement {
     
     
     public static UserRole getATCUserRoleBySessionID(String sessionID) {
-        System.out.println("Finding UserRole by SessionID");
+        LOG.debug("Finding UserRole by SessionID");
         XATCUserSession s = findATCUserSessionBySessionID(sessionID);
         if (s == null) {
-            System.out.println("Session is null. Could not be found");
+            LOG.warn("Session is null. Could not be found");
             return null;
         }
         return s.getRegisteredUser().getUserRole();
@@ -128,7 +130,7 @@ public class SessionManagement {
         for (Entry<String,Channel> entry : atcChannels.entrySet()) {
             
             if (entry.getValue() == c) {
-                System.out.println("Removing ATC Channel");
+                LOG.info("Removing ATC Channel");
                 atcDataStructures.remove(entry.getKey());
                 
                 return;
@@ -136,7 +138,7 @@ public class SessionManagement {
             
             
         }
-        System.out.println("Could not remove atc channel after losing connection");
+        LOG.warn("Could not remove atc channel after losing connection");
         
     }
     

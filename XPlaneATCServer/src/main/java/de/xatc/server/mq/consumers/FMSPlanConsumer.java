@@ -7,6 +7,7 @@ package de.xatc.server.mq.consumers;
 
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -14,18 +15,20 @@ import javax.jms.TextMessage;
  */
 public class FMSPlanConsumer extends MQAbstractConsumer {
 
+    //TODO - what is this?
+    private static final Logger LOG = Logger.getLogger(FMSPlanConsumer.class.getName());
     public FMSPlanConsumer(String queueName) {
         super(queueName);
     }
 
     @Override
     public void onObjectMessage(ObjectMessage message) {
-        System.out.println("FMSPlanConsumer.... recived ObejctMessage");
+        LOG.info("FMSPlanConsumer.... recived ObejctMessage");
     }
 
     @Override
     public void onTextMessage(TextMessage message) {
-        System.out.println("FMSPlanConsumer.... recived TextMessage");
+        LOG.info("FMSPlanConsumer.... recived TextMessage");
     }
     
 }

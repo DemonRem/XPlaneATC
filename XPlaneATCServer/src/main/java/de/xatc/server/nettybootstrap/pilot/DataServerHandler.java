@@ -12,7 +12,6 @@ import de.xatc.commons.networkpackets.pilot.FMSPlan;
 import de.xatc.commons.networkpackets.pilot.LoginPacket;
 import de.xatc.commons.networkpackets.pilot.PlanePosition;
 import de.xatc.commons.networkpackets.pilot.RegisterPacket;
-import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
 import de.xatc.commons.networkpackets.pilot.TextMessagePacket;
 import de.xatc.server.config.ServerConfig;
@@ -25,6 +24,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 
 
@@ -34,16 +34,17 @@ import org.apache.commons.lang.StringUtils;
  */
 public class DataServerHandler extends ChannelInboundHandlerAdapter {
 
+    private static final Logger LOG = Logger.getLogger(DataServerHandler.class.getName());
     private Channel channel;
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-        System.out.println("CHANNEL READ. Incoming Packet!");
-        System.out.println("Object is: " + msg);
+        LOG.debug("CHANNEL READ. Incoming Packet!");
+        LOG.info("Object is: " + msg);
 
         if (msg instanceof NetworkPacket == false) {
-            System.out.println("No NetworkPacket received! Returning");
+            LOG.warn("No NetworkPacket received! Returning");
             return;
         } else {
 
@@ -54,13 +55,13 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
 
                 if (msg instanceof RegisterPacket) {
 
-                    System.out.println("CHANNEL ID: " + this.channel.id());
-                    System.out.println("RegisterPacketAnswer Received!");
+                    LOG.debug("CHANNEL ID: " + this.channel.id());
+                    LOG.debug("RegisterPacketAnswer Received!");
                     RegisterHandler.doRegistering(channel, msg);
 
                 } else if (msg instanceof LoginPacket) {
 
-                    System.out.println("Login Packet received!");
+                    LOG.debug("Login Packet received!");
                     LoginHandler.handleLogin(channel, msg);
 
                 }
@@ -71,7 +72,7 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
                 TextMessageHandler.handleUserTextMessage(channel, msg);
 
             } else if (msg instanceof PlanePosition) {
-                System.out.println("received PlanePosition");
+                LOG.debug("received PlanePosition");
                 if (SessionManagement.getAtcDataStructures().size() > 0) {
                     ServerConfig.getMessageSenders().get("planePosition").sendObjectMessage((PlanePosition) msg);
                 }
@@ -106,14 +107,14 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
                     
         }
         
-        System.out.println("client disconnected");
+        LOG.info("client disconnected");
 
         channel.close();
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("Client connected");
+        LOG.info("Client connected");
         this.channel = ctx.channel();
 
 
@@ -122,7 +123,8 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 
-        System.out.println("SERVER EXCEPTION CAUGHT!!!!!!!!!!!!!!!!!");
+        LOG.error("SERVER EXCEPTION CAUGHT!!!!!!!!!!!!!!!!!");
+        LOG.error(cause.getLocalizedMessage());
         cause.printStackTrace(System.err);
         SessionManagement.removePilotSessionByChannel(ctx.channel());
         
