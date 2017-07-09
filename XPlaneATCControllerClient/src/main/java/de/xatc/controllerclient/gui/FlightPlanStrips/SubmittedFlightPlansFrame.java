@@ -131,6 +131,7 @@ public class SubmittedFlightPlansFrame extends JFrame implements ActionListener 
             this.repaint();
             SubmittedFlightPlanActionHandler.deleteLocalFlightPlans();
             SubmittedFlightPlanActionHandler.sendFlightPlansSyncRequest();
+            loadStrips();
         }
     }
 

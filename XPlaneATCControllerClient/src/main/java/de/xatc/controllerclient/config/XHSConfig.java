@@ -276,7 +276,7 @@ public class XHSConfig {
        LOG.info("SAVING PROPERTIES");
 
         String configBeanContent = ObjectsMarshaller.objectToXml(configBean);
-        LOG.info(configBeanContent);
+    
         try {
             FileUtils.writeStringToFile(new File(XHSConfig.getPropertiesFileName()), configBeanContent);
         } catch (IOException ex) {

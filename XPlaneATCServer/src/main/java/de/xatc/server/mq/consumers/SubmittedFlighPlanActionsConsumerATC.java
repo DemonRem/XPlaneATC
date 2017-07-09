@@ -38,7 +38,7 @@ public class SubmittedFlighPlanActionsConsumerATC extends MQAbstractConsumer {
                 
             }
             else if (p.getAction().equals("syncAll")) {
-                SubmittedFlightPlanActionHandlerATC.sendSubmittedFlightPlansToATC(p);
+                SubmittedFlightPlanActionHandlerATC.sendAllSubmittedFlightPlansToATC(p);
             }
             
             

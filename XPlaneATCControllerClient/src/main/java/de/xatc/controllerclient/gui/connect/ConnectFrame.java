@@ -7,7 +7,6 @@ package de.xatc.controllerclient.gui.connect;
 
 import de.mytools.tools.swing.SwingTools;
 import de.xatc.commons.networkpackets.pilot.LoginPacket;
-import de.xatc.controllerclient.config.ConfigBean;
 import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.nettyclient.DataClientBootstrap;
 import java.awt.event.ActionEvent;
@@ -21,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.VerticalLayout;
 
 /**
@@ -29,6 +29,7 @@ import org.jdesktop.swingx.VerticalLayout;
  */
 public class ConnectFrame extends JFrame implements ActionListener, WindowListener {
 
+    private static final Logger LOG = Logger.getLogger(ConnectFrame.class.getName());
     private JPanel connectPanel;
     private JTextField nameField;
     private JPasswordField passwordField;
@@ -67,13 +68,10 @@ public class ConnectFrame extends JFrame implements ActionListener, WindowListen
         connectButton = new JButton("connect");
         cancelButton = new JButton("cancel");
         
-        
-        
-        ConfigBean config = XHSConfig.getConfigBean();
-        
 
         connectButton.addActionListener(this);
         connectPanel.add(connectButton);
+        connectPanel.add(cancelButton);
 
         this.add(connectPanel);
 
@@ -112,12 +110,17 @@ public class ConnectFrame extends JFrame implements ActionListener, WindowListen
             p.setUserName(this.nameField.getText());
             p.setPassword(String.valueOf(this.passwordField.getPassword()));
             
+            LOG.info("DATACLIENT: " + XHSConfig.getDataClient());
+            
             XHSConfig.getDataClient().writeMessage(p);
             
             
             XHSConfig.setConnectFrame(null);
             this.dispose();
-
+            return;
+        }
+        if (cmd.equals("cancel")) {
+            this.dispose();
         }
     }
 

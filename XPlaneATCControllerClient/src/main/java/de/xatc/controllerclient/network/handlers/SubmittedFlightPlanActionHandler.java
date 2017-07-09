@@ -33,7 +33,23 @@ public class SubmittedFlightPlanActionHandler {
             LOG.info("Handling new FlightPlan");
             handleNewSubmittedFlightPlan(action.getSubmittedFlightPlan());
         }
+        
+        else if (action.getAction().equals("sync")) {
+            
+            LOG.info("Syncing Submitted FlightPlan from Server");
+            syncExistingFlightPlanFromServer(action);
+            
+            
+        }
 
+    }
+    private static void syncExistingFlightPlanFromServer(SubmittedFlightPlansActionPacket action) {
+        
+        LOG.info("performing flightplan sync"); {
+        LOG.info("Pilots Session ID: " + action.getSubmittedFlightPlan().getSessionID());
+    }
+        
+        
     }
 
     public static void handleNewSubmittedFlightPlan(SubmittedFlightPlan flightPlan) {
@@ -106,14 +122,8 @@ public class SubmittedFlightPlanActionHandler {
 
     public static void deleteLocalFlightPlans() {
 
-        Session s = DBSessionManager.getSession();
-
-        Transaction tx = s.beginTransaction();
-        Query q = s.createQuery("delete from SubmittedFlightPlan");
-        q.executeUpdate();
-        tx.commit();
-
-        DBSessionManager.closeSession(s);
+        //TODO
+        
 
     }
 

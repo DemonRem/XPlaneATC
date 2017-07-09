@@ -93,7 +93,7 @@ public class SubmittedFlightPlanActionHandlerATC {
         
     }
 
-    public static void sendSubmittedFlightPlansToATC(SubmittedFlightPlansActionPacket action) {
+    public static void sendAllSubmittedFlightPlansToATC(SubmittedFlightPlansActionPacket action) {
 
         Channel channel = SessionManagement.getAtcChannels().get(action.getSessionID());
         if (channel == null) {
