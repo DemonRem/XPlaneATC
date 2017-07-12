@@ -32,6 +32,11 @@ public class SubmittedFlighPlanActionsConsumerPilot extends MQAbstractConsumer {
                 SubmittedFlightPlanActionHandlerPilot.handleNewIncomingSubmittedFlightPlan(f);
                 return;
             }
+            if (f.getAction().equals("update")) {
+                SubmittedFlightPlanActionHandlerPilot.handleNewIncomingSubmittedFlightPlan(f);
+                return;
+                
+            }
             if (f.getAction().equals("revoke")) {
                 
                 SubmittedFlightPlanActionHandlerPilot.revokeSubmittedFlightPlan(f);

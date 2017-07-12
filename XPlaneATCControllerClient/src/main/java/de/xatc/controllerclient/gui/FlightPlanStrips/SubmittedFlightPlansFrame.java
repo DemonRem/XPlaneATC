@@ -42,6 +42,7 @@ public class SubmittedFlightPlansFrame extends JFrame implements ActionListener 
         super();
         this.loadControllersStrips = myStrips;
         initComponents();
+        
     }
 
     private void initComponents() {
@@ -60,6 +61,7 @@ public class SubmittedFlightPlansFrame extends JFrame implements ActionListener 
 
         this.scrollPane = new JScrollPane(centerPanel);
 
+        also mit dem Refresh Button ist noch was krumm.
         this.add(scrollPane, BorderLayout.CENTER);
 
         this.loadStrips();
@@ -67,10 +69,11 @@ public class SubmittedFlightPlansFrame extends JFrame implements ActionListener 
         this.revalidate();
         this.setSize(new Dimension(this.getWidth() + 40, 400));
         this.setVisible(true);
+        this.loadStrips();
 
     }
 
-    private void loadStrips() {
+    public void loadStrips() {
 
         LOG.info("READING Flightstrips");
 

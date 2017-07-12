@@ -11,9 +11,7 @@ import de.xatc.controllerclient.gui.FlightPlanStrips.FligtPlanStripsPanel;
 import java.awt.Component;
 import javax.swing.JPanel;
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 /**
  *
@@ -75,6 +73,9 @@ public class SubmittedFlightPlanActionHandler {
         Session session = DBSessionManager.getSession();
         session.saveOrUpdate(flightPlan);
         DBSessionManager.closeSession(session);
+        if (XHSConfig.getSubmittedFlightPlansPoolFrame() != null) {
+            XHSConfig.getSubmittedFlightPlansPoolFrame().loadStrips();
+        }
 
     }
 
@@ -95,6 +96,9 @@ public class SubmittedFlightPlanActionHandler {
         Session session = DBSessionManager.getSession();
         session.saveOrUpdate(action.getSubmittedFlightPlan());
         DBSessionManager.closeSession(session);
+        if (XHSConfig.getSubmittedFlightPlansPoolFrame() != null) {
+            XHSConfig.getSubmittedFlightPlansPoolFrame().loadStrips();
+        }
 
     }
 

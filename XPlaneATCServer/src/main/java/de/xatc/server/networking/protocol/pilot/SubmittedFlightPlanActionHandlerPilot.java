@@ -19,62 +19,60 @@ import org.hibernate.Session;
  * @author Mirko
  */
 public class SubmittedFlightPlanActionHandlerPilot {
-    
+
     private static final Logger LOG = Logger.getLogger(SubmittedFlightPlanActionHandlerPilot.class.getName());
-    
+
     public static void handleNewIncomingSubmittedFlightPlan(SubmittedFlightPlansActionPacket action) {
 
-        LOG.info("Saving new submitted FlightPlan!");
+        LOG.info("Saving NEW or UPDATED submitted FlightPlan!");
         PilotStructure pilotStructure = SessionManagement.getPilotDataStructures().get(action.getSessionID());
         if (pilotStructure == null) {
             LOG.warn("Could not find pilotDataStructure");
             return;
 
         }
-        pilotStructure.setSubmittedFlightPlan(action.getSubmittedFlightPlan());
+
         SubmittedFlightPlan plan = action.getSubmittedFlightPlan();
         plan.setActive(true);
         plan.setRevoked(false);
+
         plan.setPilotsSessionID(action.getSessionID());
         plan.setId(0);
+        plan.setAssingedControllerSessionID(null);
+        pilotStructure.setSubmittedFlightPlan(plan);
         Session session = DBSessionManager.getSession();
         session.saveOrUpdate(plan);
         DBSessionManager.closeSession(session);
-        
-        if (!SessionManagement.getAtcDataStructures().isEmpty()) {
-            LOG.info("sending new FlightPlan to all controllers!");
-            
-            NetworkBroadcaster.broadcastATC(action);
-        }
+
+        action.setSubmittedFlightPlan(plan);
+        LOG.info("sending new FlightPlan to all controllers!");
+
+        NetworkBroadcaster.broadcastATC(action);
 
     }
-    
-    public static void revokeSubmittedFlightPlan(SubmittedFlightPlansActionPacket p) {
 
-        
-        PilotStructure pilotStructure = SessionManagement.getPilotDataStructures().get(p.getSessionID());
+    public static void revokeSubmittedFlightPlan(SubmittedFlightPlansActionPacket action) {
+
+        PilotStructure pilotStructure = SessionManagement.getPilotDataStructures().get(action.getSessionID());
         if (pilotStructure == null) {
             LOG.info("Could not revoke flightplan. PilotStrcuture not found");
             return;
         }
-        
-        
-        SubmittedFlightPlan plan = p.getSubmittedFlightPlan();
+
+        SubmittedFlightPlan plan = action.getSubmittedFlightPlan();
         plan.setRevoked(true);
         plan.setActive(false);
+        plan.setPilotsSessionID(action.getSessionID());
         plan.setAssingedControllerSessionID(null);
         plan.setId(0);
         Session session = DBSessionManager.getSession();
         session.saveOrUpdate(plan);
         DBSessionManager.closeSession(session);
-        if (SessionManagement.getAtcDataStructures().size() > 0) {
-            NetworkBroadcaster.broadcastATC(p);
-            
-        }
+        
+        NetworkBroadcaster.broadcastATC(action);
+
         pilotStructure.setSubmittedFlightPlan(null);
 
     }
-    
-    
-    
+
 }
