@@ -61,7 +61,7 @@ public class SubmittedFlightPlansFrame extends JFrame implements ActionListener 
 
         this.scrollPane = new JScrollPane(centerPanel);
 
-        also mit dem Refresh Button ist noch was krumm.
+       // also mit dem Refresh Button ist noch was krumm.
         this.add(scrollPane, BorderLayout.CENTER);
 
         this.loadStrips();
