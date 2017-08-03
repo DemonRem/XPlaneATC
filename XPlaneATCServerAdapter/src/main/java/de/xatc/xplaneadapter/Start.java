@@ -5,8 +5,7 @@
  */
 package de.xatc.xplaneadapter;
 
-import de.annodatatracker.annotations.ItemType;
-import de.annodatatracker.annotations.TrackDataInNB;
+
 import de.xatc.xplaneadapter.config.AdapterConfig;
 import de.xatc.xplaneadapter.gui.MainFrame;
 import javax.swing.SwingUtilities;

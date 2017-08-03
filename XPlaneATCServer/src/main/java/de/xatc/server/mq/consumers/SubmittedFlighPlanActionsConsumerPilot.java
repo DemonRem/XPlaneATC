@@ -16,6 +16,13 @@ import org.apache.log4j.Logger;
  *
  * @author C047
  */
+
+    //TRACKDATAINNB_START
+    //itemName="pilotSendNewFlightPlan"
+    //comment="consume new submitted flightplan"
+    //step=2
+    //itemType="CLASS"
+    //TRACKDATAINNB_STOP
 public class SubmittedFlighPlanActionsConsumerPilot extends MQAbstractConsumer {
 
     private static final Logger LOG = Logger.getLogger(SubmittedFlighPlanActionsConsumerPilot.class.getName());

@@ -45,11 +45,7 @@
             <artifactId>commons</artifactId>
             <version>0.1</version>
         </dependency>
-        <dependency>
-            <groupId>de.annodatatracker</groupId>
-            <artifactId>AnnoDataTrackerAnnotations</artifactId>
-            <version>0.1</version>
-        </dependency>
+
     </dependencies>
      <build>
                 

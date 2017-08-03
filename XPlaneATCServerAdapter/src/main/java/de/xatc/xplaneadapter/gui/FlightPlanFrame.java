@@ -343,6 +343,14 @@ public class FlightPlanFrame extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_formWindowClosing
 
+
+    //TRACKDATAINNB_START
+    //itemName="pilotSendNewFlightPlan"
+    //comment="initially send new FlightPlan"
+    //step=1
+    //itemType="Method"
+    //methodName="sendButtonActionPerformed"
+    //TRACKDATAINNB_STOP
     private void sendButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendButtonActionPerformed
         if (StringUtils.isEmpty(this.icaoFromField.getText())){
             SwingTools.alertWindow("Icao From may not be empty", this);

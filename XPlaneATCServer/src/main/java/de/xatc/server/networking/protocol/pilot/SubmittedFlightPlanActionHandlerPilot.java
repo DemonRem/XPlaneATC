@@ -5,6 +5,7 @@
  */
 package de.xatc.server.networking.protocol.pilot;
 
+
 import de.xatc.commons.datastructure.pilot.PilotStructure;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlan;
 import de.xatc.commons.networkpackets.pilot.SubmittedFlightPlansActionPacket;
@@ -22,6 +23,14 @@ public class SubmittedFlightPlanActionHandlerPilot {
 
     private static final Logger LOG = Logger.getLogger(SubmittedFlightPlanActionHandlerPilot.class.getName());
 
+
+    //TRACKDATAINNB_START
+    //itemName="pilotSendNewFlightPlan"
+    //comment="handle send new FlightPlan"
+    //step=2
+    //itemType="Method"
+    //methodName="
+    //TRACKDATAINNB_STOP
     public static void handleNewIncomingSubmittedFlightPlan(SubmittedFlightPlansActionPacket action) {
 
         LOG.info("Saving NEW or UPDATED submitted FlightPlan!");

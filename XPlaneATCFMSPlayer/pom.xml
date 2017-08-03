@@ -51,11 +51,7 @@
             <version>0.1-alpha</version>
     
         </dependency>
-        <dependency>
-            <groupId>de.annodatatracker</groupId>
-            <artifactId>AnnoDataTrackerAnnotations</artifactId>
-            <version>0.1</version>
-        </dependency>
+
     </dependencies>
     <build>
                 
