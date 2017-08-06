@@ -19,8 +19,9 @@ import org.apache.log4j.Logger;
 
     //TRACKDATAINNB_START
     //itemName="pilotSendNewFlightPlan"
+    //className=SubmittedFlighPlanActionsConsumerPilot
     //comment="consume new submitted flightplan"
-    //step=2
+    //step=3
     //itemType="CLASS"
     //TRACKDATAINNB_STOP
 public class SubmittedFlighPlanActionsConsumerPilot extends MQAbstractConsumer {

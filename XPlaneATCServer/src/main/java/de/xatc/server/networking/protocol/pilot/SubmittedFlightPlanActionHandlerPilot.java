@@ -27,9 +27,9 @@ public class SubmittedFlightPlanActionHandlerPilot {
     //TRACKDATAINNB_START
     //itemName="pilotSendNewFlightPlan"
     //comment="handle send new FlightPlan"
-    //step=2
+    //step=4
     //itemType="Method"
-    //methodName="
+    //methodName="handleNewIncomingSubmittedFlightPlan"
     //TRACKDATAINNB_STOP
     public static void handleNewIncomingSubmittedFlightPlan(SubmittedFlightPlansActionPacket action) {
 
