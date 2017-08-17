@@ -346,7 +346,7 @@ public class FlightPlanFrame extends javax.swing.JFrame {
 
     //TRACKDATAINNB_START
     //itemName="pilotSendNewFlightPlan"
-    //comment="initially send new FlightPlan mit extra langem schubidu um zu sehen, ob hier eine zeile bricht oder scrollbar ist"
+    //comment="initially send new FlightPlan from XPlane Adapter"
     //step=1
     //itemType="Method"
     //methodName="sendButtonActionPerformed"
