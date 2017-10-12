@@ -89,7 +89,7 @@
           </dependency>
           <dependency>
                <groupId>de.mytools</groupId>
-               <artifactId>mytools</artifactId>
+               <artifactId>PettersiliesDevTools</artifactId>
                <version>0.1</version>
           </dependency>
           <dependency>
