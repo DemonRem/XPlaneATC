@@ -174,6 +174,14 @@ public class ATCServerHandler extends ChannelInboundHandlerAdapter {
             }
         
 
+                //TRACKDATAINNB_START
+                //itemName="atcRevokesPilotsFlightPlan"
+                //comment="server receives FlightPlanActionPacket and puts it into mq"
+                //step=2
+                //itemType="inside" 
+                //className=ATCServerHandler
+                //methodName="na"
+                //TRACKDATAINNB_STOP
             if (msg instanceof SubmittedFlightPlansActionPacket) {
                 SubmittedFlightPlansActionPacket action = (SubmittedFlightPlansActionPacket) msg;
                 ServerConfig.getMessageSenders().get("submittedFlightPlanActionsATC").sendObjectMessage(action);

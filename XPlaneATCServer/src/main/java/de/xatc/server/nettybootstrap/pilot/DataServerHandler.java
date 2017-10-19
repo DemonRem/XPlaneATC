@@ -77,6 +77,14 @@ public class DataServerHandler extends ChannelInboundHandlerAdapter {
                     ServerConfig.getMessageSenders().get("planePosition").sendObjectMessage((PlanePosition) msg);
                 }
                 
+                //TRACKDATAINNB_START
+                //itemName="pilotSendNewFlightPlan"
+                //className="DataServerHandler"
+                //comment="Server takes FlightplanActoin and sends it via mq"
+                //step=2
+                //itemType="inside"
+                //methodName="na"
+                //TRACKDATAINNB_STOP    
             } else if (msg instanceof SubmittedFlightPlansActionPacket) {
                 SubmittedFlightPlansActionPacket f = (SubmittedFlightPlansActionPacket) msg;
                 ServerConfig.getMessageSenders().get("submittedFlightPlanActionsPilot").sendObjectMessage(f);

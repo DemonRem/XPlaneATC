@@ -299,6 +299,14 @@ public class FligtPlanStripsPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    //TRACKDATAINNB_START
+    //itemName="atcRevokesPilotsFlightPlan"
+    //comment="ATC presses revoke button on flightplan"
+    //step=1
+    //itemType="Method"
+    //className=FlightPlanStripsPanel
+    //methodName="revokeButtonActionPerformed"
+    //TRACKDATAINNB_STOP
     private void revokeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_revokeButtonActionPerformed
         SubmittedFlightPlansActionPacket action = new SubmittedFlightPlansActionPacket();
        // action.setServersID(this.serversID);

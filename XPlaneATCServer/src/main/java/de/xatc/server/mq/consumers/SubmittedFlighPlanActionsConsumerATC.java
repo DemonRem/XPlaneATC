@@ -24,6 +24,15 @@ public class SubmittedFlighPlanActionsConsumerATC extends MQAbstractConsumer {
         super(queueName);
     }
 
+    
+    //TRACKDATAINNB_START
+    //itemName="atcRevokesPilotsFlightPlan"
+    //comment="Consumer takes flightplan ATC action packet and analyes it"
+    //step=3
+    //itemType="Method"
+    //className=SubmittedFlighPlanActionsConsumerATC
+    //methodName="onObjectMessage"
+    //TRACKDATAINNB_STOP
     @Override
     public void onObjectMessage(ObjectMessage message) {
         
