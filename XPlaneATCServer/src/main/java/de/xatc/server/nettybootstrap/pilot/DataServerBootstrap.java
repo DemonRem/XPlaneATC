@@ -19,6 +19,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import java.net.BindException;
 import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 
@@ -38,7 +39,7 @@ public class DataServerBootstrap {
         initServer();
     }
 
-    public void initServer() {
+    public void initServer()  {
 
         bossGroup = new NioEventLoopGroup();
         workerGroup = new NioEventLoopGroup();
@@ -65,6 +66,10 @@ public class DataServerBootstrap {
         } catch (InterruptedException ex) {
             LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
+        }
+        catch (Exception ex) {
+            System.err.println(" exception caught. Could not startup. Exiting" + ex.getLocalizedMessage());
+            System.exit(-1);
         }
 
     }

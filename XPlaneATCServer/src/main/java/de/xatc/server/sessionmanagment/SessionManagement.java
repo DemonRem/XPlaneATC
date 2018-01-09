@@ -217,6 +217,7 @@ public class SessionManagement {
         for (Entry<String,ATCStructure> entry : atcDataStructures.entrySet()) {
 
             if (entry.getValue().getChannelID().equals(channelID)) {
+                //TODO: BAAM, this causes Nullpointer when registering an ATC airport station session.
                 return entry.getValue().getUserSession();
             }
 

@@ -10,6 +10,7 @@ import de.xatc.server.db.entities.LastRun;
 import de.xatc.server.db.startup.DataBaseStartUp;
 import de.xatc.server.db.startup.DataInitializer;
 import de.xatc.server.nettybootstrap.atc.ATCServerBootstrap;
+import java.net.BindException;
 import java.util.List;
 import org.hibernate.Session;
 
@@ -53,8 +54,15 @@ public class Start {
         attachShutDownHook();
         
         
-        
+        try {
         new ATCServerBootstrap();
+        }
+        catch (BindException ex) {
+            
+            System.err.println("Bind exception detected: " + ex.getLocalizedMessage());
+            System.exit(-1);
+            
+        }
 
     }
 

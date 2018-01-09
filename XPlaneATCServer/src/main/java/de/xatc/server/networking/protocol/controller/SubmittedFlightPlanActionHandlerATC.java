@@ -69,7 +69,7 @@ public class SubmittedFlightPlanActionHandlerATC {
                 //TRACKDATAINNB_STOP
     public static void revokeFlightPlan(SubmittedFlightPlansActionPacket action) {
         
-        ok, hier fliegt noch eine null pointer exception, weil wahrscheinlich irgendwo die PilotSessionID nicht enthaltne ist.
+  //TODO      ok, hier fliegt noch eine null pointer exception, weil wahrscheinlich irgendwo die PilotSessionID nicht enthaltne ist.
         PilotStructure pilotStructure = SessionManagement.getPilotDataStructures().get(action.getSubmittedFlightPlan().getPilotsSessionID());
         if (pilotStructure == null) {
             LOG.warn("Could not revoke flightplan by atc. PilotStructure not found");

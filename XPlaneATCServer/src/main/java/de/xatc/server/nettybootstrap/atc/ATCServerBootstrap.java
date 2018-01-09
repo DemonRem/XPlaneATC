@@ -19,6 +19,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import java.net.BindException;
 import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 
@@ -34,12 +35,12 @@ public class ATCServerBootstrap {
     private EventLoopGroup workerGroup;
     private ChannelFuture channelFuture;
 
-    public ATCServerBootstrap() {
+    public ATCServerBootstrap() throws BindException {
 
         initServer();
     }
 
-    public void initServer() {
+    public void initServer() throws java.net.BindException {
 
         bossGroup = new NioEventLoopGroup();
         workerGroup = new NioEventLoopGroup();
@@ -66,6 +67,11 @@ public class ATCServerBootstrap {
             LOG.error(ex.getLocalizedMessage());
             ex.printStackTrace(System.err);
         }
+        catch (Exception ex) {
+            System.err.println("Exceptoin detected. Exit");
+            System.exit(-1);
+        }
+        
 
     }
 
