@@ -9,8 +9,9 @@
  */
 package de.xatc.controllerclient.gui.painters.airport;
 
-import de.twyhelper.tools.FMCConfig;
+
 import de.xatc.commons.db.sharedentities.aptmodel.NavDataEntity;
+import de.xatc.controllerclient.config.XHSConfig;
 import de.xatc.controllerclient.navigation.NavPoint;
 import de.xatc.controllerclient.xdataparser.aptmodel.AptAirportModel;
 import de.xatc.controllerclient.xdataparser.aptmodel.AptChunkModel;
@@ -28,6 +29,7 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
 import java.util.Map.Entry;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.painter.Painter;
 
@@ -38,6 +40,14 @@ import org.jdesktop.swingx.painter.Painter;
  */
 public class NewAptPainter implements Painter<JXMapViewer> {
 
+    
+    //TODO: All painters need to be consolidated. 
+    
+    /**
+     * our logger inside this class
+     */
+     private static final Logger LOG = Logger.getLogger(NewAptPainter.class.getName());
+    
     /**
      * do we want anti alias
      */
@@ -199,7 +209,7 @@ public class NewAptPainter implements Painter<JXMapViewer> {
                 g.drawLine((int) fromPoint2D.getX(), (int) fromPoint2D.getY(), (int) toPoint2D.getX(), (int) toPoint2D.getY());
                 //  g.drawOval((int) fromPoint2D.getX(), (int) fromPoint2D.getY(), 5, 5);
 
-                if (FMCConfig.isDoDebug()) {
+                if (XHSConfig.isDoDebug()) {
                     //g.drawString(s.getToNode().getConnNames().toString(), (int) fromPoint2D.getX() + 20, (int) fromPoint2D.getY());
 
 //                    String connStringF = "";
@@ -213,7 +223,7 @@ public class NewAptPainter implements Painter<JXMapViewer> {
 //                    }
                     //g.drawString("-> " + connStringF, (int) toPoint2D.getX() + 100, (int) toPoint2D.getY());
                     //g.drawString("-> " + connStringT, (int) fromPoint2D.getX() + 100, (int) fromPoint2D.getY());
-                    if (FMCConfig.isToggleSelectTaxiways()) {
+                    if (XHSConfig.isToggleSelectTaxiways()) {
                         g.drawString(s.getFromNode().getId() + "", (int) fromPoint2D.getX(), (int) fromPoint2D.getY());
                         g.drawString(s.getToNode().getId() + "", (int) toPoint2D.getX(), (int) toPoint2D.getY());
                     }

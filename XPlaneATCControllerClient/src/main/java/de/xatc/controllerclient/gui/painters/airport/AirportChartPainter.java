@@ -9,8 +9,9 @@
  */
 package de.xatc.controllerclient.gui.painters.airport;
 
-import de.twyhelper.tools.FMCConfig;
-import de.twyhelper.tools.debug.DebugMessageLevel;
+
+
+import de.xatc.controllerclient.db.DBSessionManager;
 import de.xatc.controllerclient.navigation.NavLine;
 import de.xatc.controllerclient.navigation.NavPoint;
 import de.xatc.controllerclient.navigation.NavPoligon;
@@ -22,6 +23,7 @@ import java.awt.RenderingHints;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.painter.Painter;
 
@@ -32,6 +34,7 @@ import org.jdesktop.swingx.painter.Painter;
  */
 public class AirportChartPainter implements Painter<JXMapViewer> {
 
+     private static final Logger LOG = Logger.getLogger(AirportChartPainter.class.getName());
     /**
      * what colors do we draw with
      */
@@ -115,11 +118,11 @@ public class AirportChartPainter implements Painter<JXMapViewer> {
     private void drawLabels(Graphics2D g, JXMapViewer map) {
 
         for (NavPoint p : this.labelList) {
-            FMCConfig.debugMessage("DRAW LABEL: " + p.getName(), DebugMessageLevel.DEBUG);
+            LOG.debug("DRAW LABEL: " + p.getName());
 
             Point2D text2D = map.getTileFactory().geoToPixel(p.getGeoPos(), map.getZoom());
 
-            FMCConfig.debugMessage(text2D.getX() + " " + text2D.getY(), DebugMessageLevel.DEBUG);
+            LOG.debug(text2D.getX() + " " + text2D.getY());
             g.setColor(Color.BLUE);
             g.drawString(p.getName(), (int) text2D.getX(), (int) text2D.getY());
 

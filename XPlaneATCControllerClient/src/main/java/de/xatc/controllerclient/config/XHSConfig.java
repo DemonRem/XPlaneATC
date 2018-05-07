@@ -67,6 +67,8 @@ public class XHSConfig {
     
     private static boolean aptIndexingRunning = false;
     
+
+    
     /**
      * initial mapZoomFactor
      */
@@ -105,6 +107,8 @@ public class XHSConfig {
      * debug and write a lot of debug messages to stdout
      */
     private static final boolean doDebug = true;
+    
+    private static final boolean toggleSelectTaxiways = false;
 
 
     /**
@@ -433,6 +437,18 @@ public class XHSConfig {
 
     public static void setSubmittedFlightPlansPoolFrame(SubmittedFlightPlansFrame submittedFlightPlansPoolFrame) {
         XHSConfig.submittedFlightPlansPoolFrame = submittedFlightPlansPoolFrame;
+    }
+
+    public static SubmittedFlightPlansFrame getMyFlightPlansFrame() {
+        return myFlightPlansFrame;
+    }
+
+    public static void setMyFlightPlansFrame(SubmittedFlightPlansFrame myFlightPlansFrame) {
+        XHSConfig.myFlightPlansFrame = myFlightPlansFrame;
+    }
+
+    public static boolean isToggleSelectTaxiways() {
+        return toggleSelectTaxiways;
     }
     
     
